@@ -1,7 +1,7 @@
 <script>
     import * as zip from '@zip.js/zip.js';
     import { loaded, data } from '../app/store';
-    import { extractData } from '../app/package';
+    import { extractData } from '../app/extractor';
 
     let loading = false;
     let error = false;
@@ -11,11 +11,17 @@
         const reader = new zip.ZipReader(new zip.BlobReader(file));
         reader.getEntries().then((entries) => {
             const validPackage = entries.some((entry) => entry.filename === 'README.txt');
-            if (!validPackage) return error = true;
+            if (!validPackage) {
+                error = true;
+                loading = false;
+                return;
+            }
+            const extractStartAt = Date.now();
             extractData(entries).then((extractedData) => {
                 loading = false;
                 data.set(extractedData)
                 loaded.set(true);
+                console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
             });
         })
     }
