@@ -1,5 +1,5 @@
 <script>
-    import JSZip from 'jszip';
+    import * as zip from '@zip.js/zip.js';
     import { extractData } from '../app/package';
 
     let loading = false;
@@ -8,15 +8,15 @@
     function handleFile (file) {
         let loadingStartAt = Date.now();
         loading = true;
-        JSZip.loadAsync(file).then((zip) => {
+        const reader = new zip.ZipReader(new zip.BlobReader(file));
+        reader.getEntries().then((entries) => {
             loading = false;
-            const validPackage = !!zip.files['README.txt'];
+            const validPackage = entries.some((entry) => entry.filename === 'README.txt');
             if (!validPackage) return error = true;
-
-            extractData(zip).then((statistics) => {
+            extractData(entries).then((statistics) => {
                 alert('Statistics loaded!');
             });
-        });
+        })
     }
 
     function filePopup () {

@@ -19,7 +19,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "jszip": "^3.6.0",
+    "@zip.js/zip.js": "^2.2.16",
     "sirv-cli": "^0.4.4"
   }
 }
