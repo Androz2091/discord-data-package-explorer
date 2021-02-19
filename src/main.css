@@ -16,9 +16,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 }
 
 .loader-error {
     color: red;
+}
+
+.loader-loading {
+    display: block;
 }

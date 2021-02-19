@@ -1,13 +1,12 @@
 <script>
     import * as zip from '@zip.js/zip.js';
-    import { loaded, data, loadedPercent } from '../app/store';
+    import { loaded, data, loadedPercent, loadedStartAt } from '../app/store';
     import { extractData } from '../app/package';
 
     let loading = false;
     let error = false;
 
     function handleFile (file) {
-        let loadingStartAt = Date.now();
         loading = true;
         const reader = new zip.ZipReader(new zip.BlobReader(file));
         reader.getEntries().then((entries) => {
@@ -17,12 +16,12 @@
                 loading = false;
                 data.set(extractedData)
                 loaded.set(true);
-                alert('Data loaded!');
             });
         })
     }
 
     function filePopup () {
+        if (loading) return;
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('accept', '.zip');
@@ -33,9 +32,14 @@
 
 </script>
 
-<div class="loader" on:click="{filePopup}">
+<div class="loader" on:click="{filePopup}" style="cursor: { loading ? '' : 'pointer' }">
     {#if loading}
-        <p>Loading your package file... { $loadedPercent }% loaded</p>
+        <div class="loader-loading">
+            <p>
+                Loading your package file... { $loadedPercent }% loaded
+            </p>
+            <small>Estimated time: { ($loadedPercent && $loadedStartAt) ? parseInt(((Date.now() - $loadedStartAt) / $loadedPercent) * (100 - $loadedPercent) / 1000) + ' seconds' : '...' }</small>
+        </div>
     {:else if error}
         <p class="loader-error">Something went wrong... Click or drop your package file here to retry</p>
     {:else}

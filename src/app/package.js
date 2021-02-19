@@ -1,5 +1,5 @@
 import * as zip from '@zip.js/zip.js';
-import { loadedPercent } from './store';
+import { loadedPercent, loadedStartAt } from './store';
 
 export const extractData = async (entries) => {
 
@@ -9,7 +9,7 @@ export const extractData = async (entries) => {
     const extractStartAt = Date.now();
 
     // Parse and load current user informations
-    const userInfo = JSON.parse(await readFile('account/user.json'));
+    const user = JSON.parse(await readFile('account/user.json'));
     console.log('[debug] User info loaded.');
 
     // Parse and load applications
@@ -24,27 +24,56 @@ export const extractData = async (entries) => {
     console.log(`[debug] ${applicationsIDs.length} applications loaded.`);
 
     // Parse and load DM statistics
-    const DMChannelPathRegex = /messages\/([0-9]{16,32})\/$/;
-    const DMChannelsIDs = entries.filter((entry) => DMChannelPathRegex.test(entry.filename)).map((entry) => entry.filename.match(DMChannelPathRegex)[1]);
+    const messagesIndex = JSON.parse(await readFile('messages/index.json'));
+
     let index = 0;
-    const users = [];
-    for (let channelID of DMChannelsIDs) {
+    loadedStartAt.set(Date.now());
+
+    const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
+    const messagesChannelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
+
+    const messages = [];
+    for (let channelID of messagesChannelsIDs) {
+
+        // update percents
         index++;
-        loadedPercent.set(parseInt(index * 100 / DMChannelsIDs.length));
+        loadedPercent.set(parseInt(index * 100 / messagesChannelsIDs.length));
+
         const channelDataPath = `messages/${channelID}/channel.json`;
-        // const channelMessagesPath = `messages/${channelID}/messages.csv`;
+        const channelMessagesPath = `messages/${channelID}/messages.csv`;
         const channelData = JSON.parse(await readFile(channelDataPath));
-        // const channelMessages = await readFile(channelMessagesPath);
+        const channelMessages = await readFile(channelMessagesPath);
+
+        const channelName = messagesIndex[channelData.id];
+
+        // if it is a DM channel
+        let userID;
         if (channelData.recipients && channelData.recipients.length === 2) {
-            const user = channelData.recipients.find((userID) => userID !== userInfo.id);
-            users.push(user);
+            userID = channelData.recipients.find((userID) => userID !== user.id);
         }
+
+        messages.push({
+            channelID,
+            isDM: !!userID,
+            userID,
+            channelMessages,
+            channelName
+        });
     }
-    console.log(`[debug] ${DMChannelsIDs.length} channels loaded.`);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[0]);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[1]);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[2]);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[3]);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[4]);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[5]);
+    console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[6]);
+    console.log(`[debug] ${messagesChannelsIDs.length} channels loaded.`);
 
     console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
 
     return {
-        DMsCount: users.length
+        user,
+        applications,
+        messages
     };
 };
