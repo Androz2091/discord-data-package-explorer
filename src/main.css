@@ -6,7 +6,7 @@ body {
 .app {
     width: 100vw;
     height: 100vh;
-    background-color: #292b2f;
+    background-color: #373c42;
 }
 
 .loader {
@@ -24,4 +24,8 @@ body {
 
 .loader-loading {
     display: block;
+}
+
+.text-muted {
+    color: #6c757d;
 }
