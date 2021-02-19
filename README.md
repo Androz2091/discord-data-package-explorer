@@ -2,7 +2,7 @@
 
 ### ZIP Library
 
-I tested some libraries to decompress the package zip files. Here are the results (some didn't work anymore so I didn't put them here):
+I decided to use zip.js instead of JSZip. Some benchmarks with the same package file:
 
 | **Name** | **Time to read files** |
 |----------|----------|
