@@ -1,4 +1,5 @@
 import * as zip from '@zip.js/zip.js';
+import { loadedPercent } from './store';
 
 export const extractData = async (entries) => {
 
@@ -20,13 +21,16 @@ export const extractData = async (entries) => {
         const applicationData = JSON.parse(await readFile(applicationDataPath));
         applications.push(applicationData);
     }
-    console.log(`[debug] ${applicationsIDs.length} pplications loaded.`);
+    console.log(`[debug] ${applicationsIDs.length} applications loaded.`);
 
     // Parse and load DM statistics
     const DMChannelPathRegex = /messages\/([0-9]{16,32})\/$/;
     const DMChannelsIDs = entries.filter((entry) => DMChannelPathRegex.test(entry.filename)).map((entry) => entry.filename.match(DMChannelPathRegex)[1]);
+    let index = 0;
     const users = [];
     for (let channelID of DMChannelsIDs) {
+        index++;
+        loadedPercent.set(parseInt(index * 100 / DMChannelsIDs.length));
         const channelDataPath = `messages/${channelID}/channel.json`;
         // const channelMessagesPath = `messages/${channelID}/messages.csv`;
         const channelData = JSON.parse(await readFile(channelDataPath));
