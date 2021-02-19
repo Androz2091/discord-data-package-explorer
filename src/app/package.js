@@ -1,4 +1,5 @@
 import * as zip from '@zip.js/zip.js';
+import Papa from 'papaparse';
 import { loadedPercent, loadedStartAt } from './store';
 
 export const extractData = async (entries) => {
@@ -42,7 +43,14 @@ export const extractData = async (entries) => {
         const channelDataPath = `messages/${channelID}/channel.json`;
         const channelMessagesPath = `messages/${channelID}/messages.csv`;
         const channelData = JSON.parse(await readFile(channelDataPath));
-        const channelMessages = await readFile(channelMessagesPath);
+        const channelMessagesCSV = await readFile(channelMessagesPath);
+        const channelMessages = Papa.parse(channelMessagesCSV, {
+            header: true,
+            newline: ',\r'
+        })
+            .data
+            .filter((m) => m.Contents)
+            .map((m) => ({ id: m.ID, sentAt: m.Timestamp, length: m.Contents.length }));
 
         const channelName = messagesIndex[channelData.id];
 
