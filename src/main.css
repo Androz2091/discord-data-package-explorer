@@ -1,4 +1,5 @@
 body {
+    background-color: #373c42;
     margin: 0;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -6,7 +7,6 @@ body {
 .app {
     width: 100vw;
     height: 100vh;
-    background-color: #373c42;
 }
 
 .loader {
@@ -20,10 +20,6 @@ body {
 
 .loader-error {
     color: red;
-}
-
-.loader-loading {
-    display: block;
 }
 
 .text-muted {
