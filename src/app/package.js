@@ -1,6 +1,5 @@
 import * as zip from '@zip.js/zip.js';
 import Papa from 'papaparse';
-import { loadedPercent, loadedStartAt } from './store';
 
 export const extractData = async (entries) => {
 
@@ -27,18 +26,12 @@ export const extractData = async (entries) => {
     // Parse and load DM statistics
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
 
-    let index = 0;
-    loadedStartAt.set(Date.now());
-
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const messagesChannelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
     const messages = [];
-    for (let channelID of messagesChannelsIDs) {
 
-        // update percents
-        index++;
-        loadedPercent.set(parseInt(index * 100 / messagesChannelsIDs.length));
+    const loadChannel = async (channelID) => {
 
         const channelDataPath = `messages/${channelID}/channel.json`;
         const channelMessagesPath = `messages/${channelID}/messages.csv`;
@@ -67,7 +60,10 @@ export const extractData = async (entries) => {
             channelMessages,
             channelName
         });
-    }
+    };
+    
+    await Promise.all(messagesChannelsIDs.map((id) => loadChannel(id)));
+
     console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[0]);
     console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[1]);
     console.log(messages.sort((a, b) => b.channelMessages.length - a.channelMessages.length)[2]);
