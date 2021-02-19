@@ -8,28 +8,39 @@ export const extractData = async (entries) => {
     const extractStartAt = Date.now();
 
     // Parse and load current user informations
-    const userInfo = JSON.parse(await readFile(`account/user.json`));
-    console.log(userInfo)
+    const userInfo = JSON.parse(await readFile('account/user.json'));
+    console.log('[debug] User info loaded.');
+
+    // Parse and load applications
+    const applicationPathRegex = /account\/applications\/([0-9]{16,32})\/$/;
+    const applicationsIDs = entries.filter((entry) => applicationPathRegex.test(entry.filename)).map((entry) => entry.filename.match(applicationPathRegex)[1]);
+    const applications = [];
+    for (let applicationID of applicationsIDs) {
+        const applicationDataPath = `account/applications/${applicationID}/application.json`;
+        const applicationData = JSON.parse(await readFile(applicationDataPath));
+        applications.push(applicationData);
+    }
+    console.log(`[debug] ${applicationsIDs.length} pplications loaded.`);
 
     // Parse and load DM statistics
     const DMChannelPathRegex = /messages\/([0-9]{16,32})\/$/;
-    const DMChannels = entries.filter((entry) => DMChannelPathRegex.test(entry.filename)).map((entry) => entry.filename.match(DMChannelPathRegex)[1]);
+    const DMChannelsIDs = entries.filter((entry) => DMChannelPathRegex.test(entry.filename)).map((entry) => entry.filename.match(DMChannelPathRegex)[1]);
     const users = [];
-    let index = 0;
-    for (let channelID of DMChannels) {
-        console.log(++index);
+    for (let channelID of DMChannelsIDs) {
         const channelDataPath = `messages/${channelID}/channel.json`;
-        const channelMessagesPath = `messages/${channelID}/messages.csv`;
-        const channelInfo = JSON.parse(await readFile(channelDataPath));
-        const channelMessages = await readFile(channelMessagesPath);
-        if (channelInfo.recipients && channelInfo.recipients.length === 2) {
-            const user = channelInfo.recipients.find((userID) => userID !== userInfo.id);
+        // const channelMessagesPath = `messages/${channelID}/messages.csv`;
+        const channelData = JSON.parse(await readFile(channelDataPath));
+        // const channelMessages = await readFile(channelMessagesPath);
+        if (channelData.recipients && channelData.recipients.length === 2) {
+            const user = channelData.recipients.find((userID) => userID !== userInfo.id);
             users.push(user);
         }
     }
-    console.log(users.filter((e) => e === '364481003479105537').length);
+    console.log(`[debug] ${DMChannelsIDs.length} channels loaded.`);
 
-    console.log(`Extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
+    console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
 
-    return null;
+    return {
+        DMsCount: users.length
+    };
 };

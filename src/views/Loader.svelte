@@ -1,5 +1,6 @@
 <script>
     import * as zip from '@zip.js/zip.js';
+    import { loaded, data } from '../app/store';
     import { extractData } from '../app/package';
 
     let loading = false;
@@ -13,8 +14,10 @@
             loading = false;
             const validPackage = entries.some((entry) => entry.filename === 'README.txt');
             if (!validPackage) return error = true;
-            extractData(entries).then((statistics) => {
-                alert('Statistics loaded!');
+            extractData(entries).then((extractedData) => {
+                data.set(extractedData)
+                loaded.set(true);
+                alert('Data loaded!');
             });
         })
     }

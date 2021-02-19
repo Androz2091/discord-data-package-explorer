@@ -1,5 +1,5 @@
 
-import { writable } from 'svelte/store'
+import { writable } from 'svelte/store';
 
-export const loaded = writable(false)
-export const user = writable(null)
+export const loaded = writable(false);
+export const data = writable(null);
