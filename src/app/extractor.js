@@ -2,6 +2,8 @@ import * as zip from '@zip.js/zip.js';
 import Papa from 'papaparse';
 import axios from 'axios';
 
+import { getCreatedTimestamp } from './helpers';
+
 /**
  * Fetch a user on Discord
  * @param userID The ID of the user to fetch
@@ -42,7 +44,9 @@ export const extractData = async (entries) => {
         applications: [],
         channels: [],
 
-        topDMs: []
+        topDMs: [],
+        messageCount: 0,
+        averageMessageCountPerDay: 0
     };
 
     // Get the entry from the name
@@ -120,6 +124,9 @@ export const extractData = async (entries) => {
     }));
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
+
+    extractedData.messageCount = extractedData.channels.map((c) => c.messages.length).reduce((p, c) => p + c);
+    extractedData.averageMessageCountPerDay = parseInt(extractedData.messageCount / ((Date.now() - getCreatedTimestamp(extractedData.user.id)) / 24 / 60 / 60 / 1000));
 
     return extractedData;
 };

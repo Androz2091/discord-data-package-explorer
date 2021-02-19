@@ -14,9 +14,17 @@ import { generateAvatarURL } from '../app/helpers';
             </h1>
         </div>
         <div class="stats card">
-            <h1><span>DMs:</span> 4,000</h1>
-            <small>Coucou</small>
-            <h1><span>Friends:</span> 4,000</h1>
+            <h1 style="margin-top: 10px; margin-bottom: 10px;">Messages Fun Facts</h1>
+            <div class="fun-fact">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                <h3 style="margin-left: 10px;">You talked to <span class="text-discord">{ $data.channels.filter((c) => c.isDM).length }</span> distinct users</h3>
+            </div>
+            <small>Well, you know a lot of people!</small>
+            <div class="fun-fact">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                <h3 style="margin-left: 10px;">You sent <span class="text-discord">{ $data.messageCount }</span> messages on Discord</h3>
+            </div>
+            <small>That's about { $data.averageMessageCountPerDay } messages per day!</small>
         </div>
         <div class="top card">
             <h1>Top Users</h1>
@@ -37,31 +45,6 @@ import { generateAvatarURL } from '../app/helpers';
             </div>
         </div>
     </div>
-    <!--<div class="column right">
-        <div class="cards">
-            <div class="card">
-                <h2>
-                    <span>50</span> friends
-                </h2>
-                <small>Woaw, you have a lot of friends on Discord!</small>
-            </div>
-            <div class="card">
-                <h2>
-                    <span>200</span> DMs
-                </h2>
-                <small>You discussed with 200 users on Discord!</small>
-            </div>
-            <div class="card">
-                <h2>
-                    <span>13,000</span> messages
-                </h2>
-                <small>You sent 13,000 messages on Discord! Congrats, this is a high ratio!</small>
-            </div>
-        </div>
-        <div class="top">
-            Hey
-        </div>
-    </div> -->
 </div>
 
 <style>
@@ -69,8 +52,15 @@ import { generateAvatarURL } from '../app/helpers';
         color: white;
         padding: 20px;
     }
-    span {
+    .fun-fact {
+        display: flex;
+        align-items: center;
+    }
+    .text-discord {
         color: #7289DA;
+    }
+    svg {
+        height: 40px;
     }
     .cards {
         display: grid;
