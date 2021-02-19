@@ -5,6 +5,9 @@ import { generateAvatarURL } from '../app/helpers';
 
 <div class="statistics">
     <div class="cards">
+        <div class="welcome card">
+            <h2>Hey, here is your extracted data! You can load another package by refreshing the page.</h2>
+        </div>
         <div class="profile card">
             <div class="avatar">
                 <img src="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }" alt="Avatar" />
@@ -138,11 +141,14 @@ import { generateAvatarURL } from '../app/helpers';
             grid-column: 4 / 8;
         }
         .card.top {
-            grid-row: 2;
             grid-column: 1 / 6;
         }
         .card.profile {
             grid-column: 1 / 4;
+        }
+
+        .card.welcome {
+            grid-column: 1 / 12;
         }
     }
     
