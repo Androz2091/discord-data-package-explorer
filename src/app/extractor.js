@@ -82,12 +82,8 @@ export const extractData = async (entries) => {
                 readFile(channelMessagesPath)
             ]).then(([ rawData, rawMessages ]) => {
                 console.timeEnd(`read contents ${channelID}`);
-                console.time(`parse json ${channelID}`);
                 const data = JSON.parse(rawData);
-                console.timeEnd(`parse json ${channelID}`);
-                console.time(`parse csv ${channelID}`);
                 const messages = parseCSV(rawMessages);
-                console.timeEnd(`parse csv ${channelID}`);
                 const name = messagesIndex[data.id];
                 const isDM = data.recipients && data.recipients.length === 2;
                 const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
