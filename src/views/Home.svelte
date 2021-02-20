@@ -23,7 +23,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
             <h1 style="margin-top: 10px; margin-bottom: 10px;">Messages Fun Facts</h1>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-                <h3 style="margin-left: 10px;">You talked to <span class="text-discord">{ $data.channels.filter((c) => c.isDM).length }</span> distinct users</h3>
+                <h3 style="margin-left: 10px;">You talked to <span class="text-discord">{ $data.channels.filter((c) => c.isDM).length.toLocaleString('en-US') }</span> distinct users</h3>
             </div>
             <small>Well, you know a lot of people!</small>
             <div class="fun-fact">
