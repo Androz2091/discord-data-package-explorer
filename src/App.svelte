@@ -7,7 +7,6 @@
 
 <svelte:head>
 	<title>Discord Data Package Explorer</title>
-	<meta property=”og:description” content="Explore and extract the data of your discord data package file!" />
 </svelte:head>
 
 <main class="app">
