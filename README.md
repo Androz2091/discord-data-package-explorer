@@ -2,7 +2,7 @@
 
 # [Discord Data Package Explorer](https://ddpe.netlify.app)
 
-What is there **really** in your Discord Data package? And how can this data be useful? Discord Data Package Explorer does the job for you!
+What's **really** in your Discord Data package? And how can this data be useful? Discord Data Package Explorer does the job for you!
 
 ## Example
 
