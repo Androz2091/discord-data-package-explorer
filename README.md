@@ -8,6 +8,12 @@ What's **really** in your Discord Data package? And how can this data be useful?
 
 ![Example](./example.png)
 
+## How to Use
+
+* Ask for your data file in Discord (`Settings` > `Privacy & Safety`)
+* Open **https://ddpe.netlify.app**
+* and import your data file!
+
 ### Installation
 
 Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, and is quite easy to install.
