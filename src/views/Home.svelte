@@ -95,6 +95,9 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
     .text-discord {
         color: #7289DA;
     }
+    .text-muted {
+        color: #6c757d;
+    }
     svg {
         height: 40px;
     }

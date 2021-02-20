@@ -4,25 +4,3 @@ body {
     margin: 0;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-
-.app {
-    width: 100vw;
-    height: 100vh;
-}
-
-.loader {
-    color: white;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.loader-error {
-    color: red;
-}
-
-.text-muted {
-    color: #6c757d;
-}

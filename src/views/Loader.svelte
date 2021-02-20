@@ -47,3 +47,17 @@
         <p>Click or drop your package file here</p>
     {/if}
 </div>
+
+<style>
+    .loader {
+        color: white;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .loader-error {
+        color: red;
+    }
+</style>
