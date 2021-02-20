@@ -82,6 +82,7 @@ export const extractData = async (entries) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
+    let done = 0;
     await Promise.all(channelsIDs.map((channelID, index) => {
         return new Promise((resolve) => {
 
@@ -104,10 +105,12 @@ export const extractData = async (entries) => {
                     isDM,
                     dmUserID
                 });
+
+                done++;
+                console.log(`${done*100/channelsIDs.length}%`);
+
                 resolve();
             });
-
-            if (index / 100 === parseInt(index / 100)) console.log(`[debug] Channel #${index} loaded.`);
 
         });
     }));
