@@ -2,7 +2,7 @@ import * as zip from '@zip.js/zip.js';
 import Papa from 'papaparse';
 import axios from 'axios';
 
-import { getCreatedTimestamp } from './helpers';
+import { getCreatedTimestamp, mostOccurences } from './helpers';
 
 /**
  * Fetch a user on Discord
@@ -27,6 +27,8 @@ const parseCSV = (input) => {
         .map((m) => ({
             id: m.ID,
             timestamp: m.Timestamp,
+            length: m.Contents.length,
+            words: m.Contents.split(' ')
             // content: m.Contents,
             // attachments: m.Attachments
         }));
@@ -47,7 +49,9 @@ export const extractData = async (entries) => {
         topDMs: [],
         messageCount: 0,
         averageMessageCountPerDay: 0,
-        hoursValues: []
+        totalSpent: 0,
+        hoursValues: [],
+        favoriteWord: null
     };
 
     // Get the entry from the name
@@ -110,6 +114,9 @@ export const extractData = async (entries) => {
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
+    const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
+    extractedData.favoriteWord = mostOccurences(words);
+
     console.log('[debug] Fetching top DMs...');
     
     extractedData.topDMs = extractedData.channels
@@ -134,6 +141,8 @@ export const extractData = async (entries) => {
     for (let i = 1; i <= 24; i++) {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
     }
+
+    extractedData.totalSpent = extractedData.user.payments.map((p) => p.amount / 100).reduce((p, c) => p + c);
 
     return extractedData;
 };

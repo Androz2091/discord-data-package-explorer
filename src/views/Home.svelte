@@ -19,7 +19,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
                 { $data.user.username }<small class="text-muted">#{ $data.user.discriminator }</small>
             </h1>
         </div>
-        <div class="stats card">
+        <div class="messages-stats card">
             <h1 style="margin-top: 10px; margin-bottom: 10px;">Messages Fun Facts</h1>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
@@ -31,6 +31,21 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
                 <h3 style="margin-left: 10px;">You sent <span class="text-discord">{ $data.messageCount.toLocaleString('en-US') }</span> messages on Discord</h3>
             </div>
             <small>That's about { $data.averageMessageCountPerDay.toLocaleString('en-US') } messages per day!</small>
+        </div>
+        <div class="other-stats card">
+            <h1 style="margin-top: 10px; margin-bottom: 10px;">Some other stats</h1>
+            <div class="fun-fact">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h3 style="margin-left: 10px;">You spent <span class="text-discord">${ parseInt($data.totalSpent).toLocaleString('en-US') }</span> on Discord</h3>
+            </div>
+            <div class="fun-fact">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>
+                <h3 style="margin-left: 10px;">You sent <span class="text-discord">{ $data.channels.map((channel) => channel.messages).flat().map((message) => message.length).reduce((p, c) => p + c).toLocaleString('en-US') }</span> characters through Discord</h3>
+            </div>
+            <div class="fun-fact">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <h3 style="margin-left: 10px;">Your favorite word is <span class="text-discord">{ $data.favoriteWord }</span></h3>
+            </div>
         </div>
         <div class="top-users card">
             <h1>Top Users</h1>
@@ -158,8 +173,11 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
         .card.welcome {
             grid-column: 1 / 12;
         }
-        .card.stats {
+        .card.messages-stats {
             grid-column: 4 / 8;
+        }
+        .card.other-stats {
+            grid-column: 8 / 12;
         }
         .card.top-users {
             grid-column: 1 / 6;
