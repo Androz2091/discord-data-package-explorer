@@ -1,7 +1,6 @@
 import * as zip from '@zip.js/zip.js';
 import Papa from 'papaparse';
 import axios from 'axios';
-import PQueue from 'p-queue';
 
 import { getCreatedTimestamp, mostOccurences } from './helpers';
 
@@ -71,22 +70,16 @@ export const extractData = async (entries) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
-    const pQueue = new PQueue({
-        concurrency: 1
-    });
-
-    channelsIDs.forEach((channelID) => {
-        pQueue.add(() => new Promise((resolve) => {
+    await Promise.all(channelsIDs.map((channelID) => {
+        return new Promise((resolve) => {
 
             const channelDataPath = `messages/${channelID}/channel.json`;
             const channelMessagesPath = `messages/${channelID}/messages.csv`;
 
-            console.time(`read contents ${channelID}`);
             Promise.all([
                 readFile(channelDataPath),
                 readFile(channelMessagesPath)
             ]).then(([ rawData, rawMessages ]) => {
-                console.timeEnd(`read contents ${channelID}`);
                 const data = JSON.parse(rawData);
                 const messages = parseCSV(rawMessages);
                 const name = messagesIndex[data.id];
@@ -103,10 +96,8 @@ export const extractData = async (entries) => {
                 resolve();
             });
 
-        }));
-    });
-
-    await pQueue.onEmpty();
+        });
+    }));
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
