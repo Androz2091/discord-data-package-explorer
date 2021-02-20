@@ -1,6 +1,7 @@
 import * as zip from '@zip.js/zip.js';
 import Papa from 'papaparse';
 import axios from 'axios';
+import PQueue from 'p-queue';
 
 import { getCreatedTimestamp, mostOccurences } from './helpers';
 
@@ -70,8 +71,12 @@ export const extractData = async (entries) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
-    await Promise.all(channelsIDs.map((channelID) => {
-        return new Promise((resolve) => {
+    const pQueue = new PQueue({
+        concurrency: 4
+    });
+
+    channelsIDs.forEach((channelID) => {
+        pQueue.add(() => new Promise((resolve) => {
 
             const channelDataPath = `messages/${channelID}/channel.json`;
             const channelMessagesPath = `messages/${channelID}/messages.csv`;
@@ -98,8 +103,10 @@ export const extractData = async (entries) => {
                 resolve();
             });
 
-        });
-    }));
+        }));
+    });
+
+    await pQueue.onEmpty();
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 

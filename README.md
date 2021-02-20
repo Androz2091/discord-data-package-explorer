@@ -24,3 +24,8 @@ I decided to use zip.js instead of JSZip. Some benchmarks with the same package 
 |----------|----------|
 | Zip.js | **47 seconds** |
 | JSZip | 123 seconds |
+
+
+### PQueue
+
+Without PQueue: 434 seconds on mobile
