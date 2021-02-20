@@ -137,6 +137,9 @@ import { generateAvatarURL } from '../app/helpers';
         .cards {
             grid-template-columns: repeat(12, 1fr);
         }
+        .card.welcome {
+            grid-column: 1 / 12;
+        }
         .card.stats {
             grid-column: 4 / 8;
         }
@@ -145,10 +148,6 @@ import { generateAvatarURL } from '../app/helpers';
         }
         .card.profile {
             grid-column: 1 / 4;
-        }
-
-        .card.welcome {
-            grid-column: 1 / 12;
         }
     }
     
