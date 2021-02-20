@@ -1,4 +1,4 @@
-<img width="150" height="150" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="https://github.com/Androz2091/discord-data-package-explorer/raw/master/example.png">  
+<img width="150" height="150" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="https://github.com/Androz2091/discord-data-package-explorer/raw/master/public/favicon.png">  
 
 # [Discord Data Package Explorer](https://ddpe.netlify.app)
 
