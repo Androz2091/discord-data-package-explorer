@@ -139,7 +139,7 @@ export const extractData = async (entries) => {
     }
 
     const paymentsAmount = extractedData.user.payments.map((p) => p.amount / 100);
-    extractedData.totalSpent = paymentsAmount.length === 0 ? paymentsAmount.reduce((p, c) => p + c) : 0;
+    extractedData.totalSpent = paymentsAmount.length === 0 ? 0 : paymentsAmount.reduce((p, c) => p + c);
 
     return extractedData;
 };
