@@ -77,11 +77,15 @@ export const extractData = async (entries) => {
             const channelDataPath = `messages/${channelID}/channel.json`;
             const channelMessagesPath = `messages/${channelID}/messages.csv`;
 
+            console.time('read contents');
             Promise.all([
                 readFile(channelDataPath),
                 readFile(channelMessagesPath)
             ]).then(([ rawData, rawMessages ]) => {
+                console.timeEnd('read contents');
+                console.time('parse json');
                 const data = JSON.parse(rawData);
+                console.timeEnd('parse json');
                 console.time('parse csv');
                 const messages = parseCSV(rawMessages);
                 console.timeEnd('parse csv');
@@ -95,9 +99,6 @@ export const extractData = async (entries) => {
                     isDM,
                     dmUserID
                 });
-
-                done++;
-                console.log(`${done*100/channelsIDs.length}%`);
 
                 resolve();
             });
