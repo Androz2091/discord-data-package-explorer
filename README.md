@@ -6,6 +6,8 @@ What's **really** in your Discord Data package? And how can this data be useful?
 
 ## Example
 
+### [DEMO](https://ddpe.netlify.app?demo)
+
 ![Example](./example.png)
 
 ## How to Use
