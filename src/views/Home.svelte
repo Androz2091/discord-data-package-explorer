@@ -28,9 +28,9 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
             <small>Well, you know a lot of people!</small>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                <h3 style="margin-left: 10px;">You sent <span class="text-discord">{ $data.messageCount }</span> messages on Discord</h3>
+                <h3 style="margin-left: 10px;">You sent <span class="text-discord">{ $data.messageCount.toLocaleString('en-US') }</span> messages on Discord</h3>
             </div>
-            <small>That's about { $data.averageMessageCountPerDay } messages per day!</small>
+            <small>That's about { $data.averageMessageCountPerDay.toLocaleString('en-US') } messages per day!</small>
         </div>
         <div class="top card">
             <h1>Top Users</h1>
@@ -44,7 +44,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
                             <h3 class="top-name">{ channel.userData.username } <small class="text-muted">#{ channel.userData.discriminator }</small></h3>
                         </div>
                         <div class="top-messages">
-                            <h3>{ channel.messages.length } <small>messages</small></h3>
+                            <h3>{ channel.messages.length.toLocaleString('en-US') } <small>messages</small></h3>
                         </div>
                     </div>
                 {/each}
