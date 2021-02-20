@@ -1,5 +1,5 @@
 {
-  "name": "svelte-app",
+  "name": "discord-data-package-explorer",
   "version": "1.2.0",
   "scripts": {
     "build": "rollup -c",
