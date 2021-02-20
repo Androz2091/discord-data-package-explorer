@@ -138,7 +138,8 @@ export const extractData = async (entries) => {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
     }
 
-    extractedData.totalSpent = extractedData.user.payments.map((p) => p.amount / 100).reduce((p, c) => p + c);
+    const paymentsAmount = extractedData.user.payments.map((p) => p.amount / 100);
+    extractedData.totalSpent = (paymentsAmount.length === 0 ? paymentsAmount : [0]).reduce((p, c) => p + c);
 
     return extractedData;
 };
