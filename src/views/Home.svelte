@@ -32,7 +32,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
             </div>
             <small>That's about { $data.averageMessageCountPerDay.toLocaleString('en-US') } messages per day!</small>
         </div>
-        <div class="top card">
+        <div class="top-users card">
             <h1>Top Users</h1>
             <p>The users you chat the most with!</p>
             <div>
@@ -161,7 +161,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
         .card.stats {
             grid-column: 4 / 8;
         }
-        .card.top {
+        .card.top-users {
             grid-column: 1 / 6;
         }
         .card.hours {
