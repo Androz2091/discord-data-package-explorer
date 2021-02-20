@@ -43,7 +43,6 @@ export const extractData = async (entries) => {
 
     const extractedData = {
         user: null,
-        applications: [],
         channels: [],
 
         topDMs: [],
@@ -64,17 +63,6 @@ export const extractData = async (entries) => {
     extractedData.user = JSON.parse(await readFile('account/user.json'));
     console.log('[debug] User info loaded.');
 
-    // Parse and load applications
-    console.log('[debug] Loading user applications...');
-    const applicationPathRegex = /account\/applications\/([0-9]{16,32})\/$/;
-    const applicationsIDs = entries.filter((entry) => applicationPathRegex.test(entry.filename)).map((entry) => entry.filename.match(applicationPathRegex)[1]);
-    for (let applicationID of applicationsIDs) {
-        const applicationDataPath = `account/applications/${applicationID}/application.json`;
-        const applicationData = JSON.parse(await readFile(applicationDataPath));
-        extractedData.applications.push(applicationData);
-    }
-    console.log(`[debug] ${applicationsIDs.length} user applications loaded.`);
-
     // Parse and load channels
     console.log('[debug] Loading channels...');
 
@@ -83,7 +71,7 @@ export const extractData = async (entries) => {
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
     let done = 0;
-    await Promise.all(channelsIDs.map((channelID, index) => {
+    await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
             const channelDataPath = `messages/${channelID}/channel.json`;
