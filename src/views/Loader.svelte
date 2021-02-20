@@ -26,6 +26,15 @@
         })
     }
 
+    function handleDragOver (event) {
+        event.preventDefault();
+    }
+
+    function handleDrop (event) {
+        event.preventDefault();
+        handleFile(event.dataTransfer.items[0].getAsFile());
+    }
+
     function filePopup () {
         if (loading) return;
         const input = document.createElement('input');
@@ -38,7 +47,7 @@
 
 </script>
 
-<div class="loader" on:click="{filePopup}" style="cursor: { loading ? '' : 'pointer' }">
+<div class="loader" on:click="{filePopup}" style="cursor: { loading ? '' : 'pointer' }" on:drop="{handleDrop}" on:dragover="{handleDragOver}">
     {#if loading}
         Loading your package file...
     {:else if error}
