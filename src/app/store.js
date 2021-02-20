@@ -31,7 +31,8 @@ if (isDemo) {
             }
         ],
         messageCount: 0,
-        averageMessageCountPerDay: 0
+        averageMessageCountPerDay: 0,
+        hoursValues: new Array(24).fill(0).map(() => Math.floor(Math.random() * 300) + 1)
     };
 }
 

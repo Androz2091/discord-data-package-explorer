@@ -1,6 +1,9 @@
 <script>
 import { data } from "../app/store";
 import { generateAvatarURL } from '../app/helpers';
+import Chart from 'svelte-frappe-charts';
+
+const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` : `${i-11}pm`);
 </script>
 
 <div class="statistics">
@@ -46,6 +49,21 @@ import { generateAvatarURL } from '../app/helpers';
                     </div>
                 {/each}
             </div>
+        </div>
+        <div class="hours card">
+            <h1>Your Discord Hours</h1>
+            <p>{ hoursLabels[$data.hoursValues.indexOf(Math.max(...$data.hoursValues))] } is definitely your favorite hour to chat with your friends!</p>
+            <Chart data={{
+                labels: hoursLabels,
+                datasets: [
+                    {
+                        name: 'Messages',
+                        values: $data.hoursValues
+                    }
+                ]
+            }} axisOptions="{{
+                xAxisMode: 'tick'
+            }}" type="bar" />
         </div>
     </div>
 </div>
@@ -145,6 +163,10 @@ import { generateAvatarURL } from '../app/helpers';
         }
         .card.top {
             grid-column: 1 / 6;
+        }
+        .card.hours {
+            grid-column: 6 / 12;
+            height: 400px;
         }
         .card.profile {
             grid-column: 1 / 4;

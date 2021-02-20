@@ -544,6 +544,11 @@ follow-redirects@^1.10.0:
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.13.2.tgz#dd73c8effc12728ba5cf4259d760ea5fb83e3147"
   integrity sha512-6mPTgLxYm3r6Bkkg0vNM0HTjfGrOEtsfbhagQvbxDEsEkpNhw582upBaoRZylzen6krEmxXJgt9Ju6HiI4O7BA==
 
+frappe-charts@^1.5.6:
+  version "1.5.6"
+  resolved "https://registry.npmjs.org/frappe-charts/-/frappe-charts-1.5.6.tgz#6fab528aaba659c1c171e6ea267a791b915f0ef0"
+  integrity sha512-1OWqF7ijDba+Nlei/CjXSORYlUm+/M0oeVOP3Yu7R2bLBDc5GYkFSHGVx13XavuCxDoOPEJZMRgRK6GUAuB8FQ==
+
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -1123,7 +1128,15 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte@^3.0.0:
+svelte-frappe-charts@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/svelte-frappe-charts/-/svelte-frappe-charts-1.5.0.tgz#16816ea830cff681c5cf6e310e0197426111c794"
+  integrity sha512-L1LxwlqgRI2RCrsuZsug3TisUkt94PGi4Kzx780UisVT0vhpTSU/hBhss6fKr/IThVYExrHRT+4I3pwsRdUa2g==
+  dependencies:
+    frappe-charts "^1.5.6"
+    svelte "^3.32.2"
+
+svelte@^3.0.0, svelte@^3.32.2:
   version "3.32.3"
   resolved "https://registry.npmjs.org/svelte/-/svelte-3.32.3.tgz#db0c50c65573ecffe4e2f4924e4862d8f9feda74"
   integrity sha512-5etu/wDwtewhnYO/631KKTjSmFrKohFLWNm1sWErVHXqGZ8eJLqrW0qivDSyYTcN8GbUqsR4LkIhftNFsjNehg==
