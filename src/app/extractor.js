@@ -72,7 +72,7 @@ export const extractData = async (entries) => {
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
     const pQueue = new PQueue({
-        concurrency: 4
+        concurrency: 1
     });
 
     channelsIDs.forEach((channelID) => {
