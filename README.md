@@ -1,8 +1,12 @@
-# Discord Data Package Explorer
+# [Discord Data Package Explorer](https://ddpe.netlify.app)
 
 ![Logo](./public/favicon.png)
 
 What is there **really** in your Discord Data package? And how can this data be useful? Discord Data Package Explorer does the job for you!
+
+## Example
+
+![Example](./example.png)
 
 ### Installation
 
