@@ -78,7 +78,7 @@ export const extractData = async (entries) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
-    await Promise.all(channelsIDs.map((channelID) => {
+    await Promise.all(channelsIDs.map((channelID, index) => {
         return new Promise((resolve) => {
 
             const channelDataPath = `messages/${channelID}/channel.json`;
@@ -102,6 +102,8 @@ export const extractData = async (entries) => {
                 });
                 resolve();
             });
+
+            if (index / 100 === parseInt(index / 100)) console.log(`[debug] Channel #${index} loaded.`);
 
         });
     }));
