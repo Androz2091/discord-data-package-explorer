@@ -70,25 +70,24 @@ export const extractData = async (entries) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
 
-    let done = 0;
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
             const channelDataPath = `messages/${channelID}/channel.json`;
             const channelMessagesPath = `messages/${channelID}/messages.csv`;
 
-            console.time('read contents');
+            console.time(`read contents ${channelID}`);
             Promise.all([
                 readFile(channelDataPath),
                 readFile(channelMessagesPath)
             ]).then(([ rawData, rawMessages ]) => {
-                console.timeEnd('read contents');
-                console.time('parse json');
+                console.timeEnd(`read contents ${channelID}`);
+                console.time(`parse json ${channelID}`);
                 const data = JSON.parse(rawData);
-                console.timeEnd('parse json');
-                console.time('parse csv');
+                console.timeEnd(`parse json ${channelID}`);
+                console.time(`parse csv ${channelID}`);
                 const messages = parseCSV(rawMessages);
-                console.timeEnd('parse csv');
+                console.timeEnd(`parse csv ${channelID}`);
                 const name = messagesIndex[data.id];
                 const isDM = data.recipients && data.recipients.length === 2;
                 const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
