@@ -1,4 +1,5 @@
 <script>
+import { fly } from 'svelte/transition';
 import { data } from "../app/store";
 import { generateAvatarURL } from '../app/helpers';
 import Chart from 'svelte-frappe-charts';
@@ -6,7 +7,7 @@ import Chart from 'svelte-frappe-charts';
 const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` : `${i-11}pm`);
 </script>
 
-<div class="statistics">
+<div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
     <div class="cards">
         <div class="welcome card">
             <h2>Hey, here is your extracted data! You can load another package by refreshing the page.</h2>
