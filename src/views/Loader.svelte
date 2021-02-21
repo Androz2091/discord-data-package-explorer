@@ -1,5 +1,5 @@
 <script>
-    import * as zip from '@zip.js/zip.js';
+    import jszip from 'jszip';
     import { loaded, data } from '../app/store';
     import { extractData } from '../app/extractor';
 
@@ -8,16 +8,15 @@
 
     function handleFile (file) {
         loading = true;
-        const reader = new zip.ZipReader(new zip.BlobReader(file));
-        reader.getEntries().then((entries) => {
-            const validPackage = entries.some((entry) => entry.filename === 'README.txt');
+        jszip.loadAsync(file).then((zip) => {
+            const validPackage = !!zip.files['README.txt'];
             if (!validPackage) {
                 error = true;
                 loading = false;
                 return;
             }
             const extractStartAt = Date.now();
-            extractData(entries).then((extractedData) => {
+            extractData(zip).then((extractedData) => {
                 loading = false;
                 data.set(extractedData)
                 loaded.set(true);

@@ -1,4 +1,3 @@
-import * as zip from '@zip.js/zip.js';
 import Papa from 'papaparse';
 import axios from 'axios';
 
@@ -39,7 +38,7 @@ const parseCSV = (input) => {
  * @param entries The ZIP file entries
  * @returns The extracted data
  */
-export const extractData = async (entries) => {
+export const extractData = async (zip) => {
 
     const extractedData = {
         user: null,
@@ -53,10 +52,8 @@ export const extractData = async (entries) => {
         favoriteWord: null
     };
 
-    // Get the entry from the name
-    const getFile = (name) => entries.find((entry) => entry.filename === name);
     // Read a file from its name
-    const readFile = (name) => getFile(name).getData(new zip.TextWriter());
+    const readFile = (name) => zip.files[name].async('text');
 
     // Parse and load current user informations
     console.log('[debug] Loading user info...');
@@ -68,7 +65,7 @@ export const extractData = async (entries) => {
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
-    const channelsIDs = entries.filter((entry) => messagesPathRegex.test(entry.filename)).map((entry) => entry.filename.match(messagesPathRegex)[1]);
+    const channelsIDs = Object.keys(zip.files).filter((entry) => messagesPathRegex.test(entry)).map((entry) => entry.match(messagesPathRegex)[1]);
 
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
