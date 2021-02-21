@@ -185,10 +185,10 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
         }
         .card.top-users {
             grid-column: 1 / 6;
+            grid-row: 3 / 5;
         }
         .card.hours {
             grid-column: 6 / 12;
-            height: 400px;
         }
         .card.profile {
             grid-column: 1 / 4;
