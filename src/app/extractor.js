@@ -76,10 +76,12 @@ export const extractData = async (entries) => {
             const channelDataPath = `messages/${channelID}/channel.json`;
             const channelMessagesPath = `messages/${channelID}/messages.csv`;
 
+            console.time(`Read content of ${channelID}`);
             Promise.all([
                 readFile(channelDataPath),
                 readFile(channelMessagesPath)
             ]).then(([ rawData, rawMessages ]) => {
+                console.timeEnd(`Read content of ${channelID}`);
                 const data = JSON.parse(rawData);
                 const messages = parseCSV(rawMessages);
                 const name = messagesIndex[data.id];
