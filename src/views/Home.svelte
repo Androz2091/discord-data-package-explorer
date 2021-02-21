@@ -17,7 +17,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` :
                 <img src="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }" alt="Avatar" />
             </div>
             <h1>
-                { $data.user.username }<small class="text-muted">#{ $data.user.discriminator }</small>
+                { $data.user.username }<small class="text-muted">#{ $data.user.discriminator.toString().padStart(4, "0") }</small>
             </h1>
         </div>
         <div class="messages-stats card">
