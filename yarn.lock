@@ -1191,6 +1191,11 @@ svelte-frappe-charts@^1.5.0:
     frappe-charts "^1.5.6"
     svelte "^3.32.2"
 
+svelte-simple-modal@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/svelte-simple-modal/-/svelte-simple-modal-0.8.1.tgz#cc48119e83a8ad728d2c39eb3231b08e8d14e19c"
+  integrity sha512-AGAMPPuQGm2+zJH5V7iTAMttnen6kNmXPCFPVg+9Vdn2U1npJWRzFHTxgJ35cD43yiZJFXruHWS6I2Xhy13Qeg==
+
 svelte@^3.0.0, svelte@^3.32.2:
   version "3.32.3"
   resolved "https://registry.npmjs.org/svelte/-/svelte-3.32.3.tgz"

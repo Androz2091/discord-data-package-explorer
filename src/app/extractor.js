@@ -49,7 +49,11 @@ export const extractData = async (zip) => {
         averageMessageCountPerDay: 0,
         totalSpent: 0,
         hoursValues: [],
-        favoriteWord: null
+        favoriteWord: null,
+        payments: {
+            total: 0,
+            list: ''
+        }
     };
 
     // Read a file from its name
@@ -58,6 +62,23 @@ export const extractData = async (zip) => {
     // Parse and load current user informations
     console.log('[debug] Loading user info...');
     extractedData.user = JSON.parse(await readFile('account/user.json'));
+    const hasPayments = extractedData.user.payments.length > 0;
+    if (hasPayments) {
+        extractedData.payments.total += extractedData.user.payments.map((p) => p.amount / 100).reduce((p, c) => p + c);
+        extractedData.payments.list += extractedData.user.payments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
+    }
+    const hasEntitlements = extractedData.user.entitlements.length > 0 && extractedData.user.entitlements.some((e) => e.type === 6 && e.gifter_user_id === extractedData.user.id);
+    if (hasEntitlements) {
+        const validEntitlements = extractedData.user.entitlements.filter((e) => e.type === 6&& e.gifter_user_id === extractedData.user.id);
+        const prices = {
+            'Nitro Classic Monthly': 4.99,
+            'Nitro Monthly': 9.99,
+            'Nitro Classic Yearly': 49.99,
+            'Nitro Yearly': 99.99
+        };
+        extractedData.payments.total += validEntitlements.map((e) => prices[e.subscription_plan.name]).reduce((p, c) => p + c);
+        extractedData.payments.list += validEntitlements.map((e) => `${e.subscription_plan.name} ($${prices[e.subscription_plan.name]})`).join('<br>');
+    }
     console.log('[debug] User info loaded.');
 
     // Parse and load channels
@@ -125,9 +146,6 @@ export const extractData = async (zip) => {
     for (let i = 1; i <= 24; i++) {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
     }
-
-    const paymentsAmount = extractedData.user.payments.map((p) => p.amount / 100);
-    extractedData.totalSpent = paymentsAmount.length === 0 ? 0 : paymentsAmount.reduce((p, c) => p + c);
 
     return extractedData;
 };
