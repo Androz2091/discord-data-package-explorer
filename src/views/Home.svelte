@@ -12,7 +12,7 @@ const showModal = (message) => {
     open(Modal, { message });
 };
 
-const hoursLabels = new Array(24).fill(0).map((v, i) => i+1 <= 12 ? `${i+1}am` : `${i-11}pm`);
+const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
 </script>
 
 <div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
