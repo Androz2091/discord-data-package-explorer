@@ -145,7 +145,7 @@ export const extractData = async (zip) => {
     extractedData.messageCount = extractedData.channels.map((c) => c.messages.length).reduce((p, c) => p + c);
     extractedData.averageMessageCountPerDay = parseInt(extractedData.messageCount / ((Date.now() - getCreatedTimestamp(extractedData.user.id)) / 24 / 60 / 60 / 1000));
 
-    for (let i = 1; i <= 24; i++) {
+    for (let i = 0; i < 24; i++) {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
     }
 
