@@ -41,4 +41,5 @@ if (isDemo) {
 }
 
 export const loaded = writable(loadedValue);
+export const loadTask = writable(null);
 export const data = writable(dataValue);

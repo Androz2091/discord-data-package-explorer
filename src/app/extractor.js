@@ -1,6 +1,7 @@
 import Papa from 'papaparse';
 import axios from 'axios';
 
+import { loadTask } from './store';
 import { getCreatedTimestamp, mostOccurences } from './helpers';
 
 /**
@@ -67,6 +68,7 @@ export const extractData = async (zip) => {
 
     // Parse and load current user informations
     console.log('[debug] Loading user info...');
+    loadTask.set('Loading user information...');
     extractedData.user = JSON.parse(await readFile('account/user.json'));
     const hasPayments = extractedData.user.payments.length > 0;
     if (hasPayments) {
@@ -91,6 +93,7 @@ export const extractData = async (zip) => {
 
     // Parse and load channels
     console.log('[debug] Loading channels...');
+    loadTask.set('Loading user messages...');
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
@@ -131,6 +134,7 @@ export const extractData = async (zip) => {
     extractedData.favoriteWord = mostOccurences(words);
 
     console.log('[debug] Fetching top DMs...');
+    loadTask.set('Loading user activity...');
     
     extractedData.topDMs = extractedData.channels
         .filter((channel) => channel.isDM)
@@ -147,6 +151,8 @@ export const extractData = async (zip) => {
     }));
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
+
+    loadTask.set('Calculating statistics...');
 
     extractedData.messageCount = extractedData.channels.map((c) => c.messages.length).reduce((p, c) => p + c);
     extractedData.averageMessageCountPerDay = parseInt(extractedData.messageCount / ((Date.now() - getCreatedTimestamp(extractedData.user.id)) / 24 / 60 / 60 / 1000));
