@@ -4,12 +4,18 @@ import axios from 'axios';
 import { getCreatedTimestamp, mostOccurences } from './helpers';
 
 /**
- * Fetch a user on Discord
+ * Fetch a user on Discord.
+ * This is necessary because sometimes we only have the user ID in the files.
  * @param userID The ID of the user to fetch
  */
 const fetchUser = async (userID) => {
-    const { data } = await axios(`https://diswho.androz2091.fr/user/${userID}`);
-    return data;
+    const res = await axios(`https://diswho.androz2091.fr/user/${userID}`).catch(() => {});
+    if (!res.data) return {
+        username: 'Unknown',
+        discriminator: '0000',
+        avatar: null
+    };
+    return res.data;
 };
 
 /**
