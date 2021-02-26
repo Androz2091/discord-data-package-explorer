@@ -75,20 +75,6 @@ export const extractData = async (zip) => {
         extractedData.payments.total += extractedData.user.payments.map((p) => p.amount / 100).reduce((p, c) => p + c);
         extractedData.payments.list += extractedData.user.payments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
     }
-    /*
-    const hasEntitlements = extractedData.user.entitlements.length > 0 && extractedData.user.entitlements.some((e) => e.type === 6 && e.gifter_user_id === extractedData.user.id);
-    if (hasEntitlements) {
-        const validEntitlements = extractedData.user.entitlements.filter((e) => e.type === 6&& e.gifter_user_id === extractedData.user.id);
-        const prices = {
-            'Nitro Classic Monthly': 4.99,
-            'Nitro Monthly': 9.99,
-            'Nitro Classic Yearly': 49.99,
-            'Nitro Yearly': 99.99
-        };
-        extractedData.payments.total += validEntitlements.map((e) => prices[e.subscription_plan.name]).reduce((p, c) => p + c);
-        extractedData.payments.list += validEntitlements.map((e) => `${e.subscription_plan.name} ($${prices[e.subscription_plan.name]})`).join('<br>');
-    }
-    */
     console.log('[debug] User info loaded.');
 
     // Parse and load channels
