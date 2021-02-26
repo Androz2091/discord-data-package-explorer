@@ -64,7 +64,7 @@ export const extractData = async (zip) => {
     };
 
     // Read a file from its name
-    const readFile = (name) => zip.files[name].async('text');
+    const readFile = (name) => zip.files[name] && zip.files[name].async('text');
 
     // Parse and load current user informations
     console.log('[debug] Loading user info...');
@@ -95,6 +95,12 @@ export const extractData = async (zip) => {
                 readFile(channelDataPath),
                 readFile(channelMessagesPath)
             ]).then(([ rawData, rawMessages ]) => {
+
+                if (!rawData || !rawMessages) {
+                    console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
+                    return;
+                }
+
                 const data = JSON.parse(rawData);
                 const messages = parseCSV(rawMessages);
                 const name = messagesIndex[data.id];
