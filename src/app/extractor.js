@@ -72,8 +72,8 @@ export const extractData = async (zip) => {
     extractedData.user = JSON.parse(await readFile('account/user.json'));
     const hasPayments = extractedData.user.payments.length > 0;
     if (hasPayments) {
-        extractedData.payments.total += extractedData.user.payments.map((p) => p.amount / 100).reduce((p, c) => p + c);
-        extractedData.payments.list += extractedData.user.payments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
+        extractedData.payments.total += extractedData.user.payments.filter((p) => p.status == 1).map((p) => p.amount / 100).reduce((p, c) => p + c);
+        extractedData.payments.list += extractedData.user.payments.filter((p) => p.status == 1).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
     }
     console.log('[debug] User info loaded.');
 
