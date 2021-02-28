@@ -56,7 +56,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                 <h3 style="margin-left: 10px;">Your favorite words are <span class="text-discord">
                     {#each $data.favoriteWords as favoriteWord, index}
-                        <SvelteTooltip tip="Used {favoriteWord.count} times" bottom color="#000000">{favoriteWord.word}</SvelteTooltip>{ (index+1 < $data.favoriteWords.length) ? ', ' : '' }
+                        <SvelteTooltip tip="Used {favoriteWord.count} times" bottom color="#000000">{favoriteWord.word}{ (index+1 < $data.favoriteWords.length) ? ', ' : '' }</SvelteTooltip>
                     {/each}
                     </span>
                 </h3>
