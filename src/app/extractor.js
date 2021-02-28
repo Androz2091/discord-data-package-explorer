@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import axios from 'axios';
 
 import { loadTask } from './store';
-import { getCreatedTimestamp, mostOccurences } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 
 /**
  * Fetch a user on Discord.
@@ -123,7 +123,7 @@ export const extractData = async (zip) => {
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
     const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
-    extractedData.favoriteWords = mostOccurences(words, true).slice(0, 10);
+    extractedData.favoriteWords = getFavoriteWords(words);
 
     console.log('[debug] Fetching top DMs...');
     loadTask.set('Loading user activity...');
