@@ -1196,6 +1196,13 @@ svelte-simple-modal@^0.8.1:
   resolved "https://registry.yarnpkg.com/svelte-simple-modal/-/svelte-simple-modal-0.8.1.tgz#cc48119e83a8ad728d2c39eb3231b08e8d14e19c"
   integrity sha512-AGAMPPuQGm2+zJH5V7iTAMttnen6kNmXPCFPVg+9Vdn2U1npJWRzFHTxgJ35cD43yiZJFXruHWS6I2Xhy13Qeg==
 
+svelte-tooltip@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/svelte-tooltip/-/svelte-tooltip-1.2.0.tgz#a9cf2dfcbcae0c1446afe505e8ccdb04c75fa6e6"
+  integrity sha512-FmaiNoCGkXBqF5AAscv+NdLtVIhywpqcaKw7mP1IksLJPMW3QaOPB8G23CHPQWde0J3A0NdCDQ3DI2isWGsDbg==
+  dependencies:
+    sirv-cli "^0.4.4"
+
 svelte@^3.0.0, svelte@^3.32.2:
   version "3.32.3"
   resolved "https://registry.npmjs.org/svelte/-/svelte-3.32.3.tgz"
