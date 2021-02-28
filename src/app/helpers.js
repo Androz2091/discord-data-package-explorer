@@ -26,7 +26,7 @@ export const getFavoriteWords = (words) => {
         else ++object[item];
     }
     
-    for (let p in object) words[words.length] = p;
+    for (let p in object) array[array.length] = p;
     
     return array.sort((a, b) => object[b] - object[a]).map((word) => ({ word: word, count: object[word] })).slice(0, 10);
 };
