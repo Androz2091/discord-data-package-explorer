@@ -53,7 +53,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
             </div>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                <h3 style="margin-left: 10px;">Your favorite word is <span class="text-discord">{ $data.favoriteWord }</span></h3>
+                <h3 style="margin-left: 10px;">Your favorite words are <span class="text-discord">{@html $data.favoriteWords.map((wordObject) => `<span title="${wordObject.count} times used">${wordObject.word}</span>`).join(', ') }.</span></h3>
             </div>
         </div>
         <div class="top-users card">

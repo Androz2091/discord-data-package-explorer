@@ -32,7 +32,7 @@ if (isDemo) {
         messageCount: 0,
         averageMessageCountPerDay: 0,
         hoursValues: new Array(24).fill(0).map(() => Math.floor(Math.random() * 300) + 1),
-        favoriteWord: 'Androz',
+        favoriteWords: [],
         payments: {
             total: 500,
             list: 'Super Mega Nitro ($500)'
