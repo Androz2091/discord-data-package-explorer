@@ -42,10 +42,10 @@ export const mostOccurences = (arr, words = false) => {
             else ++object[item];
         }
     
-        for(var p in object) array[array.length] = p;
+        for (var p in object) array[array.length] = p;
     
         return array.sort((a, b) => {
             return object[b] - object[a];
-        });
+        }).map((word) => { return { word: word, count: object[word] } });
     }
 };
