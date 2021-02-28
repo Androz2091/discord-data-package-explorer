@@ -123,7 +123,7 @@ export const extractData = async (zip) => {
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
     const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
-    extractedData.favoriteWords = mostOccurences(words, true).filter((word) => !['!', '?', '/', '<', '@'].includes(word[0])).slice(0, 10).join(', ');
+    extractedData.favoriteWords = mostOccurences(words, true).slice(0, 10).join(', ');
 
     console.log('[debug] Fetching top DMs...');
     loadTask.set('Loading user activity...');
