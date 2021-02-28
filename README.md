@@ -23,12 +23,3 @@ Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, an
 * Clone the repository.
 * Install the dependencies using `npm install` or `yarn install`.
 * Start the app using `npm run dev` or `yarn dev`!
-
-### ZIP Library
-
-I decided to use JSZip instead of zip.js. Some benchmarks with the same package file:
-
-| **Name** | **Time to read files** |
-|----------|----------|
-| JSZip | **8 seconds** |
-| Zip.js | 47 seconds |
