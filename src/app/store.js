@@ -54,7 +54,7 @@ if (isDemo) {
         joinCallCount: randomNumber(20, 30),
         addReactionCount: randomNumber(100, 200),
         messageEditedCount: randomNumber(50, 70),
-        sendMessageCount: randomNumber(200, 600),
+        sentMessageCount: randomNumber(200, 600),
         slashCommandUsedCount: randomNumber(10, 20)
     };
 }
