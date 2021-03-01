@@ -6,7 +6,6 @@ import Chart from 'svelte-frappe-charts';
 import Modal from '../components/Modal.svelte';
 import { getContext } from 'svelte';
 import SvelteTooltip from 'svelte-tooltip';
-import { listen } from 'svelte/internal';
 
 const { open } = getContext('simple-modal');
 
