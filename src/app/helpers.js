@@ -38,7 +38,7 @@ export const getGitHubContributors = () => {
         axios.get('https://api.github.com/repos/Androz2091/discord-data-package-explorer/contributors')
         .then((response) => {
 
-            resolve(response.data);
+            resolve(response.data.map((user) => { return { username: user.login, avatar: user.avatar_url, url: user.html_url } }));
         }).catch((error) => {
             console.log(error);
 
