@@ -13,8 +13,6 @@ const showModal = (message) => {
     open(Modal, { message });
 };
 
-getGitHubContributors().then((users) => console.log(users)).catch(console.log);
-
 const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
 </script>
 
