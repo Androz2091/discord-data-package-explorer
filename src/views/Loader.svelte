@@ -1,29 +1,47 @@
 <script>
-    import jszip from 'jszip';
+    import { Unzip, AsyncUnzipInflate, DecodeUTF8 } from 'fflate';
+
     import { loaded, loadTask, data } from '../app/store';
     import { extractData } from '../app/extractor';
 
     let loading = false;
     let error = false;
 
-    function handleFile (file) {
+    async function handleFile (file) {
         loading = true;
-        jszip.loadAsync(file).then((zip) => {
-            const validPackage = !!zip.files['README.txt'];
-            if (!validPackage) {
-                error = true;
-                loading = false;
-                return;
+
+        const uz = new Unzip();
+        uz.register(AsyncUnzipInflate);
+
+        const files = [];
+        uz.onfile = (f) => files.push(f);
+
+        const reader = file.stream().getReader();
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                uz.push(new Uint8Array(0), true);
+                break;
             }
-            const extractStartAt = Date.now();
-            extractData(zip).then((extractedData) => {
-                loading = false;
-                data.set(extractedData)
-                loaded.set(true);
-                loadTask.set(null);
-                console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
-            });
-        })
+            for (let i = 0; i < value.length; i += (65536*2)) {
+                uz.push(value.subarray(i, i + (65536*2)));
+            }
+        }
+
+        const validPackage = files.some((file) => file.name === 'README.txt');
+        if (!validPackage) {
+            error = true;
+            loading = false;
+            return;
+        }
+        const extractStartAt = Date.now();
+        extractData(files).then((extractedData) => {
+            loading = false;
+            data.set(extractedData)
+            loaded.set(true);
+            loadTask.set(null);
+            console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
+        });
     }
 
     function handleDragOver (event) {
