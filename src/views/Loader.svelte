@@ -17,27 +17,17 @@
 
         uz.onfile = (f) => {
             if (f.name === 'activity/analytics/events-2021-00000-of-00001.json') {
-                const parser = clarinet.parser();
-                parser.write
                 console.time('read analytics');
-                console.time('parse json');
-                let obj = 0;
-                parser.onopenobject = (key) => {
-                    obj++;
-                    if (obj === 870907) {
-                        console.timeEnd('parse json');
-                    }
-                }
-                parser.onend = () => {
-                    console.log(obj);
-                    console.timeEnd('read analytics');
-                }
                 console.time('read file');
                 const decoder = new DecodeUTF8();
+                let permRequested = 0;
                 f.ondata = (err, data, final) => decoder.push(data, final);
                 decoder.ondata = (str, final) => {
-                    parser.write(str);
-                    if (final) console.timeEnd('read file');
+                    if (str.includes('add_reaction')) permRequested++;
+                    if (final) {
+                        console.timeEnd('read file');
+                        console.log(permRequested)
+                    }
                 }
                 f.start();
             }
