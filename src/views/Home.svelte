@@ -37,7 +37,6 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
             </h1>
         </div>
         <div class="messages-stats card">
-            <h1 style="margin-top: 10px; margin-bottom: 10px;">Messages Fun Facts</h1>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                 <h3 style="margin-left: 10px;">You talked to <span class="text-discord">{ $data.channels.filter((c) => c.isDM).length.toLocaleString('en-US') }</span> distinct users</h3>
@@ -48,9 +47,13 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 <h3 style="margin-left: 10px;">You sent <span class="text-discord">{ $data.messageCount.toLocaleString('en-US') }</span> messages on Discord</h3>
             </div>
             <small>That's about { $data.averageMessageCountPerDay.toLocaleString('en-US') } messages per day!</small>
+            <div class="fun-fact">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <h3 style="margin-left: 10px;">You opened Discord <span class="text-discord">{ $data.openCount.toLocaleString('en-US') }</span> times</h3>
+            </div>
+            <small>You are checking Discord ~{ $data.averageOpenCountPerDay.toLocaleString('en-US') } times per day!</small>
         </div>
         <div class="other-stats card">
-            <h1 style="margin-top: 10px; margin-bottom: 10px;">Some other stats</h1>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3 style="margin-left: 10px;">You spent <span class="text-discord" on:click="{showModal($data.payments.list)}">${ parseInt($data.payments.total).toLocaleString('en-US') }</span> on Discord</h3>
@@ -68,6 +71,11 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                     </span>
                 </h3>
             </div>
+            <div class="fun-fact">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <h3 style="margin-left: 10px;">You clicked on <span class="text-discord">{ $data.notificationCount.toLocaleString('en-US') }</span> Discord notifications</h3>
+            </div>
+            <small>If I were you I would set my status to DND right now...</small>
         </div>
         <div class="top-users card">
             <h1>Top Users</h1>

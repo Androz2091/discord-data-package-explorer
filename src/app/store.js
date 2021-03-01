@@ -45,7 +45,10 @@ if (isDemo) {
         payments: {
             total: 500,
             list: 'Super Mega Nitro ($500)'
-        }
+        },
+        openCount: 1000,
+        averageOpenCountPerDay: 10,
+        notificationCount: 4000
     };
 }
 

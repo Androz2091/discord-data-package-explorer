@@ -42,6 +42,10 @@ const parseCSV = (input) => {
         }));
 };
 
+const perDay = (value, userID) => {
+    return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
+};
+
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
         const eventsOccurrences = { ...events };
@@ -72,7 +76,10 @@ const readAnalyticsFile = (file) => {
                 prevChkEnd = str.slice(-eventName.length);
             }
             if (final) {
-                resolve(eventsOccurrences);
+                resolve({
+                    openCount: eventsOccurrences.appOpened,
+                    notificationCount: eventsOccurrences.notificationClicked
+                });
             }
         };
         file.start();
@@ -202,14 +209,17 @@ export const extractData = async (files) => {
     loadTask.set('Calculating statistics...');
     console.log('[debug] Fetching activity...');
 
-    await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    extractedData.openCount = statistics.openCount;
+    extractedData.averageOpenCountPerDay = perDay(statistics.openCount, extractedData.user.id);
+    extractedData.notificationCount = statistics.notificationCount; 
 
     console.log('[debug] Activity fetched...');
 
     loadTask.set('Calculating statistics...');
 
     extractedData.messageCount = extractedData.channels.map((c) => c.messages.length).reduce((p, c) => p + c);
-    extractedData.averageMessageCountPerDay = parseInt(extractedData.messageCount / ((Date.now() - getCreatedTimestamp(extractedData.user.id)) / 24 / 60 / 60 / 1000));
+    extractedData.averageMessageCountPerDay = perDay(extractedData.messageCount, extractedData.user.id);
 
     for (let i = 0; i < 24; i++) {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
