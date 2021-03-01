@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { loadTask } from './store';
 import { getCreatedTimestamp, getFavoriteWords } from './helpers';
+import { DecodeUTF8 } from 'fflate';
 
 /**
  * Fetch a user on Discord.
@@ -42,10 +43,10 @@ const parseCSV = (input) => {
 
 /**
  * Extract the data from the package file.
- * @param entries The ZIP file entries
+ * @param files The files in the package
  * @returns The extracted data
  */
-export const extractData = async (zip) => {
+export const extractData = async (files) => {
 
     const extractedData = {
         user: null,
@@ -63,8 +64,24 @@ export const extractData = async (zip) => {
         }
     };
 
+    const getFile = (name) => files.find((file) => file.name === name);
     // Read a file from its name
-    const readFile = (name) => zip.files[name] && zip.files[name].async('text');
+    const readFile = (name) => {
+        return new Promise((resolve) => {
+            const file = getFile(name);
+            if (!file) return resolve(null);
+            const fileContent = [];
+            const decoder = new DecodeUTF8();
+            file.ondata = (err, data, final) => {
+                decoder.push(data, final);
+            };
+            decoder.ondata = (str, final) => {
+                fileContent.push(str);
+                if (final) resolve(fileContent.join(''));
+            };
+            file.start();
+        });
+    };
 
     // Parse and load current user informations
     console.log('[debug] Loading user info...');
@@ -83,7 +100,7 @@ export const extractData = async (zip) => {
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
-    const channelsIDs = Object.keys(zip.files).filter((entry) => messagesPathRegex.test(entry)).map((entry) => entry.match(messagesPathRegex)[1]);
+    const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
 
     console.time('read');
     await Promise.all(channelsIDs.map((channelID) => {

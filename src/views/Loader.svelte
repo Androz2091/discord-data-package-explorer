@@ -1,6 +1,5 @@
 <script>
     import { Unzip, AsyncUnzipInflate, DecodeUTF8 } from 'fflate';
-    import clarinet from 'clarinet';
 
     import { loaded, loadTask, data } from '../app/store';
     import { extractData } from '../app/extractor';
@@ -10,41 +9,13 @@
 
     async function handleFile (file) {
         loading = true;
+
         const uz = new Unzip();
         uz.register(AsyncUnzipInflate);
 
-        console.time('read account');
+        const files = [];
+        uz.onfile = (f) => files.push(f);
 
-        uz.onfile = (f) => {
-            if (f.name === 'activity/analytics/events-2021-00000-of-00001.json') {
-                console.time('read analytics');
-                console.time('read file');
-                const decoder = new DecodeUTF8();
-                let permRequested = 0;
-                f.ondata = (err, data, final) => decoder.push(data, final);
-                decoder.ondata = (str, final) => {
-                    if (str.includes('add_reaction')) permRequested++;
-                    if (final) {
-                        console.timeEnd('read file');
-                        console.log(permRequested)
-                    }
-                }
-                f.start();
-            }
-        }
-
-        /*
-        const reader = file.stream().getReader();
-        while (true) {
-            const { done, value } = await reader.read();
-                if (done) {
-                    uz.push(new Uint8Array(0), true);
-                    break;
-                }
-                for (let i = 0; i < value.length; i += 65536) {
-                uz.push(value.subarray(i, i + 65536));
-            }
-        }*/
         const reader = file.stream().getReader();
         while (true) {
             const { done, value } = await reader.read();
@@ -57,22 +28,20 @@
             }
         }
 
-        /*jszip.loadAsync(file).then((zip) => {
-            const validPackage = !!zip.files['README.txt'];
-            if (!validPackage) {
-                error = true;
-                loading = false;
-                return;
-            }
-            const extractStartAt = Date.now();
-            extractData(zip).then((extractedData) => {
-                loading = false;
-                data.set(extractedData)
-                loaded.set(true);
-                loadTask.set(null);
-                console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
-            });
-        })*/
+        const validPackage = files.some((file) => file.name === 'README.txt');
+        if (!validPackage) {
+            error = true;
+            loading = false;
+            return;
+        }
+        const extractStartAt = Date.now();
+        extractData(files).then((extractedData) => {
+            loading = false;
+            data.set(extractedData)
+            loaded.set(true);
+            loadTask.set(null);
+            console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
+        });
     }
 
     function handleDragOver (event) {
