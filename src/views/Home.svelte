@@ -107,7 +107,9 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 <p>...</p>
             {:then users}
                 {#each users as user}
-                    <div class="contributors-wrapper-item svelte-1it6haw" style="background-image: url('{user.avatar}');"></div>
+                    <SvelteTooltip tip="{user.username}" bottom color="#000000">
+                        <div class="contributors-wrapper-item svelte-1it6haw" style="background-image: url('{user.avatar}');"></div>
+                    </SvelteTooltip>
                 {/each}
             {/await}
         </div>
