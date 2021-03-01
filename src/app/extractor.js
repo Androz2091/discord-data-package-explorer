@@ -62,7 +62,7 @@ const readAnalyticsFile = (file) => {
                     const ind = str.indexOf(eventName);
                     if (ind == -1) break;
                     str = str.slice(ind + eventName.length);
-                    eventsOccurrences[eventName]++;
+                    eventsOccurrences[event]++;
                 }
                 prevChkEnd = str.slice(-eventName.length);
             }
