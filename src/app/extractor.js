@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import axios from 'axios';
 
-import { loadTask } from './store';
+import { loadEstimatedTime, loadTask } from './store';
 import { getCreatedTimestamp, getFavoriteWords, events } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
@@ -46,10 +46,15 @@ const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
         const eventsOccurrences = { ...events };
         const decoder = new DecodeUTF8();
+        let startAt = Date.now();
         let bytesRead = 0;
         file.ondata = (_err, data, final) => {
             bytesRead += data.length;
             loadTask.set(`Loading user statistics... ${parseInt(bytesRead / file.originalSize * 100)}%`);
+            const remainingBytes = file.originalSize-bytesRead;
+            const timeToReadByte = (Date.now()-startAt) / bytesRead;
+            const remainingTime = parseInt(remainingBytes * timeToReadByte / 1000);
+            loadEstimatedTime.set(`Estimated time: ${remainingTime+1} second${remainingTime+1 === 1 ? '' : 's'}`);
             decoder.push(data, final);
         };
         let prevChkEnd = '';

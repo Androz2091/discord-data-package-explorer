@@ -91,7 +91,7 @@ export const events = {
     activityUpdated: 0,
     //    paymentSourceAdded: 0,
     //    premiumMarketingPageViewed: 0,
-    oauth2AuthorizeViewed: 0,
+    //    oauth2AuthorizeViewed: 0,
     //    streamReportProblem: 0,
     guildRoleUpdated: 0,
     externalDynamicLinkReceived: 0,
