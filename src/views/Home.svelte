@@ -6,6 +6,7 @@ import Chart from 'svelte-frappe-charts';
 import Modal from '../components/Modal.svelte';
 import { getContext } from 'svelte';
 import SvelteTooltip from 'svelte-tooltip';
+import { listen } from 'svelte/internal';
 
 const { open } = getContext('simple-modal');
 
@@ -46,7 +47,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
             <h1 style="margin-top: 10px; margin-bottom: 10px;">Some other stats</h1>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <h3 style="margin-left: 10px;">You spent <span class="text-discord" on:click="{showModal($data.payments.list)}">${ parseInt($data.payments.total).toLocaleString('en-US') }</span> on Discord</h3>
+                <h3 style="margin-left: 10px;">You spent <span class="text-discord" on:click="{ $data.payments.list.length ? showModal($data.payments.list) : undefined }">${ parseInt($data.payments.total).toLocaleString('en-US') }</span> on Discord</h3>
             </div>
             <div class="fun-fact">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>
