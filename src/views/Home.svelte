@@ -1,7 +1,7 @@
 <script>
 import { fly } from 'svelte/transition';
 import { data } from "../app/store";
-import { generateAvatarURL } from '../app/helpers';
+import { generateAvatarURL, getGitHubContributors } from '../app/helpers';
 import Chart from 'svelte-frappe-charts';
 import Modal from '../components/Modal.svelte';
 import { getContext } from 'svelte';
@@ -12,6 +12,8 @@ const { open } = getContext('simple-modal');
 const showModal = (message) => {
     open(Modal, { message });
 };
+
+getGitHubContributors().then((users) => console.log(users)).catch(console.log);
 
 const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
 </script>
@@ -96,6 +98,20 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
             }}" type="bar" />
         </div>
     </div>
+    <div class="contributors-card">
+        <h2 style="margin-top: 10px; margin-bottom: 10px;">Project contributors</h2>
+        <p>These are all of the people who helped create this project!</p>
+        
+        <div class="contributors-wrapper svelte-1it6haw" >
+            {#await getGitHubContributors()}
+                <p>...</p>
+            {:then users}
+                {#each users as user}
+                    <div class="contributors-wrapper-item svelte-1it6haw" style="background-image: url('{user.avatar}');"></div>
+                {/each}
+            {/await}
+        </div>
+    </div>
 </div>
 
 <style>
@@ -178,6 +194,46 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
         margin-top: 20px;
         border-radius: 50%;
         height: 128px;
+    }
+    .contributors-card {
+        width: 350px;
+        min-height: 50px;
+        height: auto;
+        
+        margin-top: 25px;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 15px;
+
+        border-radius: 10px;
+        background-color: #202225;
+    }
+    .contributors-wrapper {
+        width: 350px;
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+
+        margin-top: 5px;
+
+        border-radius: 10px;
+    }
+    .contributors-wrapper-item {
+        width: 50px;
+        height: 50px;
+        
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        margin-left: 5px;
+
+        border-radius: 100%;
+        background-color: #373c42;
+        background-size: contain;
+        cursor: pointer;
     }
     @media screen and (max-width: 600px){
         .avatar img {
