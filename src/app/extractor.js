@@ -78,7 +78,13 @@ const readAnalyticsFile = (file) => {
             if (final) {
                 resolve({
                     openCount: eventsOccurrences.appOpened,
-                    notificationCount: eventsOccurrences.notificationClicked
+                    notificationCount: eventsOccurrences.notificationClicked,
+                    joinVoiceChannelCount: eventsOccurrences.joinVoiceChannel,
+                    joinCallCount: eventsOccurrences.joinCall,
+                    addReactionCount: eventsOccurrences.addReaction,
+                    messageEditedCount: eventsOccurrences.messageEdited,
+                    sendMessageCount: eventsOccurrences.sendMessage,
+                    slashCommandUsedCount: eventsOccurrences.slashCommandUsed
                 });
             }
         };
@@ -212,7 +218,13 @@ export const extractData = async (files) => {
     const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
     extractedData.openCount = statistics.openCount;
     extractedData.averageOpenCountPerDay = perDay(statistics.openCount, extractedData.user.id);
-    extractedData.notificationCount = statistics.notificationCount; 
+    extractedData.notificationCount = statistics.notificationCount;
+    extractedData.joinVoiceChannelCount = statistics.joinVoiceChannelCount; 
+    extractedData.joinCallCount = statistics.joinCallCount;
+    extractedData.addReactionCount = statistics.addReactionCount;
+    extractedData.messageEditedCount = statistics.messageEditedCount;
+    extractedData.sendMessageCount = statistics.sendMessageCount;
+    extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount; 
 
     console.log('[debug] Activity fetched...');
 
