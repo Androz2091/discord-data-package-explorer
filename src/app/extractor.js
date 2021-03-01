@@ -85,6 +85,7 @@ export const extractData = async (zip) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = Object.keys(zip.files).filter((entry) => messagesPathRegex.test(entry)).map((entry) => entry.match(messagesPathRegex)[1]);
 
+    console.time('read');
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
@@ -119,6 +120,7 @@ export const extractData = async (zip) => {
 
         });
     }));
+    console.timeEnd('read');
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 

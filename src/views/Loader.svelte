@@ -1,14 +1,54 @@
 <script>
-    import jszip from 'jszip';
+    import { Unzip, AsyncUnzipInflate, DecodeUTF8 } from 'fflate';
+
     import { loaded, loadTask, data } from '../app/store';
     import { extractData } from '../app/extractor';
 
     let loading = false;
     let error = false;
 
-    function handleFile (file) {
+    async function handleFile (file) {
         loading = true;
-        jszip.loadAsync(file).then((zip) => {
+        const uz = new Unzip();
+        uz.register(AsyncUnzipInflate);
+
+        uz.onfile = (f) => {
+            console.log(f.name);
+            if (f.name === 'README.txt') {
+                const decoder = new DecodeUTF8();
+                f.ondata = (err, data, final) => decoder.push(data, final)
+                decoder.ondata = (str, final) => {
+                    console.log(f.name, str);
+                }
+                f.start();
+            }
+        }
+
+        /*
+        const reader = file.stream().getReader();
+        while (true) {
+            const { done, value } = await reader.read();
+                if (done) {
+                    uz.push(new Uint8Array(0), true);
+                    break;
+                }
+                for (let i = 0; i < value.length; i += 65536) {
+                uz.push(value.subarray(i, i + 65536));
+            }
+        }*/
+        const reader = file.stream().getReader();
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                uz.push(new Uint8Array(0), true);
+                break;
+            }
+            for (let i = 0; i < value.length; i += 65536) {
+                uz.push(value.subarray(i, i + 65536));
+            }
+        }
+
+        /*jszip.loadAsync(file).then((zip) => {
             const validPackage = !!zip.files['README.txt'];
             if (!validPackage) {
                 error = true;
@@ -23,7 +63,7 @@
                 loadTask.set(null);
                 console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
             });
-        })
+        })*/
     }
 
     function handleDragOver (event) {
