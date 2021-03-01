@@ -111,6 +111,12 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                         </a>
                     </SvelteTooltip>
                 {/each}
+            {:catch users}
+                <SvelteTooltip tip="Androz2091" bottom color="#000000">
+                    <a href="https://github.com/Androz2091">
+                        <div class="contributors-wrapper-item svelte-1it6haw" style="background-image: url('https://avatars.githubusercontent.com/u/42497995?s=460&u=86b6310688c5e05140c6d12902d878cacdcf93db&v=4');"></div>
+                    </a>
+                </SvelteTooltip>
             {/await}
         </div>
     </div>
