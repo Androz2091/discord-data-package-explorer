@@ -2,8 +2,9 @@ import Papa from 'papaparse';
 import axios from 'axios';
 
 import { loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords, events } from './helpers';
 import { DecodeUTF8 } from 'fflate';
+import { snakeCase } from 'snake-case';
 
 /**
  * Fetch a user on Discord.
@@ -39,6 +40,36 @@ const parseCSV = (input) => {
             // content: m.Contents,
             // attachments: m.Attachments
         }));
+};
+
+const readAnalyticsFile = (file) => {
+    return new Promise((resolve) => {
+        const eventsOccurrences = { ...events };
+        const decoder = new DecodeUTF8();
+        let bytesRead = 0;
+        file.ondata = (_err, data, final) => {
+            bytesRead += data.length;
+            loadTask.set(`Loading user statistics... ${parseInt(bytesRead / file.originalSize * 100)}%`);
+            decoder.push(data, final);
+        };
+        let prevChkEnd = '';
+        decoder.ondata = (str, final) => {
+            str = prevChkEnd + str;
+            for (let event of Object.keys(events)) {
+                const eventName = snakeCase(event);
+                // eslint-disable-next-line no-constant-condition
+                while (true) {
+                    const ind = str.indexOf(eventName);
+                    if (ind == -1) break;
+                    str = str.slice(ind + eventName.length);
+                    eventsOccurrences[event]++;
+                }
+                prevChkEnd = str.slice(-eventName.length);
+            }
+            if (final) resolve(eventsOccurrences);
+        };
+        file.start();
+    });
 };
 
 /**
@@ -160,6 +191,13 @@ export const extractData = async (files) => {
     }));
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
+
+    loadTask.set('Calculating statistics...');
+    console.log('[debug] Fetching activity...');
+
+    await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+
+    console.log('[debug] Activity fetched...');
 
     loadTask.set('Calculating statistics...');
 
