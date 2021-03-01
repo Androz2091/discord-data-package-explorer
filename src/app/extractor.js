@@ -102,7 +102,6 @@ export const extractData = async (files) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
 
-    console.time('read');
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
@@ -137,7 +136,6 @@ export const extractData = async (files) => {
 
         });
     }));
-    console.timeEnd('read');
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
