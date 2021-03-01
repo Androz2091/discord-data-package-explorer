@@ -10,27 +10,11 @@
     async function handleFile (file) {
         loading = true;
 
-        const readFile = (fileToRead) => {
-            const fileContent = [];
-            const decoder = new DecodeUTF8();
-            fileToRead.ondata = (err, data, final) => {
-                decoder.push(data, final);
-            };
-            decoder.ondata = (str, final) => {
-                fileContent.push(str);
-                if (final) console.log(fileContent.join(''));
-            };
-            fileToRead.start()
-        }
-
         const uz = new Unzip();
         uz.register(AsyncUnzipInflate);
 
         const files = [];
-        uz.onfile = (f) => {
-            files.push(f);
-            if (f.name === 'account/user.json') readFile(f)
-        }
+        uz.onfile = (f) => files.push(f);
 
         const reader = file.stream().getReader();
         while (true) {
@@ -39,21 +23,10 @@
                 uz.push(new Uint8Array(0), true);
                 break;
             }
-            for (let i = 0; i < value.length; i += 65536) {
-                uz.push(value.subarray(i, i + 65536));
+            for (let i = 0; i < value.length; i += (65536*2)) {
+                uz.push(value.subarray(i, i + (65536*2)));
             }
         }
-
-        const userFile = files.find((file) => file.name === 'account/user.json');
-        //readFile(userFile); // throws the following error:
-/*
-browser.js:2281 Uncaught (in promise) TypeError: Cannot read property '0' of null
-    at Object.start (browser.js:2281)
-    at readFile (Loader.svelte:23)
-    at handleFile (Loader.svelte:47)
-*/
-
-        return;
 
         const validPackage = files.some((file) => file.name === 'README.txt');
         if (!validPackage) {
