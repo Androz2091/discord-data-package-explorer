@@ -102,6 +102,11 @@
   dependencies:
     "@types/node" "*"
 
+"@zerodevx/svelte-toast@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.npmjs.org/@zerodevx/svelte-toast/-/svelte-toast-0.1.4.tgz#fc69930685dd9cdf0d82132fd5f5da7aa35908d3"
+  integrity sha512-UYtwgH0CISHE1UNpQi/1hvpFSWhjpvzSSDNPsCc5PTsCeW1g7PBEe+lnOMe1iSYiqtRx5R5gpDxMyj+9KH9Vjw==
+
 acorn-jsx@^5.3.1:
   version "5.3.1"
   resolved "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.3.1.tgz"

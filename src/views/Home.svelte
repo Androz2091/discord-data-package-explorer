@@ -4,8 +4,18 @@ import { data } from "../app/store";
 import { generateAvatarURL } from '../app/helpers';
 import Chart from 'svelte-frappe-charts';
 import Modal from '../components/Modal.svelte';
-import { getContext } from 'svelte';
-import SvelteTooltip from 'svelte-tooltip';
+import { getContext, onMount } from 'svelte';
+import SvelteTooltip from 'svelte-tooltip'
+import { toast } from '@zerodevx/svelte-toast';
+
+onMount(() => {
+    toast.push('Your data has been loaded!', {
+        theme: {
+            '--toastBackground': '#48BB78',
+            '--toastProgressBackground': '#2F855A'
+        }
+    });
+});
 
 const { open } = getContext('simple-modal');
 
@@ -18,9 +28,6 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
 
 <div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
     <div class="cards">
-        <div class="welcome card">
-            <h2>Hey, here is your extracted data! You can load another package by refreshing the page.</h2>
-        </div>
         <div class="profile card">
             <div class="avatar">
                 <img src="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }" alt="Avatar" />
@@ -188,9 +195,6 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
         .cards {
             grid-template-columns: repeat(12, 1fr);
         }
-        .card.welcome {
-            grid-column: 1 / 12;
-        }
         .card.messages-stats {
             grid-column: 4 / 8;
         }
@@ -199,7 +203,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
         }
         .card.top-users {
             grid-column: 1 / 6;
-            grid-row: 3 / 5;
+            grid-row: 2 / 5;
         }
         .card.hours {
             grid-column: 6 / 12;

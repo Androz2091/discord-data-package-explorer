@@ -19,6 +19,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "@zerodevx/svelte-toast": "^0.1.4",
     "axios": "^0.21.1",
     "fflate": "^0.6.7",
     "papaparse": "^5.3.0",

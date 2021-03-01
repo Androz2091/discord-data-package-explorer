@@ -5,6 +5,12 @@
 	import Loader from './views/Loader.svelte';
 
 	import Modal from 'svelte-simple-modal';
+
+	import { SvelteToast } from '@zerodevx/svelte-toast'
+
+	const options = {
+		duration: 10000
+	}
 </script>
 
 <svelte:head>
@@ -12,6 +18,7 @@
 </svelte:head>
 
 <main class="app">
+	<SvelteToast {options} />
 	<Modal
 		styleContent={{ 'background-color': '#18191c', color: 'white' }}
 		closeButton={false}
