@@ -70,7 +70,7 @@ export const extractData = async (zip) => {
     console.log('[debug] Loading user info...');
     loadTask.set('Loading user information...');
     extractedData.user = JSON.parse(await readFile('account/user.json'));
-    const confirmedPayments = extractedData.user.payments.filter((p) => p.status == 1);
+    const confirmedPayments = extractedData.user.payments.filter((p) => p.status === 1);
     if (confirmedPayments.length) {
         extractedData.payments.total += confirmedPayments.map((p) => p.amount / 100).reduce((p, c) => p + c);
         extractedData.payments.list += confirmedPayments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
