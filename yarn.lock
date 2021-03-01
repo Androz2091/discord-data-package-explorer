@@ -504,10 +504,10 @@ fast-levenshtein@^2.0.6:
   resolved "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fflate@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.npmjs.org/fflate/-/fflate-0.6.5.tgz#363f0fe8214e7f416ed9bceb163786d87ff0183c"
-  integrity sha512-o/qAgxRjoPgO8VmuHf5CmspdujS/40BbQdwPqq62AXIQPOohSEQ80NJzD0jPpZBsl/kStglVqpww/tanzITtLA==
+fflate@^0.6.7:
+  version "0.6.7"
+  resolved "https://registry.npmjs.org/fflate/-/fflate-0.6.7.tgz#fc1e8ea830b7f6f42ce1504f907d8f02aa0c8126"
+  integrity sha512-vQzKXPxs2pGPAI1jBj1c0cix/3lJjZJVgMBwwjDrReumnVU4PDSYnermp0WGek/n+gCCr3ZFdYEQO0CZ32anhw==
 
 file-entry-cache@^6.0.0:
   version "6.0.0"

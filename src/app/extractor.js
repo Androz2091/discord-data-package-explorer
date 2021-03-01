@@ -116,7 +116,7 @@ export const extractData = async (files) => {
 
                 if (!rawData || !rawMessages) {
                     console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
-                    return;
+                    return resolve();
                 }
 
                 const data = JSON.parse(rawData);
