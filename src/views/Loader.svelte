@@ -1,5 +1,6 @@
 <script>
     import { Unzip, AsyncUnzipInflate, DecodeUTF8 } from 'fflate';
+    import clarinet from 'clarinet';
 
     import { loaded, loadTask, data } from '../app/store';
     import { extractData } from '../app/extractor';
@@ -12,13 +13,31 @@
         const uz = new Unzip();
         uz.register(AsyncUnzipInflate);
 
+        console.time('read account');
+
         uz.onfile = (f) => {
-            console.log(f.name);
-            if (f.name === 'README.txt') {
+            if (f.name === 'activity/analytics/events-2021-00000-of-00001.json') {
+                const parser = clarinet.parser();
+                parser.write
+                console.time('read analytics');
+                console.time('parse json');
+                let obj = 0;
+                parser.onopenobject = (key) => {
+                    obj++;
+                    if (obj === 870907) {
+                        console.timeEnd('parse json');
+                    }
+                }
+                parser.onend = () => {
+                    console.log(obj);
+                    console.timeEnd('read analytics');
+                }
+                console.time('read file');
                 const decoder = new DecodeUTF8();
-                f.ondata = (err, data, final) => decoder.push(data, final)
+                f.ondata = (err, data, final) => decoder.push(data, final);
                 decoder.ondata = (str, final) => {
-                    console.log(f.name, str);
+                    parser.write(str);
+                    if (final) console.timeEnd('read file');
                 }
                 f.start();
             }
@@ -43,8 +62,8 @@
                 uz.push(new Uint8Array(0), true);
                 break;
             }
-            for (let i = 0; i < value.length; i += 65536) {
-                uz.push(value.subarray(i, i + 65536));
+            for (let i = 0; i < value.length; i += (65536*2)) {
+                uz.push(value.subarray(i, i + (65536*2)));
             }
         }
 

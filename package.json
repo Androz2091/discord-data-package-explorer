@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "clarinet": "Androz2091/clarinet",
     "fflate": "^0.6.5",
     "jszip": "^3.6.0",
     "papaparse": "^5.3.0",

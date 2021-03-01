@@ -260,6 +260,10 @@ chokidar@^3.3.0:
   optionalDependencies:
     fsevents "~2.3.1"
 
+clarinet@Androz2091/clarinet:
+  version "0.12.4"
+  resolved "https://codeload.github.com/Androz2091/clarinet/tar.gz/3c6487d6e3ed3b758ab5a2aa42123ed0083b31eb"
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
