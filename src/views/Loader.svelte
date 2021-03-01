@@ -23,8 +23,8 @@
                 uz.push(new Uint8Array(0), true);
                 break;
             }
-            for (let i = 0; i < value.length; i += (65536*2)) {
-                uz.push(value.subarray(i, i + (65536*2)));
+            for (let i = 0; i < value.length; i += 65536) {
+                uz.push(value.subarray(i, i + 65536));
             }
         }
 
