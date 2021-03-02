@@ -1,8 +1,10 @@
 import Papa from 'papaparse';
 import axios from 'axios';
 
-import { loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords } from './helpers';
+import { loadEstimatedTime, loadTask } from './store';
+import { getCreatedTimestamp, getFavoriteWords, events } from './helpers';
+import { DecodeUTF8 } from 'fflate';
+import { snakeCase } from 'snake-case';
 
 /**
  * Fetch a user on Discord.
@@ -40,12 +42,62 @@ const parseCSV = (input) => {
         }));
 };
 
+const perDay = (value, userID) => {
+    return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
+};
+
+const readAnalyticsFile = (file) => {
+    return new Promise((resolve) => {
+        const eventsOccurrences = { ...events };
+        const decoder = new DecodeUTF8();
+        let startAt = Date.now();
+        let bytesRead = 0;
+        file.ondata = (_err, data, final) => {
+            bytesRead += data.length;
+            loadTask.set(`Loading user statistics... ${parseInt(bytesRead / file.originalSize * 100)}%`);
+            const remainingBytes = file.originalSize-bytesRead;
+            const timeToReadByte = (Date.now()-startAt) / bytesRead;
+            const remainingTime = parseInt(remainingBytes * timeToReadByte / 1000);
+            loadEstimatedTime.set(`Estimated time: ${remainingTime+1} second${remainingTime+1 === 1 ? '' : 's'}`);
+            decoder.push(data, final);
+        };
+        let prevChkEnd = '';
+        decoder.ondata = (str, final) => {
+            str = prevChkEnd + str;
+            for (let event of Object.keys(events)) {
+                const eventName = snakeCase(event);
+                // eslint-disable-next-line no-constant-condition
+                while (true) {
+                    const ind = str.indexOf(eventName);
+                    if (ind == -1) break;
+                    str = str.slice(ind + eventName.length);
+                    eventsOccurrences[event]++;
+                }
+                prevChkEnd = str.slice(-eventName.length);
+            }
+            if (final) {
+                resolve({
+                    openCount: eventsOccurrences.appOpened,
+                    notificationCount: eventsOccurrences.notificationClicked,
+                    joinVoiceChannelCount: eventsOccurrences.joinVoiceChannel,
+                    joinCallCount: eventsOccurrences.joinCall,
+                    addReactionCount: eventsOccurrences.addReaction,
+                    messageEditedCount: eventsOccurrences.messageEdited,
+                    sendMessageCount: eventsOccurrences.sendMessage,
+                    slashCommandUsedCount: eventsOccurrences.slashCommandUsed
+                });
+            }
+        };
+        file.start();
+    });
+};
+
 /**
  * Extract the data from the package file.
- * @param entries The ZIP file entries
+ * @param files The files in the package
  * @returns The extracted data
  */
-export const extractData = async (zip) => {
+export const extractData = async (files) => {
 
     const extractedData = {
         user: null,
@@ -63,17 +115,33 @@ export const extractData = async (zip) => {
         }
     };
 
+    const getFile = (name) => files.find((file) => file.name === name);
     // Read a file from its name
-    const readFile = (name) => zip.files[name] && zip.files[name].async('text');
+    const readFile = (name) => {
+        return new Promise((resolve) => {
+            const file = getFile(name);
+            if (!file) return resolve(null);
+            const fileContent = [];
+            const decoder = new DecodeUTF8();
+            file.ondata = (err, data, final) => {
+                decoder.push(data, final);
+            };
+            decoder.ondata = (str, final) => {
+                fileContent.push(str);
+                if (final) resolve(fileContent.join(''));
+            };
+            file.start();
+        });
+    };
 
     // Parse and load current user informations
     console.log('[debug] Loading user info...');
     loadTask.set('Loading user information...');
     extractedData.user = JSON.parse(await readFile('account/user.json'));
-    const hasPayments = extractedData.user.payments.length > 0;
-    if (hasPayments) {
-        extractedData.payments.total += extractedData.user.payments.filter((p) => p.status == 1).map((p) => p.amount / 100).reduce((p, c) => p + c);
-        extractedData.payments.list += extractedData.user.payments.filter((p) => p.status == 1).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
+    const confirmedPayments = extractedData.user.payments.filter((p) => p.status === 1);
+    if (confirmedPayments.length) {
+        extractedData.payments.total += confirmedPayments.map((p) => p.amount / 100).reduce((p, c) => p + c);
+        extractedData.payments.list += confirmedPayments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
     }
     console.log('[debug] User info loaded.');
 
@@ -83,7 +151,7 @@ export const extractData = async (zip) => {
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
-    const channelsIDs = Object.keys(zip.files).filter((entry) => messagesPathRegex.test(entry)).map((entry) => entry.match(messagesPathRegex)[1]);
+    const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
 
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
@@ -98,7 +166,7 @@ export const extractData = async (zip) => {
 
                 if (!rawData || !rawMessages) {
                     console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
-                    return;
+                    return resolve();
                 }
 
                 const data = JSON.parse(rawData);
@@ -130,8 +198,8 @@ export const extractData = async (zip) => {
     
     extractedData.topDMs = extractedData.channels
         .filter((channel) => channel.isDM)
-        .sort((a, b) => b.messages.length - a.messages.length);
-    if (extractedData.topDMs.length > 10) extractedData.topDMs.length = 10;
+        .sort((a, b) => b.messages.length - a.messages.length)
+        .slice(0, 10);
     await Promise.all(extractedData.topDMs.map((channel) => {
         return new Promise((resolve) => {
             fetchUser(channel.dmUserID).then((userData) => {
@@ -145,9 +213,23 @@ export const extractData = async (zip) => {
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
 
     loadTask.set('Calculating statistics...');
+    console.log('[debug] Fetching activity...');
 
-    extractedData.messageCount = extractedData.channels.map((c) => c.messages.length).reduce((p, c) => p + c);
-    extractedData.averageMessageCountPerDay = parseInt(extractedData.messageCount / ((Date.now() - getCreatedTimestamp(extractedData.user.id)) / 24 / 60 / 60 / 1000));
+    const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    extractedData.openCount = statistics.openCount;
+    extractedData.averageOpenCountPerDay = perDay(statistics.openCount, extractedData.user.id);
+    extractedData.notificationCount = statistics.notificationCount;
+    extractedData.joinVoiceChannelCount = statistics.joinVoiceChannelCount; 
+    extractedData.joinCallCount = statistics.joinCallCount;
+    extractedData.addReactionCount = statistics.addReactionCount;
+    extractedData.messageEditedCount = statistics.messageEditedCount;
+    extractedData.sentMessageCount = statistics.sendMessageCount;
+    extractedData.averageMessageCountPerDay = perDay(extractedData.sentMessageCount, extractedData.user.id);
+    extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
+
+    console.log('[debug] Activity fetched...');
+
+    loadTask.set('Calculating statistics...');
 
     for (let i = 0; i < 24; i++) {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
