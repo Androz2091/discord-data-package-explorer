@@ -1,9 +1,10 @@
 import Papa from 'papaparse';
 import axios from 'axios';
 
-import { loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords } from './helpers';
+import { loadEstimatedTime, loadTask } from './store';
+import { getCreatedTimestamp, getFavoriteWords, events } from './helpers';
 import { DecodeUTF8 } from 'fflate';
+import { snakeCase } from 'snake-case';
 
 /**
  * Fetch a user on Discord.
@@ -39,6 +40,56 @@ const parseCSV = (input) => {
             // content: m.Contents,
             // attachments: m.Attachments
         }));
+};
+
+const perDay = (value, userID) => {
+    return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
+};
+
+const readAnalyticsFile = (file) => {
+    return new Promise((resolve) => {
+        const eventsOccurrences = { ...events };
+        const decoder = new DecodeUTF8();
+        let startAt = Date.now();
+        let bytesRead = 0;
+        file.ondata = (_err, data, final) => {
+            bytesRead += data.length;
+            loadTask.set(`Loading user statistics... ${parseInt(bytesRead / file.originalSize * 100)}%`);
+            const remainingBytes = file.originalSize-bytesRead;
+            const timeToReadByte = (Date.now()-startAt) / bytesRead;
+            const remainingTime = parseInt(remainingBytes * timeToReadByte / 1000);
+            loadEstimatedTime.set(`Estimated time: ${remainingTime+1} second${remainingTime+1 === 1 ? '' : 's'}`);
+            decoder.push(data, final);
+        };
+        let prevChkEnd = '';
+        decoder.ondata = (str, final) => {
+            str = prevChkEnd + str;
+            for (let event of Object.keys(events)) {
+                const eventName = snakeCase(event);
+                // eslint-disable-next-line no-constant-condition
+                while (true) {
+                    const ind = str.indexOf(eventName);
+                    if (ind == -1) break;
+                    str = str.slice(ind + eventName.length);
+                    eventsOccurrences[event]++;
+                }
+                prevChkEnd = str.slice(-eventName.length);
+            }
+            if (final) {
+                resolve({
+                    openCount: eventsOccurrences.appOpened,
+                    notificationCount: eventsOccurrences.notificationClicked,
+                    joinVoiceChannelCount: eventsOccurrences.joinVoiceChannel,
+                    joinCallCount: eventsOccurrences.joinCall,
+                    addReactionCount: eventsOccurrences.addReaction,
+                    messageEditedCount: eventsOccurrences.messageEdited,
+                    sendMessageCount: eventsOccurrences.sendMessage,
+                    slashCommandUsedCount: eventsOccurrences.slashCommandUsed
+                });
+            }
+        };
+        file.start();
+    });
 };
 
 /**
@@ -162,9 +213,23 @@ export const extractData = async (files) => {
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
 
     loadTask.set('Calculating statistics...');
+    console.log('[debug] Fetching activity...');
 
-    extractedData.messageCount = extractedData.channels.map((c) => c.messages.length).reduce((p, c) => p + c);
-    extractedData.averageMessageCountPerDay = parseInt(extractedData.messageCount / ((Date.now() - getCreatedTimestamp(extractedData.user.id)) / 24 / 60 / 60 / 1000));
+    const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    extractedData.openCount = statistics.openCount;
+    extractedData.averageOpenCountPerDay = perDay(statistics.openCount, extractedData.user.id);
+    extractedData.notificationCount = statistics.notificationCount;
+    extractedData.joinVoiceChannelCount = statistics.joinVoiceChannelCount; 
+    extractedData.joinCallCount = statistics.joinCallCount;
+    extractedData.addReactionCount = statistics.addReactionCount;
+    extractedData.messageEditedCount = statistics.messageEditedCount;
+    extractedData.sentMessageCount = statistics.sendMessageCount;
+    extractedData.averageMessageCountPerDay = perDay(extractedData.sentMessageCount, extractedData.user.id);
+    extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
+
+    console.log('[debug] Activity fetched...');
+
+    loadTask.set('Calculating statistics...');
 
     for (let i = 0; i < 24; i++) {
         extractedData.hoursValues.push(extractedData.channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);

@@ -5,6 +5,7 @@ let loadedValue = false;
 let dataValue = null;
 const isDemo = window.location.href.includes('demo');
 if (isDemo) {
+    const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
     loadedValue = true;
     const demoUserObject = {
         id: 422820341791064085,
@@ -15,7 +16,7 @@ if (isDemo) {
     const demoMessageObject = {
         id: 422820341791064085,
         timestamp: 1613810737577,
-        length: 1000
+        length: randomNumber(200, 600)
     };
     dataValue = {
         user: demoUserObject,
@@ -25,30 +26,40 @@ if (isDemo) {
             }
         ],
         applications: [],
-        topDMs: new Array(10).fill({
+        topDMs: new Array(10).fill({}).map(() => ({
             userData: demoUserObject,
-            messages: new Array(2000).fill(demoMessageObject)
-        }),
+            messages: new Array(randomNumber(200, 10000)).fill(demoMessageObject)
+        })).sort((a, b) => b.messages.length - a.messages.length),
         messageCount: 0,
         averageMessageCountPerDay: 0,
         hoursValues: new Array(24).fill(0).map(() => Math.floor(Math.random() * 300) + 1),
         favoriteWords: [
             {
                 word: 'Androz2091',
-                count: 10000
+                count: randomNumber(600, 1000)
             },
             {
                 word: 'DDPE',
-                count: 200
+                count: randomNumber(200, 600)
             }
         ],
         payments: {
             total: 500,
             list: 'Super Mega Nitro ($500)'
-        }
+        },
+        openCount: randomNumber(200, 300),
+        averageOpenCountPerDay: randomNumber(3, 5),
+        notificationCount: randomNumber(200, 400),
+        joinVoiceChannelCount: randomNumber(40, 100), 
+        joinCallCount: randomNumber(20, 30),
+        addReactionCount: randomNumber(100, 200),
+        messageEditedCount: randomNumber(50, 70),
+        sentMessageCount: randomNumber(200, 600),
+        slashCommandUsedCount: randomNumber(10, 20)
     };
 }
 
 export const loaded = writable(loadedValue);
 export const loadTask = writable(null);
+export const loadEstimatedTime = writable(null);
 export const data = writable(dataValue);

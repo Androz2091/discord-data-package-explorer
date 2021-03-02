@@ -1,7 +1,7 @@
 <script>
     import { Unzip, AsyncUnzipInflate, DecodeUTF8 } from 'fflate';
 
-    import { loaded, loadTask, data } from '../app/store';
+    import { loaded, loadTask, loadEstimatedTime, data } from '../app/store';
     import { extractData } from '../app/extractor';
 
     let loading = false;
@@ -67,7 +67,12 @@
 
 <div class="loader" on:click="{filePopup}" style="cursor: { loading ? '' : 'pointer' }" on:drop="{handleDrop}" on:dragover="{handleDragOver}">
     {#if loading}
-        {$loadTask || "Loading your package file..."}
+        <div>
+            {$loadTask || "Loading your package file..."}
+            {#if $loadEstimatedTime}
+                <small style="display: block; margin-top: 4px;">{$loadEstimatedTime}</small>
+            {/if}
+        </div>
     {:else if error}
         <p class="loader-error">Something went wrong... Click or drop your package file here to retry</p>
     {:else}
