@@ -20,18 +20,15 @@ if (isDemo) {
     };
     dataValue = {
         user: demoUserObject,
-        channels: [
-            {
-                messages: [demoMessageObject]
-            }
-        ],
+        channels: new Array(randomNumber(200, 600)).fill({
+            isDM: true,
+            messages: [demoMessageObject]
+        }),
         applications: [],
         topDMs: new Array(10).fill({}).map(() => ({
             userData: demoUserObject,
             messages: new Array(randomNumber(200, 10000)).fill(demoMessageObject)
         })).sort((a, b) => b.messages.length - a.messages.length),
-        messageCount: 0,
-        averageMessageCountPerDay: 0,
         hoursValues: new Array(24).fill(0).map(() => Math.floor(Math.random() * 300) + 1),
         favoriteWords: [
             {
@@ -55,6 +52,7 @@ if (isDemo) {
         addReactionCount: randomNumber(100, 200),
         messageEditedCount: randomNumber(50, 70),
         sentMessageCount: randomNumber(200, 600),
+        averageMessageCountPerDay: randomNumber(20, 30),
         slashCommandUsedCount: randomNumber(10, 20)
     };
 }
