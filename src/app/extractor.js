@@ -57,7 +57,7 @@ const readAnalyticsFile = (file) => {
         let bytesRead = 0;
         file.ondata = (_err, data, final) => {
             bytesRead += data.length;
-            loadTask.set(`Loading user statistics... ${parseInt(bytesRead / file.originalSize * 100)}%`);
+            loadTask.set(`Loading user statistics... ${Math.ceil(bytesRead / file.originalSize * 100)}%`);
             const remainingBytes = file.originalSize-bytesRead;
             const timeToReadByte = (Date.now()-startAt) / bytesRead;
             const remainingTime = parseInt(remainingBytes * timeToReadByte / 1000);
