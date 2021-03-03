@@ -32,5 +32,8 @@
         .card.profile {
             grid-column: 1 / 4;
         }
+        .card.about {
+            grid-column: 6 / 12;
+        }
     }
 </style>

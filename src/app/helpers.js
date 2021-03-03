@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const generateAvatarURL = (avatarHash, id, discriminator) => {
     let avatarURL = 'https://cdn.discordapp.com/';
     if (avatarHash) avatarURL += `avatars/${id}/${avatarHash}.webp`;
@@ -29,4 +31,21 @@ export const getFavoriteWords = (words) => {
     for (let p in object) array[array.length] = p;
     
     return array.sort((a, b) => object[b] - object[a]).map((word) => ({ word: word, count: object[word] })).slice(0, 10);
+};
+
+export const getGitHubContributors = () => {
+    return new Promise((resolve, reject) => {
+        const cachedExpiresAt = localStorage.getItem('contributors_cache_expires_at');
+        const cachedData = localStorage.getItem('contributors_cache');
+        if (cachedExpiresAt && (cachedExpiresAt > Date.now()) && cachedData) resolve(cachedData);
+        axios.get('https://api.github.com/repos/Androz2091/discord-data-package-explorer/contributors')
+            .then((response) => {
+                const data = response.data.map((user) => ({ username: user.login, avatar: user.avatar_url, url: user.html_url }) );
+                localStorage.setItem('contributors_cache', JSON.stringify(data));
+                localStorage.setItem('contributors_cache_expires_at', Date.now() + 3600000);
+                resolve(data);
+            }).catch(() => {
+                reject([]);
+            });
+    });
 };
