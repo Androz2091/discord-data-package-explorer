@@ -25,6 +25,7 @@
         margin-top: 20px;
         border-radius: 50%;
         height: 128px;
+        width: 128px;
     }
     @media screen and (max-width: 600px){
         .avatar img {
