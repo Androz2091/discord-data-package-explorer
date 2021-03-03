@@ -108,7 +108,6 @@ export const extractData = async (files) => {
 
         topDMs: [],
         messageCount: 0,
-        averageMessageCountPerDay: 0,
         totalSpent: 0,
         hoursValues: [],
         favoriteWords: null,
