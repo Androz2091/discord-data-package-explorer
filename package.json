@@ -19,6 +19,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "@rollup/plugin-json": "^4.1.0",
     "@zerodevx/svelte-toast": "^0.1.4",
     "axios": "^0.21.1",
     "fflate": "^0.6.7",

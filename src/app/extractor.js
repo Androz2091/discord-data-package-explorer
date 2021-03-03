@@ -1,8 +1,9 @@
 import Papa from 'papaparse';
 import axios from 'axios';
 
+import eventsData from './events.json';
 import { loadEstimatedTime, loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords, events } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
 
@@ -49,7 +50,8 @@ const perDay = (value, userID) => {
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
         if (!file) resolve({});
-        const eventsOccurrences = { ...events };
+        const eventsOccurrences = {};
+        for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
         const decoder = new DecodeUTF8();
         let startAt = Date.now();
         let bytesRead = 0;
@@ -62,10 +64,11 @@ const readAnalyticsFile = (file) => {
             loadEstimatedTime.set(`Estimated time: ${remainingTime+1} second${remainingTime+1 === 1 ? '' : 's'}`);
             decoder.push(data, final);
         };
+        console.log(Object.keys(eventsOccurrences));
         let prevChkEnd = '';
         decoder.ondata = (str, final) => {
             str = prevChkEnd + str;
-            for (let event of Object.keys(events)) {
+            for (let event of Object.keys(eventsOccurrences)) {
                 const eventName = snakeCase(event);
                 // eslint-disable-next-line no-constant-condition
                 while (true) {
