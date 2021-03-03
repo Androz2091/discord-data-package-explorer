@@ -64,7 +64,6 @@ const readAnalyticsFile = (file) => {
             loadEstimatedTime.set(`Estimated time: ${remainingTime+1} second${remainingTime+1 === 1 ? '' : 's'}`);
             decoder.push(data, final);
         };
-        console.log(Object.keys(eventsOccurrences));
         let prevChkEnd = '';
         decoder.ondata = (str, final) => {
             str = prevChkEnd + str;
