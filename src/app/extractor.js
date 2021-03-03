@@ -145,7 +145,7 @@ export const extractData = async (files) => {
         extractedData.user.discriminator = fetchedUser.discriminator;
         extractedData.user.avatar_hash = fetchedUser.avatar;
 
-    });
+    }).catch(() => {});
     const confirmedPayments = extractedData.user.payments.filter((p) => p.status === 1);
     if (confirmedPayments.length) {
         extractedData.payments.total += confirmedPayments.map((p) => p.amount / 100).reduce((p, c) => p + c);
