@@ -13,9 +13,6 @@
         padding: 20px;
     }
     @media (min-width: 600px) {
-        .cards {
-            grid-template-columns: repeat(12, 1fr);
-        }
         .card.first {
             grid-column: 4 / 8;
         }

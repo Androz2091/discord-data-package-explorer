@@ -8,7 +8,8 @@ import { getContext, onMount } from 'svelte';
 import SvelteTooltip from 'svelte-tooltip'
 import { toast } from '@zerodevx/svelte-toast';
 
-import StatsCard from '../components/StatsCard.svelte';
+import ProfileCard from '../components/ProfileCard.svelte';
+import Card from '../components/Card.svelte';
 import FunFact from '../components/FunFact.svelte';
 
 onMount(() => {
@@ -31,15 +32,14 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
 
 <div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
     <div class="cards">
-        <div class="profile card">
-            <div class="avatar">
-                <img src="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }" alt="Avatar" />
-            </div>
-            <h1>
-                { $data.user.username }<small class="text-muted">#{ $data.user.discriminator.toString().padStart(4, "0") }</small>
-            </h1>
-        </div>
-        <StatsCard name="first">
+        <Card name="profile">
+            <ProfileCard
+                name="{ $data.user.username }"
+                discriminator="{ $data.user.discriminator.toString().padStart(4, '0') }"
+                avatar="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }"
+            />
+        </Card>
+        <Card name="first">
             <FunFact
                 svg="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                 content="You talked to % distinct users"
@@ -58,8 +58,8 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 count="{ $data.openCount }"
                 explanation="You are opening Discord ~{ $data.averageOpenCountPerDay?.toLocaleString('en-US') } times per day!"
             />
-        </StatsCard>
-        <StatsCard name="second">
+        </Card>
+        <Card name="second">
             <FunFact
                 svg="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 count="{ $data.channels.filter((c) => c.isDM).length }"
@@ -89,8 +89,8 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 count="{ $data.notificationCount }"
                 explanation="If I were you I would set my status to DND right now..."
             />
-        </StatsCard>
-        <div class="top-users card">
+        </Card>
+        <Card name="top-users">
             <h1>Top Users</h1>
             <p>The users you chat the most with!</p>
             <div>
@@ -107,8 +107,8 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                     </div>
                 {/each}
             </div>
-        </div>
-        <div class="hours card">
+        </Card>
+        <Card name="hours">
             <h1>Your Discord Hours</h1>
             <p>{ hoursLabels[$data.hoursValues.indexOf(Math.max(...$data.hoursValues))] } is definitely your favorite hour to chat with your friends!</p>
             <Chart data={{
@@ -122,8 +122,8 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
             }} axisOptions="{{
                 xAxisMode: 'tick'
             }}" type="bar" />
-        </div>
-        <StatsCard name="third">
+        </Card>
+        <Card name="third">
             <FunFact
                 svg="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
                 content="You joined % voice channels"
@@ -149,7 +149,7 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 content="You used % Slash Commands"
                 count="{ $data.slashCommandUsedCount }"
             />
-        </StatsCard>
+        </Card>
     </div>
 </div>
 
@@ -161,25 +161,12 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
         color: white;
         padding: 20px;
     }
-    .fun-fact {
-        display: flex;
-        align-items: center;
-    }
     .text-muted {
         color: #6c757d;
     }
     .cards {
         display: grid;
         grid-gap: 10px;
-    }
-    .card {
-        background-color: #202225;
-        border-radius: 10px;
-        padding: 20px;
-    }
-    .card.profile {
-        display: grid;
-        justify-content: center;
     }
     .top-item {
         display: flex;
@@ -223,41 +210,10 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
     .top-bubble.third {
         background-color: #ae7441;
     }
-    .avatar {
-        text-align: center;
-    }
-    .avatar img {
-        margin-top: 20px;
-        border-radius: 50%;
-        height: 128px;
-    }
-    @media screen and (max-width: 600px){
-        .avatar img {
-            height: 120px;
-        }
-    }
+    
     @media (min-width: 600px) {
         .cards {
             grid-template-columns: repeat(12, 1fr);
-        }
-        .card.messages-stats {
-            grid-column: 4 / 8;
-        }
-        .card.other-stats {
-            grid-column: 8 / 12;
-        }
-        .card.analytics-stats {
-            grid-column: 6 / 12;
-        }
-        .card.top-users {
-            grid-column: 1 / 6;
-            grid-row: 2 / 5;
-        }
-        .card.hours {
-            grid-column: 6 / 12;
-        }
-        .card.profile {
-            grid-column: 1 / 4;
         }
     }
     
