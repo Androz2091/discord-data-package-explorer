@@ -1,8 +1,9 @@
 import Papa from 'papaparse';
 import axios from 'axios';
 
+import eventsData from './events.json';
 import { loadEstimatedTime, loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords, events } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
 
@@ -48,7 +49,9 @@ const perDay = (value, userID) => {
 
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
-        const eventsOccurrences = { ...events };
+        if (!file) resolve({});
+        const eventsOccurrences = {};
+        for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
         const decoder = new DecodeUTF8();
         let startAt = Date.now();
         let bytesRead = 0;
@@ -64,7 +67,7 @@ const readAnalyticsFile = (file) => {
         let prevChkEnd = '';
         decoder.ondata = (str, final) => {
             str = prevChkEnd + str;
-            for (let event of Object.keys(events)) {
+            for (let event of Object.keys(eventsOccurrences)) {
                 const eventName = snakeCase(event);
                 // eslint-disable-next-line no-constant-condition
                 while (true) {
@@ -217,14 +220,14 @@ export const extractData = async (files) => {
 
     const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
     extractedData.openCount = statistics.openCount;
-    extractedData.averageOpenCountPerDay = perDay(statistics.openCount, extractedData.user.id);
+    extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
     extractedData.notificationCount = statistics.notificationCount;
     extractedData.joinVoiceChannelCount = statistics.joinVoiceChannelCount; 
     extractedData.joinCallCount = statistics.joinCallCount;
     extractedData.addReactionCount = statistics.addReactionCount;
     extractedData.messageEditedCount = statistics.messageEditedCount;
     extractedData.sentMessageCount = statistics.sendMessageCount;
-    extractedData.averageMessageCountPerDay = perDay(extractedData.sentMessageCount, extractedData.user.id);
+    extractedData.averageMessageCountPerDay = extractedData.sentMessageCount && perDay(extractedData.sentMessageCount, extractedData.user.id);
     extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
 
     console.log('[debug] Activity fetched...');

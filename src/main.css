@@ -8,3 +8,7 @@ body {
 .tooltip {
     z-index: 5;
 }
+
+.text-discord {
+    color: #7289DA;
+}
