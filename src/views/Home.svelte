@@ -50,13 +50,13 @@ const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12
                 svg="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                 content="You sent % messages on Discord"
                 count="{ $data.sentMessageCount }"
-                explanation="That's about { $data.averageMessageCountPerDay?.toLocaleString('en-US') } messages per day!"
+                explanation="That's about { $data.averageMessageCountPerDay && $data.averageOpenCountPerDay.toLocaleString('en-US') } messages per day!"
             />
             <FunFact
                 svg="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                 content="You opened Discord % times"
                 count="{ $data.openCount }"
-                explanation="You are opening Discord ~{ $data.averageOpenCountPerDay?.toLocaleString('en-US') } times per day!"
+                explanation="You are opening Discord ~{ $data.averageOpenCountPerDay && $data.averageOpenCountPerDay.toLocaleString('en-US') } times per day!"
             />
         </Card>
         <Card name="second">
