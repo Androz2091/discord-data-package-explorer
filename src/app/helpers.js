@@ -37,7 +37,7 @@ export const getGitHubContributors = () => {
     return new Promise((resolve, reject) => {
         const cachedExpiresAt = localStorage.getItem('contributors_cache_expires_at');
         const cachedData = localStorage.getItem('contributors_cache');
-        if (cachedExpiresAt && (cachedExpiresAt > Date.now()) && cachedData) resolve(JSON.parse(cachedData));
+        if (cachedExpiresAt && (cachedExpiresAt > Date.now()) && cachedData) return resolve(JSON.parse(cachedData));
         axios.get('https://api.github.com/repos/Androz2091/discord-data-package-explorer/contributors')
             .then((response) => {
                 const data = response.data.map((user) => ({ username: user.login, avatar: user.avatar_url, url: user.html_url }) );
@@ -45,7 +45,7 @@ export const getGitHubContributors = () => {
                 localStorage.setItem('contributors_cache_expires_at', Date.now() + 3600000);
                 resolve(data);
             }).catch(() => {
-                reject([]);
+                reject(cachedData || []);
             });
     });
 };
