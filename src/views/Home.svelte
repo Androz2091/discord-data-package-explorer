@@ -154,7 +154,7 @@
                 <div style="text-align: center;">
                     <h2>About this project</h2>
                     <p>Discord Data Package Explorer is a free, ad-free and <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank" class="text-discord" style="text-decoration: none;">open source</a> website made with Svelte.
-                    <p>These are all the people who contributed to the creation of DDPE!</p>
+                    <p>These are all the developers who contributed to the creation of DDPE!</p>
                 </div>
                 
                 <div class="contributors">
