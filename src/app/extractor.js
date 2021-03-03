@@ -48,6 +48,7 @@ const perDay = (value, userID) => {
 
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
+        if (!file) resolve({});
         const eventsOccurrences = { ...events };
         const decoder = new DecodeUTF8();
         let startAt = Date.now();
@@ -217,14 +218,14 @@ export const extractData = async (files) => {
 
     const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
     extractedData.openCount = statistics.openCount;
-    extractedData.averageOpenCountPerDay = perDay(statistics.openCount, extractedData.user.id);
+    extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
     extractedData.notificationCount = statistics.notificationCount;
     extractedData.joinVoiceChannelCount = statistics.joinVoiceChannelCount; 
     extractedData.joinCallCount = statistics.joinCallCount;
     extractedData.addReactionCount = statistics.addReactionCount;
     extractedData.messageEditedCount = statistics.messageEditedCount;
     extractedData.sentMessageCount = statistics.sendMessageCount;
-    extractedData.averageMessageCountPerDay = perDay(extractedData.sentMessageCount, extractedData.user.id);
+    extractedData.averageMessageCountPerDay = extractedData.sentMessageCount && perDay(extractedData.sentMessageCount, extractedData.user.id);
     extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
 
     console.log('[debug] Activity fetched...');

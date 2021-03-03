@@ -4,6 +4,7 @@ import { writable } from 'svelte/store';
 let loadedValue = false;
 let dataValue = null;
 const isDemo = window.location.href.includes('demo');
+const removeAnalytics = window.location.href.includes('noanalytics');
 if (isDemo) {
     const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
     loadedValue = true;
@@ -17,6 +18,18 @@ if (isDemo) {
         id: 422820341791064085,
         timestamp: 1613810737577,
         length: randomNumber(200, 600)
+    };
+    const analytics = removeAnalytics ? {} : {
+        openCount: randomNumber(200, 300),
+        averageOpenCountPerDay: randomNumber(3, 5),
+        notificationCount: randomNumber(200, 400),
+        joinVoiceChannelCount: randomNumber(40, 100), 
+        joinCallCount: randomNumber(20, 30),
+        addReactionCount: randomNumber(100, 200),
+        messageEditedCount: randomNumber(50, 70),
+        sentMessageCount: randomNumber(200, 600),
+        averageMessageCountPerDay: randomNumber(20, 30),
+        slashCommandUsedCount: randomNumber(10, 20)
     };
     dataValue = {
         user: demoUserObject,
@@ -44,16 +57,7 @@ if (isDemo) {
             total: 500,
             list: 'Super Mega Nitro ($500)'
         },
-        openCount: randomNumber(200, 300),
-        averageOpenCountPerDay: randomNumber(3, 5),
-        notificationCount: randomNumber(200, 400),
-        joinVoiceChannelCount: randomNumber(40, 100), 
-        joinCallCount: randomNumber(20, 30),
-        addReactionCount: randomNumber(100, 200),
-        messageEditedCount: randomNumber(50, 70),
-        sentMessageCount: randomNumber(200, 600),
-        averageMessageCountPerDay: randomNumber(20, 30),
-        slashCommandUsedCount: randomNumber(10, 20)
+        ...analytics
     };
 }
 
