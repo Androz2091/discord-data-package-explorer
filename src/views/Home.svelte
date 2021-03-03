@@ -79,8 +79,8 @@
                 />
                 <FunFact svg="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                     <h3 slot="content">Your favorite words are
-                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[0].count} times" bottom color="#000000"><span class="text-discord">{$data.favoriteWords[0].word}</SvelteTooltip></span> and
-                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[1].count} times" bottom color="#000000">{$data.favoriteWords[1].word}</SvelteTooltip></span>
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[0].count.toLocaleString('en-US')} times" bottom color="#000000"><span class="text-discord">{$data.favoriteWords[0].word}</SvelteTooltip></span> and
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[1].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[1].word}</SvelteTooltip></span>
                     </h3>
                 </FunFact>
                 <FunFact
