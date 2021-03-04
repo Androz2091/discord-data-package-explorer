@@ -41,6 +41,10 @@
             loaded.set(true);
             loadTask.set(null);
             console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
+        }).catch((err) => {
+            error = true;
+            loading = false;
+            alert(err.stack);
         });
     }
 
