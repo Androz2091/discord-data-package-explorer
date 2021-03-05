@@ -14,7 +14,7 @@ import { snakeCase } from 'snake-case';
  */
 const fetchUser = async (userID) => {
     const res = await axios(`https://diswho.androz2091.fr/user/${userID}`).catch(() => {});
-    if (!res.data) return {
+    if (!res || !res.data) return {
         username: 'Unknown',
         discriminator: '0000',
         avatar: null
