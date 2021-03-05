@@ -1,4 +1,6 @@
 <script>
+    let defaultAvatar = '/default-avatar.png';
+
     export let name;
     export let discriminator;
     export let avatar;
@@ -6,7 +8,7 @@
 
 <div class="user-profile">
     <div class="avatar">
-        <img src="{ avatar }" alt="Avatar" />
+        <img src="{ avatar }" onerror="this.onerror = null; this.src='{ defaultAvatar }';" alt="Avatar" />
     </div>
     <h1>
         { name }<small class="text-muted">#{ discriminator }</small>
@@ -25,6 +27,7 @@
         margin-top: 20px;
         border-radius: 50%;
         height: 128px;
+        width: 128px;
     }
     @media screen and (max-width: 600px){
         .avatar img {

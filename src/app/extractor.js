@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import eventsData from './events.json';
 import { loadEstimatedTime, loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords, generateAvatarURL } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
 
@@ -140,6 +140,12 @@ export const extractData = async (files) => {
     console.log('[debug] Loading user info...');
     loadTask.set('Loading user information...');
     extractedData.user = JSON.parse(await readFile('account/user.json'));
+    await fetchUser(extractedData.user.id).then((fetchedUser) => {
+        extractedData.user.username = fetchedUser.username;
+        extractedData.user.discriminator = fetchedUser.discriminator;
+        extractedData.user.avatar_hash = fetchedUser.avatar;
+
+    }).catch(() => {});
     const confirmedPayments = extractedData.user.payments.filter((p) => p.status === 1);
     if (confirmedPayments.length) {
         extractedData.payments.total += confirmedPayments.map((p) => p.amount / 100).reduce((p, c) => p + c);
