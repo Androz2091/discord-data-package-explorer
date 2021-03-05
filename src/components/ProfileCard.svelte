@@ -8,7 +8,7 @@
 
 <div class="user-profile">
     <div class="avatar">
-        <img src="{ avatar }" onerror="this.onerror = null; this.src='{ defaultAvatar }';" alt="Avatar" />
+        <img src="{ avatar }" alt="Avatar" />
     </div>
     <h1>
         { name }<small class="text-muted">#{ discriminator }</small>
