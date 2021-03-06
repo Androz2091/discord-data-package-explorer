@@ -23,6 +23,14 @@ const fetchUser = async (userID) => {
 };
 
 /**
+ * Parse the mention to return a user ID
+ */
+const parseMention = (mention) => {
+    const mentionRegex = /^<@!?(\d+)>$/;
+    return mentionRegex.test(mention) ? mention.match(mentionRegex)[1] : null;
+};
+
+/**
  * Parse a messages CSV into an object
  * @param input
  */
@@ -200,6 +208,16 @@ export const extractData = async (files) => {
 
     const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
     extractedData.favoriteWords = getFavoriteWords(words);
+    for (let wordData of extractedData.favoriteWords) {
+        const userID = parseMention(wordData.word);
+        if (userID) {
+            const userData = await fetchUser(userID);
+            extractedData.favoriteWords[extractedData.favoriteWords.findIndex((wd) => wd.word === wordData.word)] = {
+                word: `@${userData.username}`,
+                count: wordData.count
+            };
+        }
+    }
 
     console.log('[debug] Fetching top DMs...');
     loadTask.set('Loading user activity...');
