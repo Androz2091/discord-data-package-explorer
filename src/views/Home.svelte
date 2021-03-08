@@ -47,13 +47,13 @@
                     explanation="Well, you know a lot of people!"
                 />
                 <FunFact
-                    svg="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                    svg="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     content="You sent % messages on Discord"
                     count="{ $data.sentMessageCount }"
                     explanation="That's about { $data.averageMessageCountPerDay && $data.averageMessageCountPerDay.toLocaleString('en-US') } messages per day!"
                 />
                 <FunFact
-                    svg="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                    svg="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     content="You opened Discord % times"
                     count="{ $data.openCount }"
                     explanation="You are opening Discord ~{ $data.averageOpenCountPerDay && $data.averageOpenCountPerDay.toLocaleString('en-US') } times per day!"
@@ -62,7 +62,6 @@
             <Card name="second">
                 <FunFact
                     svg="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    count="{ $data.channels.filter((c) => c.isDM).length }"
                 >
                     <h3 slot="content">
                         You spent
