@@ -11,6 +11,8 @@
     import ProfileCard from '../components/ProfileCard.svelte';
     import Card from '../components/Card.svelte';
     import FunFact from '../components/FunFact.svelte';
+import Leaderboard from '../components/Leaderboard.svelte';
+import LeaderboardItem from '../components/LeaderboardItem.svelte';
     
     onMount(() => {
         toast.push('Your data has been loaded!', {
@@ -63,13 +65,15 @@
                 <FunFact
                     svg="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 >
-                    <h3 slot="content">
+                    <div  slot="content">
+                    <h3>
                         You spent
                         <span class="text-discord" on:click="{ $data.payments.list.length ? showModal($data.payments.list) : undefined }">
                             ${ parseInt($data.payments.total).toLocaleString('en-US') }
                         </span>
                         on Discord
                     </h3>
+                    </div>
                 </FunFact>
                 <FunFact
                     svg="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
@@ -90,22 +94,17 @@
                 />
             </Card>
             <Card name="top-users">
-                <h1>Top Users</h1>
-                <p>The users you chat the most with!</p>
-                <div>
+                <Leaderboard title="Top Users" description="The users you chat the most with!">
                     {#each $data.topDMs as channel, i}
-                        <div class="top-item">
-                            <div class="top-whois">
-                                <div class="top-bubble { i === 0 ? 'first' : i === 1 ? 'second' : i === 2 ? 'third' : '' }">{ i + 1 }</div>
-                                <img class="top-avatar" src="{ generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator) }" alt="Avatar" />
-                                <h3 class="top-name">{ channel.userData.username } <small class="text-muted">#{ channel.userData.discriminator }</small></h3>
-                            </div>
-                            <div class="top-messages">
-                                <h3>{ channel.messages.length.toLocaleString('en-US') } <small>messages</small></h3>
-                            </div>
-                        </div>
+                        <LeaderboardItem
+                            position={i}
+                            avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
+                            username={channel.userData.username}
+                            discriminator={channel.userData.discriminator}
+                            count={channel.messages.length.toLocaleString('en-US')}
+                        />
                     {/each}
-                </div>
+                </Leaderboard>
             </Card>
             <Card name="hours">
                 <h1>Your Discord Hours</h1>
@@ -187,54 +186,9 @@
             color: white;
             padding: 20px;
         }
-        .text-muted {
-            color: #6c757d;
-        }
         .cards {
             display: grid;
             grid-gap: 10px;
-        }
-        .top-item {
-            display: flex;
-            flex-direction: row;
-            border-bottom: 1px solid white;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .top-whois {
-            padding: 8px;
-            align-items: center;
-            display: flex;
-        }
-        .top-item:last-child {
-            border-bottom: 0;
-        }
-        .top-avatar {
-            border-radius: 50%;
-            height: 50px;
-            margin-right: 10px;
-        }
-        .top-name {
-            margin-left: inherit;
-        }
-        .top-bubble {
-            align-items: center;
-            justify-content: center;
-            display: flex;
-            flex: 0 0 35px;
-            height: 35px;
-            background-color: #50555a;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .top-bubble.first {
-            background-color: #da9e3b;
-        }
-        .top-bubble.second {
-            background-color: #989898;
-        }
-        .top-bubble.third {
-            background-color: #ae7441;
         }
         .contributors {
     
