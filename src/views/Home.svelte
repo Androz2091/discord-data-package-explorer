@@ -11,8 +11,8 @@
     import ProfileCard from '../components/ProfileCard.svelte';
     import Card from '../components/Card.svelte';
     import FunFact from '../components/FunFact.svelte';
-import Leaderboard from '../components/Leaderboard.svelte';
-import LeaderboardItem from '../components/LeaderboardItem.svelte';
+    import Leaderboard from '../components/Leaderboard.svelte';
+    import LeaderboardItem from '../components/LeaderboardItem.svelte';
     
     onMount(() => {
         toast.push('Your data has been loaded!', {
