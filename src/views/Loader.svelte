@@ -16,6 +16,12 @@
         const files = [];
         uz.onfile = (f) => files.push(f);
 
+        if (!file.stream) {
+            loading = false;
+            error = 'This browser is not supported. Try using Google Chrome instead.';
+            return;
+        }
+
         const reader = file.stream().getReader();
         while (true) {
             const { done, value } = await reader.read();
@@ -30,7 +36,7 @@
 
         const validPackage = files.some((file) => file.name === 'README.txt');
         if (!validPackage) {
-            error = true;
+            error = 'Your package seems to be corrupted. Click or drop your package file here to retry';
             loading = false;
             return;
         }
@@ -42,7 +48,7 @@
             loadTask.set(null);
             console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
         }).catch((err) => {
-            error = true;
+            error = 'Something went wrong... Click or drop your package file here to retry';
             loading = false;
             alert(err.stack);
         });
@@ -78,7 +84,7 @@
             {/if}
         </div>
     {:else if error}
-        <p class="loader-error">Something went wrong... Click or drop your package file here to retry</p>
+        <p class="loader-error">{error}</p>
     {:else}
         <p>Click or drop your package file here</p>
     {/if}
