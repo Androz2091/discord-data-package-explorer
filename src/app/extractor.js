@@ -206,7 +206,7 @@ export const extractData = async (files) => {
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
-    const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
+    const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 2);
     extractedData.favoriteWords = getFavoriteWords(words);
     for (let wordData of extractedData.favoriteWords) {
         const userID = parseMention(wordData.word);
@@ -225,7 +225,7 @@ export const extractData = async (files) => {
     extractedData.topDMs = extractedData.channels
         .filter((channel) => channel.isDM)
         .sort((a, b) => b.messages.length - a.messages.length)
-        .slice(0, 10);
+        .slice(0, 30);
     await Promise.all(extractedData.topDMs.map((channel) => {
         return new Promise((resolve) => {
             fetchUser(channel.dmUserID).then((userData) => {
