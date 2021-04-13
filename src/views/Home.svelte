@@ -82,8 +82,11 @@
                 />
                 <FunFact svg="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                     <h3 slot="content">Your favorite words are
-                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[0].count.toLocaleString('en-US')} times" bottom color="#000000"><span class="text-discord">{$data.favoriteWords[0].word}</SvelteTooltip></span> and
-                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[1].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[1].word}</SvelteTooltip></span>
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[0].count.toLocaleString('en-US')} times" bottom color="#000000"><span class="text-discord">{$data.favoriteWords[0].word}</SvelteTooltip></span>, 
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[1].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[1].word}</SvelteTooltip></span>, 
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[2].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[2].word}</SvelteTooltip></span>, 
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[3].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[3].word}</SvelteTooltip></span> and 
+                        <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[4].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[4].word}</SvelteTooltip></span>
                     </h3>
                 </FunFact>
                 <FunFact
@@ -153,6 +156,7 @@
                     <h2>About this project</h2>
                     <p>Discord Data Package Explorer is a free, ad-free and <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank" class="text-discord" style="text-decoration: none;">open source</a> website made with Svelte.
                     <p>These are all the developers who contributed to the creation of DDPE!</p>
+                    <p>Note: ceci est une modifcation rapide par A1ex pour mes fins, me permettant de voir le top 30 des users ainsi que le top 5 des mots les + utilisées. Le code source modifié est dispo. sur GitHub (@a9ex) (conformément à la license GNU). Allez voir le repo officiel mentionné au dessus pour les soutenir !</p>
                 </div>
                 
                 <div class="contributors">
