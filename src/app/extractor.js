@@ -206,7 +206,7 @@ export const extractData = async (files) => {
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
-    const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 2);
+    const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 4);
     extractedData.favoriteWords = getFavoriteWords(words);
     for (let wordData of extractedData.favoriteWords) {
         const userID = parseMention(wordData.word);
