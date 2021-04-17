@@ -12,10 +12,24 @@ import { snakeCase } from 'snake-case';
  * This is necessary because sometimes we only have the user ID in the files.
  * @param userID The ID of the user to fetch
  */
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+let i = 0
+let u = 101
 const fetchUser = async (userID) => {
-    const res = await axios(`https://diswho.androz2091.fr/user/${userID}`).catch(() => {});
+     i = i + 900
+    await sleep(i)
+    --u
+  loadTask.set('🍍 Chargement des Top DMs...\n ' + u + ' users restants.');
+    const res = await axios(`https://go-get-users-api-discord.herokuapp.com/user/${userID}`).catch(() => {});
     if (!res || !res.data) return {
         username: 'Unknown',
+        discriminator: '0000',
+        avatar: null
+    };
+    if (res.data.message) return {
+        username: 'Ratelimit Discord | ID:' + userID,
         discriminator: '0000',
         avatar: null
     };
@@ -221,16 +235,19 @@ export const extractData = async (files) => {
 
     console.log('[debug] Fetching top DMs...');
     loadTask.set('Loading user activity...');
-    
+
     extractedData.topDMs = extractedData.channels
         .filter((channel) => channel.isDM)
         .sort((a, b) => b.messages.length - a.messages.length)
-        .slice(0, 30);
+        .slice(0, 100);
     await Promise.all(extractedData.topDMs.map((channel) => {
         return new Promise((resolve) => {
             fetchUser(channel.dmUserID).then((userData) => {
+                const words = channel.messages.flat().map((message) => message.words).flat().filter((w) => w.length > 5 && w.length < 23);
                 const channelIndex = extractedData.topDMs.findIndex((c) => c.data.id === channel.data.id);
                 extractedData.topDMs[channelIndex].userData = userData;
+                extractedData.topDMs[channelIndex].words = getFavoriteWords(words);
+                if (!extractedData.topDMs[channelIndex].words[2]) extractedData.topDMs[channelIndex].words = [{word: "N/A", count: 0}, {word: "N/A", count: 0}]
                 resolve();
             });
         });

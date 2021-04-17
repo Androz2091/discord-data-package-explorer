@@ -86,7 +86,7 @@
     {:else if error}
         <p class="loader-error">{error}</p>
     {:else}
-        <p>Click or drop your package file here</p>
+        <p>🍍 Dépose ici</p>
     {/if}
 </div>
 

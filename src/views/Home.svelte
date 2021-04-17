@@ -37,7 +37,7 @@
             <Card name="profile">
                 <ProfileCard
                     name="{ $data.user.username }"
-                    discriminator="{ $data.user.discriminator.toString().padStart(4, '0') }"
+                    discriminator="????"
                     avatar="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }"
                 />
             </Card>
@@ -105,6 +105,7 @@
                             username={channel.userData.username}
                             discriminator={channel.userData.discriminator}
                             count={channel.messages.length.toLocaleString('en-US')}
+                            word={channel.words}
                         />
                     {/each}
                 </Leaderboard>
@@ -156,7 +157,7 @@
                     <h2>About this project</h2>
                     <p>Discord Data Package Explorer is a free, ad-free and <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank" class="text-discord" style="text-decoration: none;">open source</a> website made with Svelte.
                     <p>These are all the developers who contributed to the creation of DDPE!</p>
-                    <p>Note: ceci est une modifcation rapide par A1ex pour mes fins, me permettant de voir le top 30 des users ainsi que le top 5 des mots les + utilisées. Le code source modifié est dispo. sur GitHub (@a9ex) (conformément à la license GNU). Allez voir le repo officiel mentionné au dessus pour les soutenir !</p>
+                    <p>Note: ceci est une modifcation rapide par A1ex pour mes fins, incluant les modifications suivantes :<br>- Le Top 100 des utilisateurs en DM (au lieu du top 10), avec un chargement d'une minute 40 au total pour éviter les ratelimit de Discord.<br>- Top 5 des mots les plus utilisées (au lieu du top 2), de plus de >= 5 caractères (sinon les mots ne sont pas intéréssents)<br>- Top 2 des mots les plus utilisées en DM de plus de >= 6 caractères et inf. 23 caractères (car "c'est" est toujours le mot favori ainsi que les emojis dans 95% des DM)<br>- Fix du bug de l'écran gris à la fin de l'écran de chargement ne permettant pas de voir les stats pour certains (pb. dû au fetcheur du discriminant)<br>- Fix de l'affichage des grilles dû au Top 100 qui cassait l'interface<br>- L'ID de la personne est affiché à la place si il y a eu un ratelimit de Discord (au lieu de undefined)<br>- Les mots ne sont normalement plus sensible à la casse (avant ils l'étaient)<br> Allez voir le repo officiel mentionné au dessus pour les soutenir !</p>
                 </div>
                 
                 <div class="contributors">
@@ -227,4 +228,3 @@
         }
         
     </style>
-    
