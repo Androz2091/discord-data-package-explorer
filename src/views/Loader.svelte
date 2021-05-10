@@ -1,8 +1,17 @@
 <script>
-    import { Unzip, AsyncUnzipInflate, DecodeUTF8 } from 'fflate';
+    import { Unzip, AsyncUnzipInflate } from 'fflate';
+    import { getContext } from 'svelte';
 
     import { loaded, loadTask, loadEstimatedTime, data } from '../app/store';
     import { extractData } from '../app/extractor';
+    
+    import Modal from '../components/Modal.svelte';
+
+    const { open } = getContext('simple-modal');
+    
+    const showModal = (message) => {
+        open(Modal, { message });
+    };
 
     let loading = false;
     let error = false;
@@ -63,7 +72,8 @@
         handleFile(event.dataTransfer.items[0].getAsFile());
     }
 
-    function filePopup () {
+    function filePopup (event) {
+        if (event.target.classList.value.includes('help')) return
         if (loading) return;
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
@@ -71,6 +81,13 @@
         input.addEventListener('change', (e) => handleFile(e.target.files[0]));
         input.addEventListener('error', (e) => error = true);
         input.click();
+    }
+
+    function helpPopup () {
+        showModal(`
+            <h3>About DDPE</h3>
+            <p>Data privacy is important. DDPE is an <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank">open source</a> website. No data is sent to any server. You can donate <a href="https://github.com/sponsors/Androz2091" target="_blank">here</a> ❤️</p>
+        `);
     }
 
 </script>
@@ -86,7 +103,12 @@
     {:else if error}
         <p class="loader-error">{error}</p>
     {:else}
-        <p>Click or drop your package file here</p>
+        <div>
+            <div style="display: flex; align-items: center;">
+                <p>Click or drop your package file here</p>
+                <svg on:click="{helpPopup}" class="help" style="width: 25px; margin-left: 5px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+        </div>
     {/if}
 </div>
 

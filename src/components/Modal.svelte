@@ -2,12 +2,6 @@
     export let message;
 </script>
 
-<h3>
+<main>
     {@html message}
-</h3>
-
-<style>
-    h3 {
-        text-align: center;
-    }
-</style>
+</main>
