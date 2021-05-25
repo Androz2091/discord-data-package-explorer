@@ -182,16 +182,18 @@
         h3 {
             margin-left: 10px;
         }
+
         .statistics {
             color: white;
             padding: 20px;
         }
+
         .cards {
             display: grid;
             grid-gap: 10px;
         }
+
         .contributors {
-    
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
@@ -202,6 +204,7 @@
     
             border-radius: 10px;
         }
+
         .contributors-item {
             width: 50px;
             height: 50px;
@@ -216,11 +219,11 @@
             background-size: contain;
             cursor: pointer;
         }
+
         @media (min-width: 600px) {
             .cards {
                 grid-template-columns: repeat(11, 1fr);
             }
         }
-        
     </style>
     
