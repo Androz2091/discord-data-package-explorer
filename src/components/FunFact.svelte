@@ -29,10 +29,22 @@
 
 <style>
     svg {
-        height: 40px;
+        --icon-dimensions: 2.5rem;
+
+        min-height: var(--icon-dimensions);
+        max-height: var(--icon-dimensions);
+        min-width: var(--icon-dimensions);
+        max-width: var(--icon-dimensions);
     }
+
     .fun-fact {
         display: flex;
         align-items: center;
+    }
+
+    @media (max-width: 800px) {
+        svg {
+            --icon-dimensions: 2rem;
+        }
     }
 </style>
