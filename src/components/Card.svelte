@@ -20,12 +20,16 @@
             grid-column: 8 / 12;
         }
         .card.third {
-            grid-column: 6 / 12;
+            grid-column: 1 / 6;
         }
         .card.top-users {
             grid-column: 1 / 6;
-            grid-row: 2 / 5;
         }
+
+        .card.top-channels {
+            grid-column: 6 / 12;
+        }
+
         .card.hours {
             grid-column: 6 / 12;
         }

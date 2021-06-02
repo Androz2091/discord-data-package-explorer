@@ -13,7 +13,6 @@
     import FunFact from '../components/FunFact.svelte';
     import Leaderboard from '../components/Leaderboard.svelte';
     import LeaderboardItem from '../components/LeaderboardItem.svelte';
-import { SSL_OP_NO_TICKET } from 'node:constants';
     
     onMount(() => {
         toast.push('Your data has been loaded!', {
@@ -103,26 +102,6 @@ import { SSL_OP_NO_TICKET } from 'node:constants';
                     explanation="If I were you I would set my status to DND right now..."
                 />
             </Card>
-            <Card name="top-users">
-                <Leaderboard title="Top Users" description="The users you chat the most with!">
-                    {#each $data.topDMs as channel, i}
-                        <LeaderboardItem
-                            position={i}
-                            avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
-                            name={channel.userData.username}
-                            discriminator={channel.userData.discriminator}
-                            count={channel.messages.length.toLocaleString('en-US')}
-                        />
-                    {/each}
-                </Leaderboard>
-            </Card>
-            <Card name="Top Channels">
-                <Leaderboard title="Top Channels" description="The channels you chat the most in!">
-                    {#each $data.channels.filter(c => !c.isDM && c.data.name && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 9) as channel, i}
-                        <LeaderboardItem position={i} name={channel.name} guild={channel.data.guild.name} count={channel.messages.length} channel />
-                    {/each}
-                </Leaderboard>
-            </Card>
             <Card name="hours">
                 <h1>Your Discord Hours</h1>
                 <p>{ hoursLabels[$data.hoursValues.indexOf(Math.max(...$data.hoursValues))] } is definitely your favorite hour to chat with your friends!</p>
@@ -165,6 +144,33 @@ import { SSL_OP_NO_TICKET } from 'node:constants';
                     count="{ $data.slashCommandUsedCount }"
                 />
             </Card>
+            <Card name="top-users">
+                <Leaderboard title="Top Users" description="The users you chat the most with!">
+                    {#each $data.topDMs as channel, i}
+                        <LeaderboardItem
+                            position={i}
+                            avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
+                            name={channel.userData.username}
+                            discriminator={channel.userData.discriminator}
+                            count={channel.messages.length.toLocaleString('en-US')}
+                        />
+                    {/each}
+                </Leaderboard>
+            </Card>
+            <Card name="top-channels">
+                <Leaderboard title="Top Channels" description="The channels you chat the most in!">
+                    {#each $data.channels.filter(c => !c.isDM && c.data.name && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10) as channel, i}
+                        <LeaderboardItem
+                            position={i}
+                            name={channel.name}
+                            guild={channel.data.guild.name}
+                            count={channel.messages.length}
+                            channel
+                        />
+                    {/each}
+                </Leaderboard>
+            </Card>
+            
             <Card name="about">
                 <div style="text-align: center;">
                     <h2>About this project</h2>
