@@ -160,7 +160,7 @@
             </Card>
             <Card name="top-channels">
                 <Leaderboard title="Top Channels" description="The channels you chat the most in!">
-                    {#each channels.filter(c => c.data.name && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10) as channel, i}
+                    {#each $data.channels.filter(c => c.data && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10) as channel, i}
                         <LeaderboardItem
                             position={i}
                             name={channel.name}
