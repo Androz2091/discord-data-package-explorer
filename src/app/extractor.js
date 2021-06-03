@@ -113,6 +113,7 @@ export const extractData = async (files) => {
     const extractedData = {
         user: null,
         channels: [],
+        guilds: [],
 
         topDMs: [],
         messageCount: 0,
@@ -205,6 +206,15 @@ export const extractData = async (files) => {
     }));
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
+
+    console.log(`[debug] Loading guilds...`);
+    loadTask.set('Loading joined servers...');
+
+    const guildIndex = JSON.parse(await readFile('servers/index.json'));
+    const guilds = Object.entries(guildIndex).map(g => ({ id: g[0], name: g[1] }));
+    extractedData.guilds = guilds;
+
+    console.log(`[debug] ${guilds.length} guilds loaded`);
 
     const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
     extractedData.favoriteWords = getFavoriteWords(words);
