@@ -37,6 +37,7 @@ if (isDemo) {
             isDM: true,
             messages: [demoMessageObject]
         }),
+        guilds: new Array(randomNumber(10, 100)).fill({ id: 123456789, name: "Demo" }),
         applications: [],
         topDMs: new Array(10).fill({}).map(() => ({
             userData: demoUserObject,
