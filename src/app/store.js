@@ -36,6 +36,7 @@ if (isDemo) {
         channels: new Array(randomNumber(200, 600)).fill({
             isDM: true,
             data: {
+                name: 'Awesome Discord Channel',
                 guild: {
                     name: 'Awesome Discord Server'
                 }
