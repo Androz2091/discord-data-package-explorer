@@ -1,6 +1,6 @@
 {
   "name": "discord-data-package-explorer",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
