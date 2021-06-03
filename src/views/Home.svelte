@@ -30,6 +30,7 @@
     };
     
     const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
+    const channels = $data.channels.filter(c => !c.isDM);
     </script>
     
     <div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
@@ -66,8 +67,8 @@
                     strokeLinecap="square"
                     strokeLinejoin="square"
                     content="You have spoken in % different text channels"
-                    count="{ $data.channels.filter(c => !c.isDM).length }"
-                    explanation="That's ~10 per guild!"
+                    count="{ channels.length }"
+                    explanation="That's ~{ Math.round(channels.length / $data.guilds.length) } per guild!"
                 />
             </Card>
             <Card name="second">
@@ -159,7 +160,7 @@
             </Card>
             <Card name="top-channels">
                 <Leaderboard title="Top Channels" description="The channels you chat the most in!">
-                    {#each $data.channels.filter(c => !c.isDM && c.data.name && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10) as channel, i}
+                    {#each channels.filter(c => c.data.name && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10) as channel, i}
                         <LeaderboardItem
                             position={i}
                             name={channel.name}
