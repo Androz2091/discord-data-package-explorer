@@ -37,7 +37,7 @@
             grid-column: 1 / 4;
         }
         .card.about {
-            grid-column: 6 / 12;
+            grid-column: 1 / 6;
         }
     }
 </style>
