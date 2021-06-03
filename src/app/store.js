@@ -35,8 +35,10 @@ if (isDemo) {
         user: demoUserObject,
         channels: new Array(randomNumber(200, 600)).fill({
             isDM: true,
-            guild: {
-                name: 'Awesome Discord Server'
+            data: {
+                guild: {
+                    name: 'Awesome Discord Server'
+                }
             },
             messages: [demoMessageObject]
         }),
