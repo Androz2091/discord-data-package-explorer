@@ -67,9 +67,15 @@
         event.preventDefault();
     }
 
+    /** @see https://developer.mozilla.org/en-US/docs/Web/API/Document/drop_event */
     function handleDrop (event) {
         event.preventDefault();
-        handleFile(event.dataTransfer.items[0].getAsFile());
+
+        if (event.dataTransfer.items[0].getAsFile() !== null) {
+            handleFile(event.dataTransfer.items[0].getAsFile());
+        } else {
+            error = 'Error trying to handle the dropped file. Try clicking instead.';
+        }
     }
 
     function filePopup (event) {

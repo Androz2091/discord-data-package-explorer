@@ -23,3 +23,5 @@ Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, an
 * Clone the repository.
 * Install the dependencies using `npm install` or `yarn install`.
 * Start the app using `npm run dev` or `yarn dev`!
+
+> Note: for testing purposes, you may append `?demo` to the URL to use the mocked data.
