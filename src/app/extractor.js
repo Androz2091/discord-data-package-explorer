@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import eventsData from './events.json';
 import { loadEstimatedTime, loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords, generateAvatarURL } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
 
@@ -207,7 +207,7 @@ export const extractData = async (files) => {
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
-    console.log(`[debug] Loading guilds...`);
+    console.log('[debug] Loading guilds...');
     loadTask.set('Loading joined servers...');
 
     const guildIndex = JSON.parse(await readFile('servers/index.json'));

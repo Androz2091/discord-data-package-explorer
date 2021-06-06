@@ -43,7 +43,27 @@
             }
         }
 
-        const validPackage = files.some((file) => file.name === 'README.txt');
+        /**
+         * If the package is valid and have
+         * all the required files files.
+         */
+        const validPackage = (() => {
+            const requiredFiles = [
+                'README.txt',
+                'account/user.json',
+                'messages/index.json',
+                'servers/index.json'
+            ];
+
+            for (const requiredFile of requiredFiles) {
+                if (! files.some((file) => file.name === requiredFile)) {
+                    return false;
+                }
+            }
+
+            return true;
+        })();
+
         if (!validPackage) {
             error = 'Your package seems to be corrupted. Click or drop your package file here to retry';
             loading = false;
@@ -79,13 +99,12 @@
     }
 
     function filePopup (event) {
-        if (event.target.classList.value.includes('help')) return
-        if (loading) return;
+        if (event.target.classList.value.includes('help') || loading) return;
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('accept', '.zip');
         input.addEventListener('change', (e) => handleFile(e.target.files[0]));
-        input.addEventListener('error', (e) => error = true);
+        input.addEventListener('error', () => error = true);
         input.click();
     }
 
