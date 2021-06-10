@@ -77,9 +77,14 @@
             loadTask.set(null);
             console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
         }).catch((err) => {
-            error = 'Something went wrong... Click or drop your package file here to retry';
-            loading = false;
-            alert(err.stack);
+            if (err.message === 'invalid_package_missing_messages') {
+                error = 'Some data is missing in your package, therefore it can not be read. <br> It is a bug on Discord side (06-10-21), and will be fixed in the next few days. <br> Join <a href="https://androz2091.fr/discord">our Discord</a> to get more information.';
+                loading = false;
+            } else {
+                error = 'Something went wrong... Click or drop your package file here to retry';
+                loading = false;
+                alert(err.stack);
+            }
         });
     }
 
@@ -126,7 +131,7 @@
             {/if}
         </div>
     {:else if error}
-        <p class="loader-error">{error}</p>
+        <p class="loader-error">{@html error}</p>
     {:else}
         <div>
             <div style="display: flex; align-items: center;">
@@ -147,6 +152,7 @@
         align-items: center;
     }
     .loader-error {
+        text-align: center;
         color: red;
     }
 </style>

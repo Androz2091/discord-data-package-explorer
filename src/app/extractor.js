@@ -170,6 +170,8 @@ export const extractData = async (files) => {
     const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
 
+    let messagesRead = 0;
+
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
@@ -184,7 +186,7 @@ export const extractData = async (files) => {
                 if (!rawData || !rawMessages) {
                     console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
                     return resolve();
-                }
+                } else messagesRead++;
 
                 const data = JSON.parse(rawData);
                 const messages = parseCSV(rawMessages);
@@ -204,6 +206,8 @@ export const extractData = async (files) => {
 
         });
     }));
+
+    if (messagesRead === 0) throw new Error('invalid_package_missing_messages');
 
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
