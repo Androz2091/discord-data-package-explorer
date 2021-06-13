@@ -167,7 +167,7 @@ export const extractData = async (files) => {
     loadTask.set('Loading user messages...');
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
-    const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
+    const messagesPathRegex = /messages\/c([0-9]{16,32})\/$/;
     const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
 
     let messagesRead = 0;
@@ -175,8 +175,8 @@ export const extractData = async (files) => {
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
-            const channelDataPath = `messages/${channelID}/channel.json`;
-            const channelMessagesPath = `messages/${channelID}/messages.csv`;
+            const channelDataPath = `messages/c${channelID}/channel.json`;
+            const channelMessagesPath = `messages/c${channelID}/messages.csv`;
 
             Promise.all([
                 readFile(channelDataPath),
