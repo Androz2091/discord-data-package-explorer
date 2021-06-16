@@ -41,6 +41,8 @@
         padding: 8px;
         align-items: center;
         display: flex;
+        min-width: 0;
+        width: 100%;
     }
     .top-item:last-child {
         border-bottom: 0;
@@ -53,6 +55,14 @@
     }
     .top-name {
         margin-left: inherit;
+        display: flex;
+        flex-direction: column;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .top-messages {
+        flex-shrink: 0;
     }
     .top-bubble {
         align-items: center;
