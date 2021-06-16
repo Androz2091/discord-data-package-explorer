@@ -49,6 +49,7 @@
         border-radius: 50%;
         height: 50px;
         margin-right: 10px;
+        flex-shrink: 0;
     }
     .top-name {
         margin-left: inherit;
