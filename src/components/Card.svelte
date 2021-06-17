@@ -20,20 +20,25 @@
             grid-column: 8 / 12;
         }
         .card.third {
-            grid-column: 6 / 12;
+            grid-column: 1 / 6;
+            grid-row: 2 / 3;
         }
         .card.top-users {
             grid-column: 1 / 6;
             grid-row: 2 / 6;
         }
+        .card.top-channels {
+            grid-column: 6 / 12;
+        }
         .card.hours {
             grid-column: 6 / 12;
+            grid-row: 2 / 3;
         }
         .card.profile {
             grid-column: 1 / 4;
         }
         .card.about {
-            grid-column: 6 / 12;
+            grid-column: 1 / 6;
         }
     }
 </style>

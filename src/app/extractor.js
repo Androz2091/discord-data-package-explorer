@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import eventsData from './events.json';
 import { loadEstimatedTime, loadTask } from './store';
-import { getCreatedTimestamp, getFavoriteWords, generateAvatarURL } from './helpers';
+import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
 
@@ -127,6 +127,7 @@ export const extractData = async (files) => {
     const extractedData = {
         user: null,
         channels: [],
+        guilds: [],
 
         topDMs: [],
         messageCount: 0,
@@ -180,14 +181,16 @@ export const extractData = async (files) => {
     loadTask.set('Loading user messages...');
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
-    const messagesPathRegex = /messages\/([0-9]{16,32})\/$/;
+    const messagesPathRegex = /messages\/c([0-9]{16,32})\/$/;
     const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
+
+    let messagesRead = 0;
 
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
-            const channelDataPath = `messages/${channelID}/channel.json`;
-            const channelMessagesPath = `messages/${channelID}/messages.csv`;
+            const channelDataPath = `messages/c${channelID}/channel.json`;
+            const channelMessagesPath = `messages/c${channelID}/messages.csv`;
 
             Promise.all([
                 readFile(channelDataPath),
@@ -197,7 +200,7 @@ export const extractData = async (files) => {
                 if (!rawData || !rawMessages) {
                     console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
                     return resolve();
-                }
+                } else messagesRead++;
 
                 const data = JSON.parse(rawData);
                 const messages = parseCSV(rawMessages);
@@ -218,9 +221,21 @@ export const extractData = async (files) => {
         });
     }));
 
+    if (messagesRead === 0) throw new Error('invalid_package_missing_messages');
+
     console.log(`[debug] ${extractedData.channels.length} channels loaded.`);
 
     const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 4);
+    console.log('[debug] Loading guilds...');
+    loadTask.set('Loading joined servers...');
+
+    const guildIndex = JSON.parse(await readFile('servers/index.json'));
+    const guilds = Object.entries(guildIndex).map(g => ({ id: g[0], name: g[1] }));
+    extractedData.guilds = guilds;
+
+    console.log(`[debug] ${guilds.length} guilds loaded`);
+
+    const words = extractedData.channels.map((channel) => channel.messages).flat().map((message) => message.words).flat().filter((w) => w.length > 5);
     extractedData.favoriteWords = getFavoriteWords(words);
     for (let wordData of extractedData.favoriteWords) {
         const userID = parseMention(wordData.word);
