@@ -168,44 +168,64 @@ export const extractData = async (files) => {
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
     const messagesPathRegex = /messages\/c([0-9]{16,32})\/$/;
+    const messagesPathRegexFallback = /messages\/([0-9]{16,32})\/$/;
     const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
+    const fallbackChannelsIDs = files.filter((file) => messagesPathRegexFallback.test(file.name)).map((file) => file.name.match(messagesPathRegexFallback)[1]);
 
-    let messagesRead = 0;
+    var messagesRead = 0;
 
-    await Promise.all(channelsIDs.map((channelID) => {
-        return new Promise((resolve) => {
+    function channelMapper(TargetChannel)
+    {
+        // Skip if no channels exist in this array.
+        if (TargetChannel.length < 1) return;
+        return Promise.all(TargetChannel.map((channelID) => {
+            return new Promise((resolve) => {
 
-            const channelDataPath = `messages/c${channelID}/channel.json`;
-            const channelMessagesPath = `messages/c${channelID}/messages.csv`;
+                const channelDataPath = `messages/c${channelID}/channel.json`;
+                const channelMessagesPath = `messages/c${channelID}/messages.csv`;
+                const channelDataPathAlt = `messages/${channelID}/channel.json`;
+                const channelMessagesPathAlt = `messages/${channelID}/messages.csv`;
 
-            Promise.all([
-                readFile(channelDataPath),
-                readFile(channelMessagesPath)
-            ]).then(([ rawData, rawMessages ]) => {
+                Promise.all([
+                    readFile(channelDataPath),
+                    readFile(channelMessagesPath),
+                    readFile(channelDataPathAlt),
+                    readFile(channelMessagesPathAlt)
+                ]).then(([ rawData, rawMessages, rawDataAlt, rawMessagesAlt ]) => {
 
-                if (!rawData || !rawMessages) {
-                    console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
-                    return resolve();
-                } else messagesRead++;
+                    // Set Target Data/Messages to whatever one isn't undefined
+                    var TargetData = rawData || rawDataAlt;
+                    var TargetMessages = rawMessages || rawMessagesAlt
+                    if (!TargetData || !TargetMessages) {
+                        console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
+                        return resolve();
+                    } else {
+                        messagesRead++;
 
-                const data = JSON.parse(rawData);
-                const messages = parseCSV(rawMessages);
-                const name = messagesIndex[data.id];
-                const isDM = data.recipients && data.recipients.length === 2;
-                const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
-                extractedData.channels.push({
-                    data,
-                    messages,
-                    name,
-                    isDM,
-                    dmUserID
+                        const data = JSON.parse(TargetData);
+                        const messages = parseCSV(TargetMessages);
+                        const name = messagesIndex[data.id];
+                        const isDM = data.recipients && data.recipients.length === 2;
+                        const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
+                        const PushData = {
+                            data,
+                            messages,
+                            name,
+                            isDM,
+                            dmUserID
+                        }
+                        extractedData.channels.push(PushData);
+                        console.log(`[debug] Pushed Channel '${channelID}'`,PushData);
+                        resolve();
+                    }
                 });
 
-                resolve();
             });
-
-        });
-    }));
+        }));
+    }
+    
+    await channelMapper(channelsIDs);
+    await channelMapper(fallbackChannelsIDs);
 
     if (messagesRead === 0) throw new Error('invalid_package_missing_messages');
 
