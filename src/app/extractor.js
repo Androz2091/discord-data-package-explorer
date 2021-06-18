@@ -167,16 +167,21 @@ export const extractData = async (files) => {
     loadTask.set('Loading user messages...');
 
     const messagesIndex = JSON.parse(await readFile('messages/index.json'));
-    const messagesPathRegex = /messages\/c([0-9]{16,32})\/$/;
-    const channelsIDs = files.filter((file) => messagesPathRegex.test(file.name)).map((file) => file.name.match(messagesPathRegex)[1]);
+
+    const messagesPathRegex = /messages\/c?([0-9]{16,32})\/$/;
+    const channelsIDsFile = files.filter((file) => messagesPathRegex.test(file.name));
+
+    // Packages before 06-12-2021 does not have the leading "c" before the channel ID
+    const isOldPackage = channelsIDsFile[0].name.match(/messages\/(c)?([0-9]{16,32})\/$/)[1] === undefined;
+    const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[1]);
 
     let messagesRead = 0;
 
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
-            const channelDataPath = `messages/c${channelID}/channel.json`;
-            const channelMessagesPath = `messages/c${channelID}/messages.csv`;
+            const channelDataPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
+            const channelMessagesPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/messages.csv`;
 
             Promise.all([
                 readFile(channelDataPath),
