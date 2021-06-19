@@ -42,7 +42,6 @@ body {
 
 a {
     color: var(--secondary-color) !important;
-    font-weight: bolder;
     text-decoration: none;
 }
 
