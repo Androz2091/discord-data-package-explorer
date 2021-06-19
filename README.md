@@ -6,7 +6,7 @@ What's **really** in your Discord Data package? And how can this data be useful?
 
 ## Example
 
-### [DEMO](https://ddpe.androz2091.fr?demo)
+### [DEMO](https://ddpe.androz2091.fr/stats?demo)
 
 ![Example](./example.png)
 
