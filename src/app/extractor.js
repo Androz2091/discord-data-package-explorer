@@ -153,6 +153,7 @@ export const extractData = async (files) => {
     loadTask.set('Loading user information...');
 
     extractedData.user = JSON.parse(await readFile('account/user.json'));
+    loadTask.set('Fetching user information...');
     const fetchedUser = await fetchUser(extractedData.user.id);
     extractedData.user.username = fetchedUser.username;
     extractedData.user.discriminator = fetchedUser.discriminator;
@@ -217,6 +218,8 @@ export const extractData = async (files) => {
     }));
 
     if (messagesRead === 0) throw new Error('invalid_package_missing_messages');
+
+    loadTask.set('Calculating statistics...');
 
     extractedData.channelCount = channels.filter(c => !c.isDM).length;
     extractedData.dmChannelCount = channels.length - extractedData.channelCount;
