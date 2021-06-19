@@ -124,7 +124,7 @@
                 </label>
             </div>
             <div class="app-discord">
-                <button class="app-discord-btn">Need help? Chat with us on Discord!</button>
+                <a href="https://androz2091.fr/discord" target="_blank"><button class="app-discord-btn">Need help? Chat with us on Discord!</button></a>
             </div>
         </div>
     </div>
@@ -188,7 +188,6 @@
         color: white;
         font-weight: 600;
         cursor: pointer;
-        box-shadow: none;
         border: none;
         border-radius: 5px;
         background-color: var(--secondary-color);

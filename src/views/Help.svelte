@@ -1,7 +1,3 @@
-<script>
-    import { link } from 'svelte-routing';
-</script>
-
 <div class="help">
     <div>
         Here is a short TikTok video ✨ to show you how to request your Discord Data Package! Note that this is also possible on mobile device using the iOS and Android Discord apps!
