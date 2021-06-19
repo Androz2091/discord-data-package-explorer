@@ -20,12 +20,18 @@
 
 <style>
     .help {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
         padding-top: 7rem;
 		max-width: 768px;
-		margin: auto;
 	}
     .tiktok-player {
         margin-top: 2rem;
         text-align: center;
+    }
+    @media (min-width: 1080px) {
+        .help {
+            margin: auto;
+        }
     }
 </style>

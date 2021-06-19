@@ -123,6 +123,9 @@
                     </span>
                 </label>
             </div>
+            <div class="app-discord">
+                <button class="app-discord-btn">Need help? Chat with us on Discord!</button>
+            </div>
         </div>
     </div>
 </template>
@@ -138,7 +141,9 @@
 	}
 	.app-loader-description {
         font-weight: 500;
-		margin: 3rem auto;
+        margin: auto;
+        margin-top: 5rem;
+        margin-bottom: 3rem;
 	}
 	.app-loader-tuto {
 		position: relative;
@@ -174,11 +179,19 @@
 		left: -10px;
 		color: white;
 	}
-    @media (min-width: 1080px) {
-        .app-loader-description {
-            margin: auto;
-            margin-top: 5rem;
-            margin-bottom: 3rem;
-        }
+    .app-discord {
+        padding-top: 2rem;
+        width: 100%;
+    }
+    .app-discord-btn {
+        padding: 1rem;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: none;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--secondary-color);
+        width: 100%;
     }
 </style>
