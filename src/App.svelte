@@ -1,6 +1,9 @@
 <script>
 	import { loaded } from './app/store';
 
+	import Header from './components/Header.svelte';
+	import Footer from './components/Footer.svelte';
+	
 	import Home from './views/Home.svelte';
 	import Loader from './views/Loader.svelte';
 
@@ -23,17 +26,22 @@
 		styleContent={{ 'background-color': '#18191c', color: 'white' }}
 		closeButton={false}
 	>
-		{#if $loaded}
-			<Home />
-		{:else}
-			<Loader />
-		{/if}
+		<Header />
+		<div>
+			{#if $loaded}
+				<Home />
+			{:else}
+				<Loader />
+			{/if}
+		</div>
+		<Footer />
 	</Modal>
 </main>
 
 <style>
 	.app {
-		width: 100vw;
-		height: 100vh;
+		min-height: 100vh;
+		display: grid;
+		grid-template-rows: 1fr auto;
 	}
 </style>

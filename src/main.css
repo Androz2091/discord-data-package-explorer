@@ -1,8 +1,53 @@
+:root {
+    --main-color: #5865F2;
+    --secondary-color: #7289da;
+    --secondary-color-r: 114;
+    --secondary-color-g: 137;
+    --secondary-color-b: 218;
+    --background-color: rgb(40, 42, 46);
+    --secondary-background-color: rgb(45, 47, 51);
+    --accent-background-color: rgb(37, 38, 41);
+    --third-background-color: rgb(32, 34, 37);
+    --box-background-color: rgb(48, 50, 54);
+}
+
+html {
+    height: 100%;
+    background-color: var(--background-color);
+}
+
 body {
-    overflow-x: hidden;
-    background-color: #373c42;
+    min-height: 100vh;
+    padding: 0;
     margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    color: white;
+    font-weight: 400;
+    overflow-x: hidden;
+	font-family: 'Rubik', sans-serif;
+}
+
+.tag {
+    text-align: center;
+    background-color: var(--main-color);
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin-right: 0.6rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 0.3rem;
+    border: 0.1rem solid var(--accent-background-color);
+    transform: rotate(-4deg);
+}
+
+a {
+    color: var(--secondary-color) !important;
+    font-weight: bolder;
+    text-decoration: none;
+}
+
+path {
+    fill: var(--secondary-color);
 }
 
 .tooltip {
@@ -10,9 +55,5 @@ body {
 }
 
 .text-discord {
-    color: #7289DA;
-}
-
-a {
     color: #7289DA;
 }
