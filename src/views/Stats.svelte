@@ -207,13 +207,14 @@
     </div>
     
     <style>
-        h3 {
-            margin-left: 10px;
-        }
-
         .statistics {
+            margin-top: 5rem;
             color: white;
             padding: 20px;
+        }
+
+        h3 {
+            margin-left: 10px;
         }
 
         .cards {

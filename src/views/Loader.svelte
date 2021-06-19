@@ -98,7 +98,7 @@
         <div class="app-loader-boxes">
             <p class="app-loader-description"><a href="https://ddpe.me">DDPE</a> is a site that generates stats from your Discord Data Package. It is your device that processes the data, nothing is sent to any server!</p>
             <p>
-                <a class="app-loader-tuto" href="/get-data" use:link>
+                <a class="app-loader-tuto" href="/help" use:link>
                     <small class="app-loader-tag tag">1</small>
                     Get my Discord JSON data 👆
                     <br>
