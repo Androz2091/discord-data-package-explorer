@@ -16,6 +16,7 @@
         width: 100%;
         position: fixed;
         background-color: var(--secondary-background-color);
+        z-index: 9;
     }
     .app-header-container {
         text-align: center;

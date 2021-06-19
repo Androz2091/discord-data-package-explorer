@@ -1,5 +1,5 @@
 <script>
-    import { fly } from 'svelte/transition';
+    import { blur } from 'svelte/transition';
     import { data } from "../app/store";
     import { generateAvatarURL, getGitHubContributors } from '../app/helpers';
     import Chart from 'svelte-frappe-charts';
@@ -35,7 +35,7 @@
     const hoursLabels = $data && new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
     </script>
     
-    <div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
+    <div class="statistics" transition:blur>
         {#if $data}
             <div class="cards">
                 <Card name="profile">
