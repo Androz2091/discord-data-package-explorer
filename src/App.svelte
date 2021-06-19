@@ -1,10 +1,10 @@
 <script>
-	import { loaded } from './app/store';
+	import { Router, Route } from "svelte-routing";
 
 	import Header from './components/Header.svelte';
 	import Footer from './components/Footer.svelte';
 	
-	import Home from './views/Home.svelte';
+	import Stats from './views/Stats.svelte';
 	import Loader from './views/Loader.svelte';
 
 	import Modal from 'svelte-simple-modal';
@@ -26,15 +26,18 @@
 		styleContent={{ 'background-color': '#18191c', color: 'white' }}
 		closeButton={false}
 	>
-		<Header />
-		<div>
-			{#if $loaded}
-				<Home />
-			{:else}
-				<Loader />
-			{/if}
-		</div>
-		<Footer />
+		<Router>
+			<Header />
+			<div>
+				<Route path="/stats" component={Stats} />
+				<Route path="/help" />
+				<Route path="/" component={Loader} />
+				<Route>
+					404
+				</Route>
+			</div>
+			<Footer />
+		</Router>
 	</Modal>
 </main>
 
