@@ -19,7 +19,7 @@
     let timeout;
 
     onMount(() => {
-        if (window.location.href.includes('demo')) {
+        if (window.location.href.includes('/demo')) {
 
             const demoData = generateDemoData();
             data.set(demoData);

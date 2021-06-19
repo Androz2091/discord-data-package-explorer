@@ -12,6 +12,8 @@ export default () => {
     const removeAnalytics = window.location.href.includes('noanalytics');
 
     return {
+        isDemo: true,
+
         user: demoUserObject,
 
         topDMs: new Array(10).fill({}).map(() => ({

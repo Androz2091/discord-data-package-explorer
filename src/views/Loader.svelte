@@ -127,7 +127,7 @@
                 <a href="https://androz2091.fr/discord" target="_blank"><button class="app-discord-btn">Need help? Chat with us on Discord!</button></a>
             </div>
             <div class="app-demo">
-                no package yet? <a href="/stats?demo" use:link>demo</a>
+                no package yet? <a href="/stats/demo" use:link>demo</a>
             </div>
         </div>
     </div>

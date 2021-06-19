@@ -32,6 +32,7 @@
 			<Header />
 			<div>
 				<Route path="/stats" component={Stats} />
+				<Route path="/stats/demo" component={Stats} />
 				<Route path="/help" component={Help} />
 				<Route path="/" component={Loader} />
 				<Route>
