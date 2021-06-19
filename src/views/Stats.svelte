@@ -4,7 +4,7 @@
     import { generateAvatarURL, getGitHubContributors } from '../app/helpers';
     import Chart from 'svelte-frappe-charts';
     import Modal from '../components/Modal.svelte';
-    import { getContext, onMount } from 'svelte';
+    import { getContext, onMount, onDestroy } from 'svelte';
     import SvelteTooltip from 'svelte-tooltip'
     import { toast } from '@zerodevx/svelte-toast';
     import { navigate } from 'svelte-routing';
@@ -15,6 +15,8 @@
     import Leaderboard from '../components/Leaderboard.svelte';
     import LeaderboardItem from '../components/LeaderboardItem.svelte';
 
+    let timeout;
+
     onMount(() => {
         if ($data) {
             toast.push('Your data has been loaded!', {
@@ -23,8 +25,14 @@
                     '--toastProgressBackground': '#2F855A'
                 }
             });
+
+            timeout = setTimeout(() => {
+                showModal('<div style="text-align: center">Like what you see?<br><a href="https://androz2091.fr/discord" target="_blank">Support us by saying hello and sharing your stats in our Discord server!<a></div>')
+            }, 10000);
         } else navigate('/');
     });
+
+    onDestroy(() => timeout && clearTimeout(timeout));
     
     const { open } = getContext('simple-modal');
     

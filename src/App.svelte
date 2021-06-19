@@ -25,7 +25,8 @@
 	<SvelteToast {options} />
 	<Modal
 		styleContent={{ 'background-color': '#18191c', color: 'white' }}
-		closeButton={false}
+		closeOnOuterClick={false}
+		closeOnEsc={false}
 	>
 		<Router>
 			<Header />

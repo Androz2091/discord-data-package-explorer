@@ -57,3 +57,16 @@ path {
 .text-discord {
     color: #7289DA;
 }
+
+.close {
+    background-color: transparent !important;
+    border: 1px var(--main-color) solid !important;
+}
+
+.close::before {
+    background-color: white !important;
+}
+
+.close::after {
+    background-color: white !important;
+}
