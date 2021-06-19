@@ -55,8 +55,9 @@
         const extractStartAt = Date.now();
         extractData(files).then((extractedData) => {
             loading = false;
-            data.set(extractedData)
+            data.set(extractedData);
             loadTask.set(null);
+            loadEstimatedTime.set(null);
             console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
             navigate('/stats');
         }).catch((err) => {
