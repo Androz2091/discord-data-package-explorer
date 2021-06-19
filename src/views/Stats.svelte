@@ -2,6 +2,7 @@
     import { blur } from 'svelte/transition';
     import { data } from "../app/store";
     import { generateAvatarURL, getGitHubContributors } from '../app/helpers';
+    import generateDemoData from '../app/demo';
     import Chart from 'svelte-frappe-charts';
     import Modal from '../components/Modal.svelte';
     import { getContext, onMount, onDestroy } from 'svelte';
@@ -18,7 +19,12 @@
     let timeout;
 
     onMount(() => {
-        if ($data) {
+        if (window.location.href.includes('demo')) {
+
+            const demoData = generateDemoData();
+            data.set(demoData);
+
+        } else if ($data) {
             toast.push('Your data has been loaded!', {
                 theme: {
                     '--toastBackground': '#48BB78',
