@@ -1,6 +1,6 @@
 <script>
     import { fly } from 'svelte/transition';
-    import { loaded, data } from "../app/store";
+    import { data } from "../app/store";
     import { generateAvatarURL, getGitHubContributors } from '../app/helpers';
     import Chart from 'svelte-frappe-charts';
     import Modal from '../components/Modal.svelte';
@@ -33,7 +33,6 @@
     };
     
     const hoursLabels = $data && new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
-    const channels = $data && $data.channels.filter(c => !c.isDM);
     </script>
     
     <div class="statistics" transition:fly="{{ y: 200, duration: 1000 }}">
@@ -50,7 +49,7 @@
                     <FunFact
                         svg="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                         content="You talked to % distinct users"
-                        count="{ $data.channels.filter((c) => c.isDM).length }"
+                        count="{ $data.dmChannelCount }"
                         explanation="Well, you know a lot of people!"
                     />
                     <FunFact
@@ -83,7 +82,7 @@
                     <FunFact
                         svg="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
                         content="You sent % characters through Discord"
-                        count="{ $data.channels.map((channel) => channel.messages).flat().map((message) => message.length).reduce((p, c) => p + c) }"
+                        count="{ $data.characterCount }"
                     />
                     <FunFact svg="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                         <h3 slot="content">Your favorite words are
@@ -145,8 +144,8 @@
                         strokeLinecap="square"
                         strokeLinejoin="square"
                         content="You have spoken in % different text channels"
-                        count="{ channels.length }"
-                        explanation="That's ~{ Math.round(channels.length / $data.guilds.length) } per guild!"
+                        count="{ $data.channelCount }"
+                        explanation="That's ~{ Math.round($data.channelCount / $data.guildCount) } per guild!"
                     />
                 </Card>
                 <Card name="top-users">
@@ -157,19 +156,19 @@
                                 avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
                                 name={channel.userData.username}
                                 discriminator={channel.userData.discriminator}
-                                count={channel.messages.length.toLocaleString('en-US')}
+                                count={channel.messageCount.toLocaleString('en-US')}
                             />
                         {/each}
                     </Leaderboard>
                 </Card>
                 <Card name="top-channels">
                     <Leaderboard title="Top Channels" description="The channels you chat the most in!">
-                        {#each $data.channels.filter(c => c.data && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10) as channel, i}
+                        {#each $data.topChannels as channel, i}
                             <LeaderboardItem
                                 position={i}
                                 name={channel.name}
-                                guild={channel.data.guild.name}
-                                count={channel.messages.length}
+                                guild={channel.guildName}
+                                count={channel.messageCount}
                                 channel
                             />
                         {/each}

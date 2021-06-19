@@ -6,6 +6,7 @@
 	
 	import Stats from './views/Stats.svelte';
 	import Loader from './views/Loader.svelte';
+	import Help from "./views/Help.svelte";
 
 	import Modal from 'svelte-simple-modal';
 
@@ -30,7 +31,7 @@
 			<Header />
 			<div>
 				<Route path="/stats" component={Stats} />
-				<Route path="/help" />
+				<Route path="/help" component={Help} />
 				<Route path="/" component={Loader} />
 				<Route>
 					404
