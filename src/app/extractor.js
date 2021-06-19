@@ -179,6 +179,8 @@ export const extractData = async (files) => {
     const isOldPackage = channelsIDsFile[0].name.match(/messages\/(c)?([0-9]{16,32})\/$/)[1] === undefined;
     const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[1]);
 
+    console.log(`[debug] Old package: ${isOldPackage}`);
+
     const channels = [];
     let messagesRead = 0;
 
@@ -194,7 +196,7 @@ export const extractData = async (files) => {
             ]).then(([ rawData, rawMessages ]) => {
 
                 if (!rawData || !rawMessages) {
-                    console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}.`);
+                    console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}. (path=${channelDataPath})`);
                     return resolve();
                 } else messagesRead++;
 
