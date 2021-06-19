@@ -19,12 +19,12 @@ export default () => {
         topDMs: new Array(10).fill({}).map(() => ({
             messageCount: randomNumber(200, 600),
             userData: demoUserObject
-        })),
+        })).sort((a, b) => b.messageCount - a.messageCount),
         topChannels: new Array(10).fill({}).map(() => ({
             messageCount: randomNumber(200, 600),
             name: 'awesome',
             guildName: 'AndrozDev'
-        })),
+        })).sort((a, b) => b.messageCount - a.messageCount),
         guildCount: randomNumber(10, 200),
         dmChannelCount: randomNumber(30, 50),
         channelCount: randomNumber(50, 100),
