@@ -46,9 +46,9 @@
         open(Modal, { message });
     };
     
-    const hoursLabels = $data && new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
+    const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
     </script>
-    
+
     <div class="statistics" transition:blur>
         {#if $data}
             <div class="cards">
