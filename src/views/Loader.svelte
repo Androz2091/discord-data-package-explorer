@@ -193,7 +193,7 @@
         cursor: pointer;
         border: none;
         border-radius: 5px;
-        background-color: var(--secondary-color);
+        background-color: #7289da;
         width: 100%;
     }
     .app-demo {
