@@ -1,8 +1,8 @@
 <script>
     export let svg;
     export let strokeWidth = 2;
-    export let strokeLinecap = "round";
-    export let strokeLinejoin = "round"
+    export let strokeLinecap = 'round';
+    export let strokeLinejoin = 'round';
     export let count = null;
     export let content = null;
     export let explanation = null;

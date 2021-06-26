@@ -1,20 +1,20 @@
 <script>
-	import { Router, Route } from "svelte-routing";
+	import { Router, Route } from 'svelte-routing';
 
 	import Header from './components/Header.svelte';
 	import Footer from './components/Footer.svelte';
-	
+
 	import Stats from './views/Stats.svelte';
 	import Loader from './views/Loader.svelte';
-	import Help from "./views/Help.svelte";
+	import Help from './views/Help.svelte';
 
 	import Modal from 'svelte-simple-modal';
 
-	import { SvelteToast } from '@zerodevx/svelte-toast'
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	const options = {
-		duration: 10000
-	}
+	    duration: 10000
+	};
 </script>
 
 <svelte:head>
