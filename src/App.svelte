@@ -1,20 +1,39 @@
 <script>
-	import { Router, Route } from "svelte-routing";
+	import { onMount } from 'svelte';
+	import { Router, Route } from 'svelte-routing';
+	import decodeJwt from 'jwt-decode';
 
 	import Header from './components/Header.svelte';
 	import Footer from './components/Footer.svelte';
-	
+
 	import Stats from './views/Stats.svelte';
 	import Loader from './views/Loader.svelte';
-	import Help from "./views/Help.svelte";
+	import Help from './views/Help.svelte';
 
 	import Modal from 'svelte-simple-modal';
 
-	import { SvelteToast } from '@zerodevx/svelte-toast'
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	const options = {
-		duration: 10000
-	}
+	    duration: 10000
+	};
+
+	onMount(() => {
+	    const
+            paramDiswhoJwt = new URLSearchParams(window.location.search).get('diswhoJwt'),
+            storeDiswhoJwt = localStorage.getItem('diswhoJwt');
+        if(paramDiswhoJwt){
+            window.history.replaceState(null, document.title, location.pathname);
+            localStorage.setItem('diswhoJwt', paramDiswhoJwt);
+        }
+	    else if(
+	        !storeDiswhoJwt
+            ||
+	        storeDiswhoJwt && decodeJwt(storeDiswhoJwt).expirationTimestamp < Date.now()
+        ){
+            window.location.replace(`https://diswho.androz2091.fr?returnUrl=${window.location.href}`);
+        }
+    });
 </script>
 
 <svelte:head>
