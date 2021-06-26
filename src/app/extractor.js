@@ -13,7 +13,11 @@ import { snakeCase } from 'snake-case';
  * @param userID The ID of the user to fetch
  */
 const fetchUser = async (userID) => {
-    const res = await axios(`https://diswho.androz2091.fr/user/${userID}`).catch(() => {});
+    const res = await axios(`https://diswho.androz2091.fr/user/${userID}`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('diswhoJwt')}`
+        }
+    }).catch(() => {});
     if (!res || !res.data) return {
         username: 'Unknown',
         discriminator: '0000',
