@@ -6,7 +6,7 @@
         <!-- svelte-ignore a11y-media-has-caption -->
         <video controls width="250">
 
-            <source src="help-tiktok.mp4"
+            <source src="https://github.com/Androz2091/discord-data-package-explorer/raw/master/assets/help-tiktok.mp4"
                     type="video/webm">
         
             Sorry, your browser doesn't support embedded videos.
