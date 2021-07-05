@@ -8,7 +8,7 @@
     export let explanation = null;
 
     const htmlContent = content ?
-        content.includes('%') ? content.split('%')[0] + '<span class="text-discord">' + (!isNaN(count) ? count.toLocaleString('en-US') : 'N/A') + '</span>' + content.split('%')[1] : content
+        content.includes('%') ? content.split('%')[0] + '<span class="text-discord">' + ((count === 0 || count) ? count.toLocaleString('en-US') : 'N/A') + '</span>' + content.split('%')[1] : content
         : null;
 </script>
 
@@ -22,7 +22,7 @@
         </slot>
     </div>
     <slot name="explanation">
-        {#if explanation && !isNaN(count)}
+        {#if explanation && (count === 0 || count)}
             <small>{ explanation }</small>
         {:else if !count && content}
             <small>This data is not available as you changed your Discord privacy settings</small>
