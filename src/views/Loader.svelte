@@ -29,24 +29,16 @@
                 uz.push(value.subarray(i, i + 65536));
             }
         }
-        /**
-         * If the package is valid and have
-         * all the required files files.
-         */
-        const validPackage = (() => {
-            const requiredFiles = [
-                'README.txt',
-                'account/user.json',
-                'messages/index.json',
-                'servers/index.json'
-            ];
-            for (const requiredFile of requiredFiles) {
-                if (! files.some((file) => file.name === requiredFile)) {
-                    return false;
-                }
-            }
-            return true;
-        })();
+        let validPackage = true;
+        const requiredFiles = [
+            'README.txt',
+            'account/user.json',
+            'messages/index.json',
+            'servers/index.json'
+        ];
+        for (const requiredFile of requiredFiles) {
+            if (!files.some((file) => file.name === requiredFile)) validPackage = false;
+        }
         if (!validPackage) {
             error = 'Your package seems to be corrupted. Click or drop your package file here to retry';
             loading = false;
