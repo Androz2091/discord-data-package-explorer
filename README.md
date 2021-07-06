@@ -16,7 +16,12 @@ What's **really** in your Discord Data package? And how can this data be useful?
 * Open **https://ddpe.androz2091.fr**
 * and import your data file!
 
-### Installation
+### Docker
+
+This repository provides a Docker image and compose file. Simply run `docker-compose up -d` in the project directory 
+and you can access the app at http://localhost:5000.
+
+### Manual Installation
 
 Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, and is quite easy to install.
 
