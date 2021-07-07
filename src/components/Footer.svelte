@@ -22,10 +22,4 @@
         margin: 0;
         margin-left: 1rem;
     }
-
-    .footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 </style>
