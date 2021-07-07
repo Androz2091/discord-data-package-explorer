@@ -1,6 +1,10 @@
+<script>
+    import { link } from 'svelte-routing';
+</script>
+
 <template>
 	<footer>
-		<p>Made with ❤️ by <a href="https://twitter.com/Androz2091" target="_blank">Androz2091</a>. DDPE is an <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank">open source</a> software.</p>
+        <p>Made with ❤️ by <a href="https://twitter.com/Androz2091" target="_blank">Androz2091</a>. DDPE is an <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank">open source</a> software. <a href="/about" use:link>About</a>.</p>
 	</footer>
 </template>
 
@@ -17,5 +21,11 @@
     footer p {
         margin: 0;
         margin-left: 1rem;
+    }
+
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 </style>

@@ -9,6 +9,7 @@
 	import Stats from './views/Stats.svelte';
 	import Loader from './views/Loader.svelte';
 	import Help from './views/Help.svelte';
+	import About from './views/About.svelte';
 
 	import Modal from 'svelte-simple-modal';
 
@@ -50,6 +51,7 @@
 		<Router>
 			<Header />
 			<div>
+				<Route path="/about" component={About} />
 				<Route path="/stats" component={Stats} />
 				<Route path="/stats/demo" component={Stats} />
 				<Route path="/help" component={Help} />
