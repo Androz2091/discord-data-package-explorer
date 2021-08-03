@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const generateAvatarURL = (avatarHash, id, discriminator) => {
     let avatarURL = 'https://cdn.discordapp.com/';
-    if (avatarHash) avatarURL += `avatars/${id}/${avatarHash}.webp`;
+    if (avatarHash) avatarURL += `avatars/${id}/${avatarHash}.${avatarHash.startsWith("a_") ? "gif" : "webp"}`;
     else avatarURL += `embed/avatars/${discriminator % 5}.png`;
     return avatarURL;
 };
