@@ -15,6 +15,7 @@
     import FunFact from '../components/FunFact.svelte';
     import Leaderboard from '../components/Leaderboard.svelte';
     import LeaderboardItem from '../components/LeaderboardItem.svelte';
+import LeaderBoardGame from '../components/LeaderBoardGame.svelte';
 
     let timeout;
 
@@ -184,6 +185,18 @@
                                 guild={channel.guildName}
                                 count={channel.messageCount}
                                 channel
+                            />
+                        {/each}
+                    </Leaderboard>
+                </Card>
+                <Card name="top-games">
+                    <Leaderboard title="Top Games" description="The games you play the most!">
+                        {#each $data.gamesPlayed as game, i}
+                            <LeaderBoardGame
+                                position={i}
+                                name={game.name}
+                                avatarURL={game.icon}
+                                count={game.timePlayed}
                             />
                         {/each}
                     </Leaderboard>
