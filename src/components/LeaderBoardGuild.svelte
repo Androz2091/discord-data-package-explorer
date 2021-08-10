@@ -19,7 +19,7 @@
     </div>
 
     <h3 class="top-name">
-      {name ?? "Serveur Inconnu"} <small class="text-muted channel">{myHumanizer(duration)}</small>
+      {name ?? "Unknow Server"} <small class="text-muted channel">{myHumanizer(duration)}</small>
     </h3>
   </div>
   <!-- <div class="top-messages">
