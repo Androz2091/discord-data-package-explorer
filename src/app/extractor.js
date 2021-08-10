@@ -165,7 +165,11 @@ const readAnalyticsFile = (file) => {
 
         resolve({
           globalVoctime: Object.values(guildsVoctime).reduce((accumulator, value) => accumulator + value),
-          guildsVoctime: Object.fromEntries(Object.entries(guildsVoctime).sort(([, a], [, b]) => b - a).slice(0,10)),
+          guildsVoctime: Object.fromEntries(
+            Object.entries(guildsVoctime)
+              .sort(([, a], [, b]) => b - a)
+              .slice(0, 10)
+          ),
 
           openCount: eventsOccurrences.appOpened,
           notificationCount: eventsOccurrences.notificationClicked,
@@ -398,7 +402,7 @@ export const extractData = async (files) => {
       voctime: voctime,
     };
   }
-  console.log(statistics.guildsVoctime)
+  console.log(statistics.guildsVoctime);
 
   extractedData.openCount = statistics.openCount;
   extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
@@ -426,7 +430,7 @@ export const extractData = async (files) => {
     .splice(0, 10)) {
     let discordSideGameInfo = detectables.find((game) => userGame.application_id == game.id);
     extractedData.gamesPlayed.push({
-      name: discordSideGameInfo?.name ?? "Unknow Game",
+      name: discordSideGameInfo && discordSideGameInfo.name ? discordSideGameInfo.name : "Unknow Game",
       timePlayed: Math.round(userGame.total_duration / 3600),
       icon:
         discordSideGameInfo && discordSideGameInfo.icon
