@@ -29,6 +29,12 @@
         .card.top-channels {
             grid-column: 6 / 12;
         }
+        .card.top-games {
+            grid-column: 1 / 7;
+        }
+        .card.top-voice {
+            grid-column: 7 / 12
+        }
         .card.hours {
             grid-column: 6 / 12;
             grid-row: 2 / 3;
@@ -37,7 +43,7 @@
             grid-column: 1 / 4;
         }
         .card.about {
-            grid-column: 1 / 6;
+            grid-column: 1 / 7;
         }
     }
 </style>

@@ -44,7 +44,7 @@
   "resolved" "https://registry.npmjs.org/@polka/url/-/url-0.5.0.tgz"
   "version" "0.5.0"
 
-"@rollup/plugin-commonjs@^11.0.0":
+"@rollup/plugin-commonjs@^11.1.0":
   "integrity" "sha512-Ycr12N3ZPN96Fw2STurD21jMqzKwL9QuFhms3SD7KKRK7oaXUsBU9Zt0jL/rOPHiPYisI21/rXGO3jr9BnLHUA=="
   "resolved" "https://registry.npmjs.org/@rollup/plugin-commonjs/-/plugin-commonjs-11.1.0.tgz"
   "version" "11.1.0"
@@ -64,7 +64,7 @@
   dependencies:
     "@rollup/pluginutils" "^3.0.8"
 
-"@rollup/plugin-node-resolve@^6.0.0":
+"@rollup/plugin-node-resolve@^6.1.0":
   "integrity" "sha512-Cv7PDIvxdE40SWilY5WgZpqfIUEaDxFxs89zCAHjqyRwlTSuql4M5hjIuc5QYJkOH0/vyiyNXKD72O+LhRipGA=="
   "resolved" "https://registry.npmjs.org/@rollup/plugin-node-resolve/-/plugin-node-resolve-6.1.0.tgz"
   "version" "6.1.0"
@@ -131,7 +131,7 @@
   "resolved" "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.3.1.tgz"
   "version" "5.3.1"
 
-"acorn@^7.1.0", "acorn@^7.4.0":
+"acorn@^6.0.0 || ^7.0.0 || ^8.0.0", "acorn@^7.1.0", "acorn@^7.4.0":
   "integrity" "sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A=="
   "resolved" "https://registry.npmjs.org/acorn/-/acorn-7.4.1.tgz"
   "version" "7.4.1"
@@ -426,7 +426,7 @@
   "resolved" "https://registry.npmjs.org/eslint-visitor-keys/-/eslint-visitor-keys-2.0.0.tgz"
   "version" "2.0.0"
 
-"eslint@^7.20.0":
+"eslint@^7.20.0", "eslint@>=6.0.0":
   "integrity" "sha512-qGi0CTcOGP2OtCQBgWZlQjcTuP0XkIpYFj25XtRTQSHC+umNnp7UMshr2G8SLsRFYDdAPFeHOsiteadmMH02Yw=="
   "resolved" "https://registry.npmjs.org/eslint/-/eslint-7.20.0.tgz"
   "version" "7.20.0"
@@ -547,10 +547,10 @@
   "resolved" "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   "version" "2.0.6"
 
-"fflate@^0.6.7":
-  "integrity" "sha512-vQzKXPxs2pGPAI1jBj1c0cix/3lJjZJVgMBwwjDrReumnVU4PDSYnermp0WGek/n+gCCr3ZFdYEQO0CZ32anhw=="
-  "resolved" "https://registry.npmjs.org/fflate/-/fflate-0.6.7.tgz"
-  "version" "0.6.7"
+"fflate@^0.6.10":
+  "integrity" "sha512-IQrh3lEPM93wVCEczc9SaAOvkmcoQn/G8Bo1e8ZPlY3X3bnAxWaBdvTdvM1hP62iZp0BXWDy4vTAy4fF0+Dlpg=="
+  "resolved" "https://registry.npmjs.org/fflate/-/fflate-0.6.10.tgz"
+  "version" "0.6.10"
 
 "file-entry-cache@^6.0.0":
   "integrity" "sha512-fqoO76jZ3ZnYrXLDRxBR1YvOvc0k844kcOg40bgsPrE25LAb/PDqTY+ho64Xh2c8ZXgIKldchCFHczG2UVRcWA=="
@@ -651,6 +651,11 @@
   "version" "1.0.3"
   dependencies:
     "function-bind" "^1.1.1"
+
+"humanize-duration@^3.27.0":
+  "integrity" "sha512-qLo/08cNc3Tb0uD7jK0jAcU5cnqCM0n568918E7R2XhMr/+7F37p4EY062W/stg7tmzvknNn9b/1+UhVRzsYrQ=="
+  "resolved" "https://registry.npmjs.org/humanize-duration/-/humanize-duration-3.27.0.tgz"
+  "version" "3.27.0"
 
 "ignore@^4.0.6":
   "integrity" "sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg=="
@@ -1054,7 +1059,7 @@
   dependencies:
     "estree-walker" "^0.6.1"
 
-"rollup@^1.20.0":
+"rollup@^1.20.0", "rollup@^1.20.0 || ^2.0.0", "rollup@^1.20.0||^2.0.0", "rollup@>=0.66.0 <3", "rollup@>=2.0.0", "rollup@1 || 2":
   "integrity" "sha512-/2HA0Ec70TvQnXdzynFffkjA6XN+1e2pEv/uKS5Ulca40g2L7KuOE3riasHoNVHOsFD5KKZgDsMk1CP3Tw9s+A=="
   "resolved" "https://registry.npmjs.org/rollup/-/rollup-1.32.1.tgz"
   "version" "1.32.1"
@@ -1075,7 +1080,7 @@
   "resolved" "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
   "version" "5.2.1"
 
-"sass@^1.35.1":
+"sass@^1.26.8", "sass@^1.35.1":
   "integrity" "sha512-oCisuQJstxMcacOPmxLNiLlj4cUyN2+8xJnG7VanRoh2GOLr9RqkvI4AxA4a6LHVg/rsu+PmxXeGhrdSF9jCiQ=="
   "resolved" "https://registry.npmjs.org/sass/-/sass-1.35.1.tgz"
   "version" "1.35.1"
@@ -1255,7 +1260,7 @@
   dependencies:
     "sirv-cli" "^0.4.4"
 
-"svelte@^3.0.0", "svelte@^3.32.2":
+"svelte@^3.0.0", "svelte@^3.18.2", "svelte@^3.2.0", "svelte@^3.20.x", "svelte@^3.23.0", "svelte@^3.24", "svelte@^3.32.2", "svelte@>=3.5.0":
   "integrity" "sha512-5etu/wDwtewhnYO/631KKTjSmFrKohFLWNm1sWErVHXqGZ8eJLqrW0qivDSyYTcN8GbUqsR4LkIhftNFsjNehg=="
   "resolved" "https://registry.npmjs.org/svelte/-/svelte-3.32.3.tgz"
   "version" "3.32.3"

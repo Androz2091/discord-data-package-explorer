@@ -59,11 +59,61 @@ const perDay = (value, userID) => {
   return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
 };
 
+// const readAnalyticsFile = (file) => {
+//   return new Promise((resolve) => {
+//     if (!file) resolve({});
+//     const eventsOccurrences = {};
+//     for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
+//     const decoder = new DecodeUTF8();
+//     let startAt = Date.now();
+//     let bytesRead = 0;
+//     file.ondata = (_err, data, final) => {
+//       bytesRead += data.length;
+//       loadTask.set(`Loading user statistics... ${Math.ceil((bytesRead / file.originalSize) * 100)}%`);
+//       const remainingBytes = file.originalSize - bytesRead;
+//       const timeToReadByte = (Date.now() - startAt) / bytesRead;
+//       const remainingTime = parseInt((remainingBytes * timeToReadByte) / 1000);
+//       loadEstimatedTime.set(`Estimated time: ${remainingTime + 1} second${remainingTime + 1 === 1 ? "" : "s"}`);
+//       decoder.push(data, final);
+//     };
+//     let prevChkEnd = "";
+//     decoder.ondata = (str, final) => {
+//       str = prevChkEnd + str;
+//       for (let event of Object.keys(eventsOccurrences)) {
+//         const eventName = snakeCase(event);
+//         // eslint-disable-next-line no-constant-condition
+//         while (true) {
+//           const ind = str.indexOf(eventName);
+//           if (ind == -1) break;
+//           str = str.slice(ind + eventName.length);
+//           eventsOccurrences[event]++;
+//         }
+//         prevChkEnd = str.slice(-eventName.length);
+//       }
+//       if (final) {
+//         console.log(eventsOccurrences);
+//         resolve({
+//           openCount: eventsOccurrences.appOpened,
+//           notificationCount: eventsOccurrences.notificationClicked,
+//           joinVoiceChannelCount: eventsOccurrences.joinVoiceChannel,
+//           joinCallCount: eventsOccurrences.joinCall,
+//           addReactionCount: eventsOccurrences.addReaction,
+//           messageEditedCount: eventsOccurrences.messageEdited,
+//           sendMessageCount: eventsOccurrences.sendMessage,
+//           slashCommandUsedCount: eventsOccurrences.slashCommandUsed,
+//         });
+//       }
+//     };
+//     file.start();
+//   });
+// };
+
 const readAnalyticsFile = (file) => {
+  const guildsVoctime = {},
+    eventsOccurrences = {};
+  for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
   return new Promise((resolve) => {
     if (!file) resolve({});
-    const eventsOccurrences = {};
-    for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
     const decoder = new DecodeUTF8();
     let startAt = Date.now();
     let bytesRead = 0;
@@ -76,22 +126,47 @@ const readAnalyticsFile = (file) => {
       loadEstimatedTime.set(`Estimated time: ${remainingTime + 1} second${remainingTime + 1 === 1 ? "" : "s"}`);
       decoder.push(data, final);
     };
-    let prevChkEnd = "";
-    decoder.ondata = (str, final) => {
+    let prevChkEnd = "",
+      line;
+    decoder.ondata = async (str, final) => {
       str = prevChkEnd + str;
-      for (let event of Object.keys(eventsOccurrences)) {
-        const eventName = snakeCase(event);
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-          const ind = str.indexOf(eventName);
-          if (ind == -1) break;
-          str = str.slice(ind + eventName.length);
-          eventsOccurrences[event]++;
+      var pos;
+      while ((pos = str.indexOf("\n")) >= 0) {
+        // keep going while there's a newline somewhere in the buffer
+        if (pos == 0) {
+          // if there's more than one newline in a row, the buffer will now start with a newline
+          str = str.slice(1); // discard it
+          continue; // so that the next iteration will start with data
         }
-        prevChkEnd = str.slice(-eventName.length);
+        line = str.slice(0, pos);
+
+        // Do Whatever You Want With Your JSON Line Below That Line
+        try {
+          //process line for voctime
+          var obj = JSON.parse(line); // parse the JSON
+          if (obj.event_type == "voice_disconnect" && obj.guild_id) {
+            guildsVoctime[obj.guild_id]
+              ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
+              : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
+          }
+        } catch (err) {}
+
+        //process line for others stats
+        for (let event of Object.keys(eventsOccurrences)) {
+          if (line.includes(snakeCase(event))) eventsOccurrences[event]++;
+        }
+
+        str = str.slice(pos + 1); // and slice the processed data off the buffer
       }
+
       if (final) {
+        console.log("Analytics file read");
+        console.log("[debug] getting guilds informations");
+
         resolve({
+          globalVoctime: Object.values(guildsVoctime).reduce((accumulator, value) => accumulator + value),
+          guildsVoctime: Object.fromEntries(Object.entries(guildsVoctime).sort(([, a], [, b]) => b - a).slice(0,10)),
+
           openCount: eventsOccurrences.appOpened,
           notificationCount: eventsOccurrences.notificationClicked,
           joinVoiceChannelCount: eventsOccurrences.joinVoiceChannel,
@@ -131,6 +206,8 @@ export const extractData = async (files) => {
       list: "",
     },
     gamesPlayed: [],
+    guildsVoctime: {},
+    globalVoctime: 0,
   };
 
   const getFile = (name) => files.find((file) => file.name === name);
@@ -314,6 +391,15 @@ export const extractData = async (files) => {
   const statistics = await readAnalyticsFile(
     files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name))
   );
+
+  for (const [guildId, voctime] of Object.entries(statistics.guildsVoctime)) {
+    statistics.guildsVoctime[guildId] = {
+      name: guildIndex[guildId],
+      voctime: voctime,
+    };
+  }
+  console.log(statistics.guildsVoctime)
+
   extractedData.openCount = statistics.openCount;
   extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
   extractedData.notificationCount = statistics.notificationCount;
@@ -325,7 +411,12 @@ export const extractData = async (files) => {
   extractedData.averageMessageCountPerDay =
     extractedData.sentMessageCount && perDay(extractedData.sentMessageCount, extractedData.user.id);
   extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
+  extractedData.globalVoctime = statistics.globalVoctime;
+  extractedData.guildsVoctime = statistics.guildsVoctime;
 
+  console.log("[debug] Activity fetched...");
+
+  console.log("[debug] Fetching games...");
   let { data: detectables } = await axios({
     method: "GET",
     url: "https://discord.com/api/v9/applications/detectable",
@@ -337,18 +428,17 @@ export const extractData = async (files) => {
     extractedData.gamesPlayed.push({
       name: discordSideGameInfo?.name ?? "Unknow Game",
       timePlayed: Math.round(userGame.total_duration / 3600),
-      icon: discordSideGameInfo?.icon
-        ? `https://cdn.discordapp.com/app-icons/${discordSideGameInfo.id}/${discordSideGameInfo.icon}.webp`
-        : "",
+      icon:
+        discordSideGameInfo && discordSideGameInfo.icon
+          ? `https://cdn.discordapp.com/app-icons/${discordSideGameInfo.id}/${discordSideGameInfo.icon}.webp`
+          : "",
     });
   }
-  console.log("[debug] Games fetched");
+  console.log("[debug] Games fetched...");
 
-  console.log("[debug] Activity fetched...");
+  // loadTask.set("Calculating statistics...");
 
-  loadTask.set("Calculating statistics...");
-
-  console.log(extractedData);
+  // console.log(extractedData);
 
   return extractedData;
 };
