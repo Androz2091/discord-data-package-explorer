@@ -36,6 +36,12 @@
         .card.profile {
             grid-column: 1 / 4;
         }
+        .card.top-games {
+            grid-column: 1 / 7;
+        }
+        .card.top-voice {
+            grid-column: 7 / 12
+        }
         .card.about {
             grid-column: 1 / 6;
         }
