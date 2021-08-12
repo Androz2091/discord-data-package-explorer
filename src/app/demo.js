@@ -46,6 +46,31 @@ export default () => {
             total: 0,
             list: ''
         },
+        gamesPlayed: new Array(10)
+            .fill({})
+            .map(() => ({
+                name: `Game n°`,
+                timePlayed: randomNumber(1, 666),
+                icon: null,
+            }))
+            .sort((a, b) => b.timePlayed - a.timePlayed)
+            .map((value, i) => {
+                value.name += i + 1;
+                return value;
+            }),
+        globalVoctime: randomNumber(60000, Infinity),
+        guildsVoctime: {
+            idGuild1: { name: 'Server n°1', voctime: '31536000000' },
+            idGuild2: { name: 'Server n°2', voctime: '16070400000' },
+            idGuild3: { name: 'Server n°3', voctime: '2629743000' },
+            idGuild4: { name: 'Server n°4', voctime: '1209600000' },
+            idGuild5: { name: 'Server n°5', voctime: '604800000' },
+            idGuild6: { name: 'Server n°6', voctime: '345600000' },
+            idGuild7: { name: 'Server n°7', voctime: '172800000' },
+            idGuild8: { name: 'Server n°8', voctime: '86400000' },
+            idGuild9: { name: 'Server n°9', voctime: '43200000' },
+            idGuild10: { name: 'Server n°10', voctime: '14400000' },
+        },
 
         ...(!removeAnalytics && {
             openCount: randomNumber(200, 300),

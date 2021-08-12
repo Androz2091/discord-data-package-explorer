@@ -15,6 +15,10 @@
     import FunFact from '../components/FunFact.svelte';
     import Leaderboard from '../components/Leaderboard.svelte';
     import LeaderboardItem from '../components/LeaderboardItem.svelte';
+    import LeaderBoardGame from "../components/LeaderBoardGame.svelte";
+    import LeaderBoardGuild from "../components/LeaderBoardGuild.svelte";
+    
+    import humanizeDuration from "humanize-duration";
 
     let timeout;
 
@@ -137,6 +141,20 @@
                         content="You accepted % calls in DMs"
                         count="{ $data.joinCallCount }"
                     />
+
+                    <FunFact
+                        svg="M 21.363281 3.1875 C 21.644531 3.121094 21.855469 2.867188 21.855469 2.566406 L 21.855469 0.636719 C 21.855469 0.285156 21.570312 0 21.21875 0 L 3.78125 0 C 3.429688 0 3.144531 0.285156 3.144531 0.636719 L 3.144531 2.566406 C 3.144531 2.867188 3.355469 3.121094 3.636719 3.1875 C 3.828125 6.621094 5.613281 9.765625 8.488281 11.695312 L 9.691406 12.5 L 8.488281 13.304688 C 5.613281 15.234375 3.828125 18.378906 3.636719 21.8125 C 3.355469 21.878906 3.144531 22.132812 3.144531 22.433594 L 3.144531 24.363281 C 3.144531 24.714844 3.429688 25 3.78125 25 L 21.21875 25 C 21.570312 25 21.855469 24.714844 21.855469 24.363281 L 21.855469 22.433594 C 21.855469 22.132812 21.644531 21.878906 21.363281 21.8125 C 21.171875 18.378906 19.386719 15.234375 16.511719 13.304688 L 15.308594 12.5 L 16.511719 11.695312 C 19.386719 9.765625 21.171875 6.621094 21.363281 3.1875 Z M 4.417969 1.273438 L 20.582031 1.273438 L 20.582031 1.929688 L 4.417969 1.929688 Z M 20.582031 23.726562 L 4.417969 23.726562 L 4.417969 23.070312 L 20.582031 23.070312 Z M 13.808594 11.96875 C 13.632812 12.089844 13.523438 12.289062 13.523438 12.5 C 13.523438 12.710938 13.632812 12.910156 13.808594 13.03125 L 15.800781 14.363281 C 18.320312 16.050781 19.890625 18.796875 20.085938 21.796875 L 4.914062 21.796875 C 5.109375 18.796875 6.679688 16.050781 9.199219 14.363281 L 11.191406 13.03125 C 11.371094 12.910156 11.476562 12.710938 11.476562 12.5 C 11.476562 12.289062 11.371094 12.089844 11.191406 11.96875 L 9.199219 10.636719 C 6.679688 8.949219 5.109375 6.203125 4.914062 3.203125 L 20.085938 3.203125 C 19.890625 6.203125 18.320312 8.949219 15.800781 10.636719 Z M 13.808594 11.96875"
+                        strokeWidth=1
+                        content="You were in a voice channel during %"
+                        count={humanizeDuration($data.globalVoctime, {
+                            conjunction: " and ",
+                            units: ["y", "mo", "w", "d", "h", "m"],
+                            serialComma: false,
+                            largest: 3,
+                            round: true,
+                        })}
+                    />
+
                     <FunFact
                         svg="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         content="You added % reactions on messages"
@@ -188,6 +206,27 @@
                         {/each}
                     </Leaderboard>
                 </Card>
+
+                <Card name="top-games">
+                    <Leaderboard title="Top Games" description="The games you play the most!">
+                      <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;width:100% align-items: center;justify-content: space-between;">
+                        {#each $data.gamesPlayed ?? [] as game, i}
+                          <LeaderBoardGame position={i} name={game.name} avatarURL={game.icon} count={game.timePlayed} />
+                        {/each}
+                      </div>
+                    </Leaderboard>
+                  </Card>
+                  <Card name="top-voice">
+                    <Leaderboard title="Voctime" description="The guilds you spent the more time in voice channels!">
+                      <div
+                        style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;width:100% align-items: center;justify-content: space-between;"
+                      >
+                        {#each Object.values($data.guildsVoctime ?? {}) as guild, i}
+                          <LeaderBoardGuild position={i} name={guild.name} duration={guild.voctime} />
+                        {/each}
+                      </div>
+                    </Leaderboard>
+                  </Card>
 
                 <Card name="about">
                     <div style="text-align: center;">
