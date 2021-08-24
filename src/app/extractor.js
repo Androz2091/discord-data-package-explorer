@@ -299,7 +299,7 @@ export const extractData = async (files) => {
     extractedData.joinCallCount = statistics.joinCallCount;
     extractedData.addReactionCount = statistics.addReactionCount;
     extractedData.messageEditedCount = statistics.messageEditedCount;
-    extractedData.sentMessageCount = statistics.sendMessageCount;
+    extractedData.sentMessageCount = channels.map(c => c.messages.length).reduce((a, b) => a + b);
     extractedData.averageMessageCountPerDay = extractedData.sentMessageCount && perDay(extractedData.sentMessageCount, extractedData.user.id);
     extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
 
