@@ -238,7 +238,7 @@ export const extractData = async (files) => {
 
     console.log('[debug] Loading top emotes...');
 
-    const allEmotes = channels.map((channel) => channel.messages).flat().map(message => message.words).flat().map((word) => {
+    const allEmotes = channels.map((channel) => channel.messages).flat().map(message => [...new Set(message.words)]).flat().map((word) => {
         const matches = String(word).match(/<a?:(.+):(.+)>/g);
         if (matches) {
             return matches[0];
