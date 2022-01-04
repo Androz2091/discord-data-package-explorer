@@ -30,7 +30,7 @@ export default () => {
         channelCount: randomNumber(50, 100),
         messageCount: randomNumber(300, 600),
         characterCount: randomNumber(4000, 10000),
-        topEmotes: new Array(10).fill({}).map(() => ({
+        topEmotes: Array.from({ length: 10 }, () => ({
             name: 'Emote',
             id: 892739134513369099,
             url: 'https://cdn.discordapp.com/emojis/892739134513369099.png?size=240',
