@@ -126,46 +126,42 @@ const readAnalyticsFile = (file) => {
             loadEstimatedTime.set(`Estimated time: ${remainingTime + 1} second${remainingTime + 1 === 1 ? "" : "s"}`);
             decoder.push(data, final);
         };
-        let prevChkEnd = "",
-            line;
+        let prevChkEnd = "";
         decoder.ondata = async (str, final) => {
+            //loop through buffer str, get every completed lines and iterate over them
             str = prevChkEnd + str;
-            var pos;
-            while ((pos = str.indexOf("\n")) >= 0) {
-                // keep going while there's a newline somewhere in the buffer
-                if (pos == 0) {
-                    // if there's more than one newline in a row, the buffer will now start with a newline
-                    str = str.slice(1); // discard it
-                    continue; // so that the next iteration will start with data
-                }
-                line = str.slice(0, pos);
+            let pos;
+            if ((pos = str.indexOf("\n")) >= 0) {
+                let lines = str.split("\n");
+                //last 'line' can be a part of a line and not an entire line so save it for next iteration
+                let lastLine = lines.pop();
+                for await(const line of lines) {
+                    try {
+                        let obj = JSON.parse(line.trim());
+                        if (obj.event_type == "voice_disconnect" && obj.channel_id) {
+                            if (obj.guild_id) {
 
-                // Do Whatever You Want With Your JSON Line Below That Line
-                try {
-                    //process line for voctime
-                    var obj = JSON.parse(line); // parse the JSON
-                    if (obj.event_type == "voice_disconnect" && obj.channel_id) {
-                        if (obj.guild_id) {
-
-                            guildsVoctime[obj.guild_id]
-                                ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
-                                : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
-                        }else{
-                            dmsVoctime[obj.channel_id]
-                                ? (dmsVoctime[obj.channel_id] += obj.duration ? parseFloat(obj.duration) : 0)
-                                : (dmsVoctime[obj.channel_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                                guildsVoctime[obj.guild_id]
+                                    ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
+                                    : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                            } else {
+                                dmsVoctime[obj.channel_id]
+                                    ? (dmsVoctime[obj.channel_id] += obj.duration ? parseFloat(obj.duration) : 0)
+                                    : (dmsVoctime[obj.channel_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                            }
                         }
+                    } catch (err) {
+                        console.error(line);
                     }
-                } catch (err) { }
 
-                //process line for others stats
-                for (let event of Object.keys(eventsOccurrences)) {
-                    if (line.includes(snakeCase(event))) eventsOccurrences[event]++;
+                    for await(let event of Object.keys(eventsOccurrences)) {
+                        if (line.includes(snakeCase(event))) eventsOccurrences[event]++;
+                    }
+
                 }
+                prevChkEnd = lastLine;
 
-                str = str.slice(pos + 1); // and slice the processed data off the buffer
             }
-
             if (final) {
                 console.log("Analytics file read");
                 console.log("[debug] getting guilds informations");
@@ -177,7 +173,7 @@ const readAnalyticsFile = (file) => {
                             .sort(([, a], [, b]) => b - a)
                             .slice(0, 10)
                     ),
-                    dmsVoctime : Object.fromEntries(
+                    dmsVoctime: Object.fromEntries(
                         Object.entries(dmsVoctime)
                             .sort(([, a], [, b]) => b - a)
                             .slice(0, 10)
@@ -197,6 +193,74 @@ const readAnalyticsFile = (file) => {
         file.start();
     });
 };
+
+//#region t
+// while ((pos = str.indexOf("\n")) >= 0) {
+
+//     // keep going while there's a newline somewhere in the buffer
+//     if (pos == 0) {
+//         // if str startswith \n, remote it
+//         str = str.slice(2); // discard it
+//         continue; // so that the next iteration will start with data
+//     }
+//     let e = str.indexOf("\n");
+//     line = str.slice(0, pos);
+
+//     // Do Whatever You Want With Your JSON Line Below That Line
+//     try {
+//         //process line for voctime
+//         var obj = JSON.parse(line); // parse the JSON
+//         if (obj.event_type == "voice_disconnect" && obj.channel_id) {
+//             if (obj.guild_id) {
+
+//                 guildsVoctime[obj.guild_id]
+//                     ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
+//                     : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
+//             } else {
+//                 dmsVoctime[obj.channel_id]
+//                     ? (dmsVoctime[obj.channel_id] += obj.duration ? parseFloat(obj.duration) : 0)
+//                     : (dmsVoctime[obj.channel_id] = obj.duration ? parseFloat(obj.duration) : 0);
+//             }
+//         }
+//     } catch (err) { console.error(e) }
+
+//     //process line for others stats
+//     for (let event of Object.keys(eventsOccurrences)) {
+//         if (line.includes(snakeCase(event))) eventsOccurrences[event]++;
+//     }
+
+//     str = str.slice(pos + 1); // and slice the processed data off the buffer
+// }
+
+// if (final) {
+//     console.log("Analytics file read");
+//     console.log("[debug] getting guilds informations");
+
+//     resolve({
+//         globalVoctime: Object.values(guildsVoctime).reduce((accumulator, value) => accumulator + value),
+//         guildsVoctime: Object.fromEntries(
+//             Object.entries(guildsVoctime)
+//                 .sort(([, a], [, b]) => b - a)
+//                 .slice(0, 10)
+//         ),
+//         dmsVoctime: Object.fromEntries(
+//             Object.entries(dmsVoctime)
+//                 .sort(([, a], [, b]) => b - a)
+//                 .slice(0, 10)
+//         ),
+
+//         openCount: eventsOccurrences.appOpened,
+//         notificationCount: eventsOccurrences.notificationClicked,
+//         joinVoiceChannelCount: eventsOccurrences.joinVoiceChannel,
+//         joinCallCount: eventsOccurrences.joinCall,
+//         addReactionCount: eventsOccurrences.addReaction,
+//         messageEditedCount: eventsOccurrences.messageEdited,
+//         sendMessageCount: eventsOccurrences.sendMessage,
+//         slashCommandUsedCount: eventsOccurrences.slashCommandUsed,
+//     });
+// }
+//#endregion
+
 /**
  * Extract the data from the package file.
  * @param files The files in the package
