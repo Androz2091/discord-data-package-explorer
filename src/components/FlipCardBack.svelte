@@ -4,8 +4,7 @@
 
 <style>
 	.flip-card-back {
-    padding: unset;
-    background-color: #202225;
+		background-color: #202225;
 		position: absolute;
 		width: 100%;
 		height: 100%;

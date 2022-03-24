@@ -37,10 +37,10 @@
             grid-column: 1 / 4;
         }
         .card.top-games {
-            grid-column: 1 / 7;
+            grid-column: 1 / 6;
         }
         .card.top-voice {
-            grid-column: 7 / 12
+            grid-column: 6 / 12
         }
         .card.about {
             grid-column: 1 / 6;

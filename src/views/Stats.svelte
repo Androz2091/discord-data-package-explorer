@@ -239,31 +239,32 @@
 					</div>
 				</Leaderboard>
 			</Card>
-			<FlipCard name="top-voice">
-				<FlipCardFront>
-					<Leaderboard title="Guild Voctime" description="The guilds you spent the more time in voice channels!">
-						<div
-							style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;width:100% align-items: center;justify-content: space-between;"
-						>
-							{#each Object.values($data.guildsVoctime ?? {}) as guild, i}
-								<LeaderBoardGuild position={i} name={guild.name} duration={guild.voctime} />
-							{/each}
-						</div>
-					</Leaderboard>
-				</FlipCardFront>
-				<FlipCardBack>
-					<Leaderboard title="Dm Voctime" description="The dms you spent the more time in voice channels!">
-						<div
-							style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;width:100% align-items: center;justify-content: space-between;"
-						>
-							{#each Object.values($data.dmsVoctime ?? {}) as channel, i}
-								<LeaderBoardGuild position={i} name={channel.name} duration={channel.voctime} ifNull="Unknow User/Group" />
-							{/each}
-						</div>
-					</Leaderboard>
-				</FlipCardBack>
-			</FlipCard>
-
+			<Card name="top-voice">
+				<FlipCard name="top-voice">
+					<FlipCardFront>
+						<Leaderboard title="Guild Voctime" description="The guilds you spent the more time in voice channels!">
+							<div
+								style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;width:100% align-items: center;justify-content: space-between;"
+							>
+								{#each Object.values($data.guildsVoctime ?? {}) as guild, i}
+									<LeaderBoardGuild position={i} name={guild.name} duration={guild.voctime} />
+								{/each}
+							</div>
+						</Leaderboard>
+					</FlipCardFront>
+					<FlipCardBack>
+						<Leaderboard title="Dm Voctime" description="The dms you spent the more time in voice channels!">
+							<div
+								style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;width:100% align-items: center;justify-content: space-between;"
+							>
+								{#each Object.values($data.dmsVoctime ?? {}) as channel, i}
+									<LeaderBoardGuild position={i} name={channel.name} duration={channel.voctime} ifNull="Unknow User/Group" />
+								{/each}
+							</div>
+						</Leaderboard>
+					</FlipCardBack>
+				</FlipCard>
+			</Card>
 			<Card name="about">
 				<div style="text-align: center;">
 					<h2>About this project</h2>
