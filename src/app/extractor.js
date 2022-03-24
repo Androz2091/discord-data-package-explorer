@@ -109,6 +109,7 @@ const perDay = (value, userID) => {
 
 const readAnalyticsFile = (file) => {
     const guildsVoctime = {},
+        dmsVoctime = {},
         eventsOccurrences = {};
     for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
     return new Promise((resolve) => {
@@ -143,10 +144,17 @@ const readAnalyticsFile = (file) => {
                 try {
                     //process line for voctime
                     var obj = JSON.parse(line); // parse the JSON
-                    if (obj.event_type == "voice_disconnect" && obj.guild_id) {
-                        guildsVoctime[obj.guild_id]
-                            ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
-                            : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                    if (obj.event_type == "voice_disconnect" && obj.channel_id) {
+                        if (obj.guild_id) {
+
+                            guildsVoctime[obj.guild_id]
+                                ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
+                                : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                        }else{
+                            dmsVoctime[obj.channel_id]
+                                ? (dmsVoctime[obj.channel_id] += obj.duration ? parseFloat(obj.duration) : 0)
+                                : (dmsVoctime[obj.channel_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                        }
                     }
                 } catch (err) { }
 
@@ -166,6 +174,11 @@ const readAnalyticsFile = (file) => {
                     globalVoctime: Object.values(guildsVoctime).reduce((accumulator, value) => accumulator + value),
                     guildsVoctime: Object.fromEntries(
                         Object.entries(guildsVoctime)
+                            .sort(([, a], [, b]) => b - a)
+                            .slice(0, 10)
+                    ),
+                    dmsVoctime : Object.fromEntries(
+                        Object.entries(dmsVoctime)
                             .sort(([, a], [, b]) => b - a)
                             .slice(0, 10)
                     ),
@@ -209,8 +222,9 @@ export const extractData = async (files) => {
             list: ''
         },
         gamesPlayed: [],
-		guildsVoctime: {},
-		globalVoctime: 0,
+        guildsVoctime: {},
+        dmsVoctime: {},
+        globalVoctime: 0,
     };
 
     const getFile = (name) => files.find((file) => file.name === name);
@@ -384,35 +398,42 @@ export const extractData = async (files) => {
     extractedData.slashCommandUsedCount = statistics.slashCommandUsedCount;
 
     for (const [guildId, voctime] of Object.entries(statistics.guildsVoctime)) {
-		statistics.guildsVoctime[guildId] = {
-			name: guildIndex[guildId],
-			voctime: voctime,
-		};
-	}
-	extractedData.globalVoctime = statistics.globalVoctime;
-	extractedData.guildsVoctime = statistics.guildsVoctime;
+        statistics.guildsVoctime[guildId] = {
+            name: guildIndex[guildId],
+            voctime: voctime,
+        };
+    }
+    extractedData.globalVoctime = statistics.globalVoctime;
+    extractedData.guildsVoctime = statistics.guildsVoctime;
 
+    for (const [channelId, voctime] of Object.entries(statistics.dmsVoctime)) {
+        statistics.dmsVoctime[channelId] = {
+            name: messagesIndex[channelId],
+            voctime: voctime,
+        };
+    }
+    extractedData.dmsVoctime = statistics.dmsVoctime;
     console.log('[debug] Activity fetched...');
 
-	console.log("[debug] Fetching games...");
-	const { data: detectables } = await axios({
-		method: "GET",
-		url: "https://discord.com/api/v9/applications/detectable",
-	});
-	for (const userGame of extractedData.user.user_activity_application_statistics
-		.sort((a, b) => (a.total_duration < b.total_duration ? 1 : -1))
-		.splice(0, 10)) {
-		let discordSideGameInfo = detectables.find((game) => userGame.application_id == game.id);
-		extractedData.gamesPlayed.push({
-			name: discordSideGameInfo && discordSideGameInfo.name ? discordSideGameInfo.name : "Unknow Game",
-			timePlayed: Math.round(userGame.total_duration / 3600),
-			icon:
-				discordSideGameInfo && discordSideGameInfo.icon
-					? `https://cdn.discordapp.com/app-icons/${discordSideGameInfo.id}/${discordSideGameInfo.icon}.webp`
-					: "",
-		});
-	}
-	console.log("[debug] Games fetched...");
+    console.log("[debug] Fetching games...");
+    const { data: detectables } = await axios({
+        method: "GET",
+        url: "https://discord.com/api/v9/applications/detectable",
+    });
+    for (const userGame of extractedData.user.user_activity_application_statistics
+        .sort((a, b) => (a.total_duration < b.total_duration ? 1 : -1))
+        .splice(0, 10)) {
+        let discordSideGameInfo = detectables.find((game) => userGame.application_id == game.id);
+        extractedData.gamesPlayed.push({
+            name: discordSideGameInfo && discordSideGameInfo.name ? discordSideGameInfo.name : "Unknow Game",
+            timePlayed: Math.round(userGame.total_duration / 3600),
+            icon:
+                discordSideGameInfo && discordSideGameInfo.icon
+                    ? `https://cdn.discordapp.com/app-icons/${discordSideGameInfo.id}/${discordSideGameInfo.icon}.webp`
+                    : "",
+        });
+    }
+    console.log("[debug] Games fetched...");
 
     loadTask.set('Calculating statistics...');
 
