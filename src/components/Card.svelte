@@ -40,7 +40,9 @@
             grid-column: 1 / 6;
         }
         .card.top-voice {
-            grid-column: 6 / 12
+            grid-column: 6 / 12;
+            /* height: calc(child-height * 2); */
+            max-height: fit-content;
         }
         .card.about {
             grid-column: 1 / 6;

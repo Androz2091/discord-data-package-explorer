@@ -4,7 +4,7 @@
 
 <input id="flipCardToggler" type="checkbox" />
 <label for="flipCardToggler"
-	><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 656 656">
+	><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" size="0 0 1em 1em" viewBox="0 0 656 656">
 		<image
 			id="Calque_2"
 			data-name="Calque 2"
@@ -35,11 +35,11 @@
 	}
 
 	label {
-		display: block;
+		display: inline-block;
 		position: relative;
 		z-index: 1;
 		top: 1em;
-		left : 1em;
+		left: 1em;
 		width: 3em;
 		height: 3em;
 		transition: all 0.5s ease-in-out;
@@ -51,18 +51,15 @@
 	}
 
 	.flip-card {
-		position: relative;
-		display: block;
-		top: -1.5em;
-		width: 100%;
-		height: 100%;
 		transition: transform 0.8s;
 		transform-style: preserve-3d;
-		margin-top: -12px;
+		margin-top: -3em;
 		background-color: #202225;
 	}
 
-	/* .flip-card-inner:hover {
-		transform: rotateY(180deg);
-	} */
+	.card.flip-card.flip-card-front,
+	.card.flip-card.flip-card-back {
+		min-width: 100%;
+		mix-blend-mode: multiply;
+	}
 </style>

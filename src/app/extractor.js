@@ -59,6 +59,7 @@ const perDay = (value, userID) => {
     return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
 };
 
+//#region OldExtractor
 // const readAnalyticsFile = (file) => {
 //     return new Promise((resolve) => {
 //         if (!file) resolve({});
@@ -106,6 +107,7 @@ const perDay = (value, userID) => {
 //         file.start();
 //     });
 // };
+//#endregion OldExtractor
 
 const readAnalyticsFile = (file) => {
     const guildsVoctime = {},
@@ -127,6 +129,8 @@ const readAnalyticsFile = (file) => {
             decoder.push(data, final);
         };
         let prevChkEnd = "";
+        let promiseList = [];
+
         decoder.ondata = async (str, final) => {
             //loop through buffer str, get every completed lines and iterate over them
             str = prevChkEnd + str;
@@ -135,34 +139,39 @@ const readAnalyticsFile = (file) => {
                 let lines = str.split("\n");
                 //last 'line' can be a part of a line and not an entire line so save it for next iteration
                 let lastLine = lines.pop();
-                for await(const line of lines) {
-                    try {
-                        let obj = JSON.parse(line.trim());
-                        if (obj.event_type == "voice_disconnect" && obj.channel_id) {
-                            if (obj.guild_id) {
+                for (const line of lines) {
+                    promiseList.push(new Promise(async (resolve) => {
 
-                                guildsVoctime[obj.guild_id]
-                                    ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
-                                    : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
-                            } else {
-                                dmsVoctime[obj.channel_id]
-                                    ? (dmsVoctime[obj.channel_id] += obj.duration ? parseFloat(obj.duration) : 0)
-                                    : (dmsVoctime[obj.channel_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                        try {
+                            let obj = JSON.parse(line.trim());
+                            if (obj.event_type == "voice_disconnect" && obj.channel_id) {
+                                if (obj.guild_id) {
+
+                                    guildsVoctime[obj.guild_id]
+                                        ? (guildsVoctime[obj.guild_id] += obj.duration ? parseFloat(obj.duration) : 0)
+                                        : (guildsVoctime[obj.guild_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                                } else {
+                                    dmsVoctime[obj.channel_id]
+                                        ? (dmsVoctime[obj.channel_id] += obj.duration ? parseFloat(obj.duration) : 0)
+                                        : (dmsVoctime[obj.channel_id] = obj.duration ? parseFloat(obj.duration) : 0);
+                                }
                             }
+                        } catch (err) {
+                            console.error(line);
+                            resolve(null);
                         }
-                    } catch (err) {
-                        console.error(line);
-                    }
 
-                    for await(let event of Object.keys(eventsOccurrences)) {
-                        if (line.includes(snakeCase(event))) eventsOccurrences[event]++;
-                    }
-
+                        for (let event of Object.keys(eventsOccurrences)) {
+                            if (line.includes(snakeCase(event))) eventsOccurrences[event]++;
+                        }
+                        resolve();
+                    }));
                 }
                 prevChkEnd = lastLine;
 
             }
             if (final) {
+                await Promise.all(promiseList);
                 console.log("Analytics file read");
                 console.log("[debug] getting guilds informations");
 
