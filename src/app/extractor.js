@@ -171,7 +171,10 @@ const readAnalyticsFile = (file) => {
 
             }
             if (final) {
-                await Promise.all(promiseList);
+                while (promiseList.length) {
+                    // 100 at a time
+                    await Promise.all(promiseList.splice(0, 100))
+                  }
                 console.log("Analytics file read");
                 console.log("[debug] getting guilds informations");
 
