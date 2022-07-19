@@ -173,7 +173,7 @@ export const extractData = async (files) => {
         extractedData.payments.list += confirmedPayments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
         extractedData.payments.total.toLocaleString = (loc) => {
             let totals = [extractedData.payments.total.usd.toLocaleString(loc)];
-            let etc = currencies.filter(c => c!=="usd");
+            let etc = currencies.filter(c => c !== "usd");
             for (let currency in etc) {
                 totals.push(currency.toLocaleUpperCase() + extractedData.payments.total[currency].toLocaleString(loc));
             }
