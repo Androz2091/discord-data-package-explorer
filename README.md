@@ -30,3 +30,8 @@ Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, an
 * Start the app using `npm run dev` or `yarn dev`!
 
 > Note: for testing purposes, you may append use [this link](https://ddpe.androz2091.fr/stats/demo) to use the mocked data.
+
+### Kaki87
+
+This project was created after a discussion with [Kaki87](https://kaki87.net), an awesome developer who taught me a lot of things. He had in mind to create this app but didn't have the time for it. I decided to learn Svelte and build it as a side project :)
+This project would never have existed without him! 🙏
