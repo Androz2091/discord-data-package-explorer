@@ -182,7 +182,7 @@
                                 position={i}
                                 name={channel.name}
                                 guild={channel.guildName}
-                                count={channel.messageCount}
+                                count={channel.messageCount.toLocaleString('en-US')}
                                 channel
                             />
                         {/each}
