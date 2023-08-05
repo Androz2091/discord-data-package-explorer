@@ -4,6 +4,10 @@
 
 What's **really** in your Discord Data package? And how can this data be useful? Discord Data Package Explorer does the job for you!
 
+## Dumpus
+
+**Discord Data Package Explorer v2** is now available as [Dumpus](https://dumpus.app). This repository (v1) will still be maintained 💪
+
 ## Example
 
 ### [DEMO](https://ddpe.androz2091.fr/stats/demo)
