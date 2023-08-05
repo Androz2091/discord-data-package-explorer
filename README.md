@@ -6,7 +6,7 @@ What's **really** in your Discord Data package? And how can this data be useful?
 
 ## Dumpus
 
-**Discord Data Package Explorer v2** is now available as [Dumpus](https://dumpus.app). This repository (v1) will still be maintained 💪
+**Discord Data Package Explorer v2** is now available as [Dumpus](https://github.com/dumpus-app/dumpus-app). This repository (v1) will still be maintained 💪
 
 ## Example
 
