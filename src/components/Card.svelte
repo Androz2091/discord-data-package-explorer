@@ -29,6 +29,10 @@
         .card.top-channels {
             grid-column: 6 / 12;
         }
+        .card.top-emotes {
+            grid-column: 1 / 6;
+            grid-row: 4 / 6;
+        }
         .card.hours {
             grid-column: 6 / 12;
             grid-row: 2 / 3;
@@ -37,7 +41,8 @@
             grid-column: 1 / 4;
         }
         .card.about {
-            grid-column: 1 / 6;
+            grid-column: 6 / 12;
+            grid-row: 4 / 6;
         }
     }
 </style>

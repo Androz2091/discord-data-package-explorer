@@ -188,7 +188,20 @@
                         {/each}
                     </Leaderboard>
                 </Card>
-
+                <Card name="top-emotes">
+                    <Leaderboard title="Top Emotes" description="The emotes you use most!">
+                        {#each $data.topEmotes as emote, i}
+                            <LeaderboardItem
+                                    position={i}
+                                    emoteUrl={emote.url}
+                                    name={emote.name}
+                                    id={emote.id}
+                                    count={emote.count}
+                                    emote
+                            />
+                        {/each}
+                    </Leaderboard>
+                </Card>
                 <Card name="about">
                     <div style="text-align: center;">
                         <h2>About this project</h2>
