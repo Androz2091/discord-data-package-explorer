@@ -110,7 +110,7 @@
                     Dumpus - Stats for Discord is released!
                 </p>
                 <div class="app-loader-v2-alert_link-wrapper">
-                    <a href="https://dumpus.app" class="app-loader-v2-alert_link">
+                    <a href="https://dumpus.app" data-umami-event="dumpus-cta" target="_blank" class="app-loader-v2-alert_link">
                     Open
                     <span aria-hidden="true"> &rarr;</span>
                     </a>
