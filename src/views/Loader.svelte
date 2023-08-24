@@ -89,6 +89,34 @@
 <template>
     <div class="app-loader">
         <div class="app-loader-boxes">
+            <div class="app-loader-v2-alert">
+                <div class="app-loader-v2-alert_icon-container">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="24"
+                    height="24"
+                >
+                    <path
+                    fill-rule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                    clip-rule="evenodd"
+                    />
+                </svg>
+                </div>
+                <div class="app-loader-v2-alert_content">
+                <p class="app-loader-v2-alert_content-text">
+                    Dumpus - Stats for Discord is released!
+                </p>
+                <div class="app-loader-v2-alert_link-wrapper">
+                    <a href="https://dumpus.app" class="app-loader-v2-alert_link">
+                    Open
+                    <span aria-hidden="true"> &rarr;</span>
+                    </a>
+                </div>
+                </div>
+            </div>
             <p class="app-loader-description"><a href="/" use:link>DDPE</a> is a website that generates stats from your Discord Data Package. It is your device that processes the data, nothing is sent to any server!</p>
             <p>
                 <a class="app-loader-tuto" href="/help" use:link>
@@ -135,10 +163,71 @@
 	.app-loader-boxes {
 		padding: 0 30px;
 	}
+    .app-loader-v2-alert {
+        margin-top: 3rem;
+        border-radius: 0.3rem;
+        padding: 1rem;
+        background-color: var(--main-color);
+        display: flex;
+        align-items: start;
+
+        @media (min-width: 600px) {
+            align-items: center;
+        }
+
+        p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .app-loader-v2-alert_icon-container {
+            flex-shrink: 0;
+
+            svg {
+                vertical-align: middle;
+            }
+        }
+        .app-loader-v2-alert_content {
+            margin-left: 0.5rem;
+            flex: 1;
+
+            @media (min-width: 600px) {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .app-loader-v2-alert_content-text {
+                color: #fff;
+            }
+
+            .app-loader-v2-alert_link-wrapper {
+                margin-top: 1rem;
+
+                @media (min-width: 600px) {
+                    margin-left: 1rem;
+                    margin-top: 0;
+                }
+
+                .app-loader-v2-alert_link {
+                    white-space: nowrap;
+                    font-weight: 600;
+                    color: var(--main-color) !important;
+                    background-color: #fff;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.3rem;
+
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
+            }
+        }
+    }
 	.app-loader-description {
         font-weight: 500;
         margin: auto;
-        margin-top: 5rem;
+        margin-top: 3rem;
         margin-bottom: 3rem;
 	}
 	.app-loader-tuto {
