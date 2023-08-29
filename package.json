@@ -1,6 +1,9 @@
 {
   "name": "discord-data-package-explorer",
   "version": "2.2.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
