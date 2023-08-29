@@ -1,4 +1,4 @@
-FROM node:14 AS build
+FROM node:20.4.0-alpine AS build
 WORKDIR /usr/local/ddpe
 COPY . .
 RUN yarn install && yarn build
