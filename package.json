@@ -1,6 +1,7 @@
 {
   "name": "discord-data-package-explorer",
   "version": "2.2.0",
+  "packageManager": "yarn@1.22.19",
   "engines": {
     "node": ">=20.0.0"
   },
