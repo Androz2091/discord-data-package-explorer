@@ -55,6 +55,23 @@ const parseCSV = (input) => {
         }));
 };
 
+/**
+ * Parse a messages JSON into an object
+ * @param input
+ */
+const parseJson = (input) => {
+    return JSON.parse(input)
+    .filter((m) => m.Contents)
+    .map((m) => ({
+        id: m.ID,
+        timestamp: m.Timestamp,
+        length: m.Contents.length,
+        words: m.Contents.split(' ')
+        // content: m.Contents,
+        // attachments: m.Attachments
+    }));
+}
+
 const perDay = (value, userID) => {
     return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
 };
@@ -183,7 +200,11 @@ export const extractData = async (files) => {
     const isOldPackage = channelsIDsFile[0].name.match(/messages\/(c)?([0-9]{16,32})\/$/)[1] === undefined;
     const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[1]);
 
-    console.log(`[debug] Old package: ${isOldPackage}`);
+    // Packages before 01-03-2024 does not have json files for messages but csv files
+    const isOldPackagev2 = files.find((file) => /messages\/c?([0-9]{16,32})\/messages.json/.test(file.name)) === undefined;
+
+    console.log(`[debug] Old package (2021): ${isOldPackage}`);
+    console.log(`[debug] Old package (2024): ${isOldPackagev2}`);
 
     const channels = [];
     let messagesRead = 0;
@@ -192,7 +213,8 @@ export const extractData = async (files) => {
         return new Promise((resolve) => {
 
             const channelDataPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
-            const channelMessagesPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/messages.csv`;
+            const extension = isOldPackagev2 ? 'csv' : 'json';
+            const channelMessagesPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
 
             Promise.all([
                 readFile(channelDataPath),
@@ -205,7 +227,7 @@ export const extractData = async (files) => {
                 } else messagesRead++;
 
                 const data = JSON.parse(rawData);
-                const messages = parseCSV(rawMessages);
+                const messages = extension === 'csv' ? parseCSV(rawMessages) : parseJson(rawMessages);
                 const name = messagesIndex[data.id];
                 const isDM = data.recipients && data.recipients.length === 2;
                 const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
