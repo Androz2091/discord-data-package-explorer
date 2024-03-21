@@ -145,7 +145,7 @@ export const extractData = async (files) => {
         hoursValues: [],
         favoriteWords: null,
         payments: {
-            total: 0,
+            total: { usd: 0 },
             list: ''
         }
     };
@@ -182,8 +182,21 @@ export const extractData = async (files) => {
 
     const confirmedPayments = extractedData.user.payments.filter((p) => p.status === 1);
     if (confirmedPayments.length) {
-        extractedData.payments.total += confirmedPayments.map((p) => p.amount / 100).reduce((p, c) => p + c);
+        const currencies = [...new Set(confirmedPayments.map((p) => p.currency))];
+        for (let p of confirmedPayments) {
+            if (!extractedData.payments.total[p.currency]) extractedData.payments.total[p.currency] = p.amount / 100;
+            else extractedData.payments.total[p.currency] += p.amount / 100;
+        }
         extractedData.payments.list += confirmedPayments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
+        extractedData.payments.total.toLocaleString = (loc) => {
+            let totals = [extractedData.payments.total.usd.toLocaleString(loc)];
+            let etc = currencies.filter(c => c !== "usd");
+            for (let currency in etc) {
+                totals.push(currency.toLocaleUpperCase() + extractedData.payments.total[currency].toLocaleString(loc));
+            }
+
+            return totals.join(", ");
+        };
     }
     console.log('[debug] User info loaded.');
 
