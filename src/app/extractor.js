@@ -187,16 +187,14 @@ export const extractData = async (files) => {
             if (!extractedData.payments.total[p.currency]) extractedData.payments.total[p.currency] = p.amount / 100;
             else extractedData.payments.total[p.currency] += p.amount / 100;
         }
-        extractedData.payments.list += confirmedPayments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} ($${p.amount / 100})`).join('<br>');
-        extractedData.payments.total.toLocaleString = (loc) => {
-            let totals = [extractedData.payments.total.usd.toLocaleString(loc)];
-            let etc = currencies.filter(c => c !== "usd");
-            for (let currency in etc) {
-                totals.push(currency.toLocaleUpperCase() + extractedData.payments.total[currency].toLocaleString(loc));
+        extractedData.payments.list += confirmedPayments.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()).map((p) => `${p.description} (${p.currency.toUpperCase()} ${p.amount / 100})`).join('<br>');
+        extractedData.payments.total = ((loc) => {
+            const totals = [];
+            for (let currency of currencies) {
+                totals.push(currency.toLocaleUpperCase() + " " + extractedData.payments.total[currency].toLocaleString(loc));
             }
-
             return totals.join(", ");
-        };
+        })('en-US');
     }
     console.log('[debug] User info loaded.');
 

@@ -53,6 +53,7 @@
             console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
             navigate('/stats');
         }).catch((err) => {
+            console.error(err);
             if (err.message === 'invalid_package_missing_messages') {
                 error = 'Some data is missing in your package, therefore it can not be read. <br> It is a bug on Discord side (06-10-21), and will be fixed in the next few days. <br> Join <a href="https://androz2091.fr/discord">our Discord</a> to get more information.';
                 loading = false;

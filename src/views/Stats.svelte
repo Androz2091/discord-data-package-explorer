@@ -87,7 +87,7 @@
                         <h3>
                             You spent
                             <span class="text-discord" on:click="{ $data.payments.list.length ? showModal(`<h3 style="text-align: center">${$data.payments.list}</h3>`) : undefined }">
-                                ${ Math.round($data.payments.total).toLocaleString('en-US') }
+                                { $data.payments.total }
                             </span>
                             on Discord
                         </h3>
