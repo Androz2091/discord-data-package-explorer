@@ -14,7 +14,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            androz2091/dscord-data-package-explorer
+            androz2091/discord-data-package-explorer
           # generate Docker tags based on the following events/attributes
           tags: |
             type=schedule
