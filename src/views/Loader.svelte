@@ -32,12 +32,11 @@
         let validPackage = true;
         const requiredFiles = [
             'README.txt',
-            'Account/user.json',
-            'Messages/index.json',
-            'Servers/index.json'
+            'user.json',
+            'index.json'
         ];
         for (const requiredFile of requiredFiles) {
-            if (!files.some((file) => file.name === requiredFile)) validPackage = false;
+            if (!files.some((file) => file.name.includes(requiredFile))) validPackage = false;
         }
         if (files.some((file) => file.name == 'account/user.json')) {
             error = 'Your package has been generated before June 14th, 2025 and is no longer supported by the latest version of DDPE. You might want to try this <a href="https://d15bd6c5.discord-data-package-explorer.pages.dev/" target="_blank">older build</a> instead.';

@@ -7,6 +7,41 @@ import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 import { DecodeUTF8 } from 'fflate';
 import { snakeCase } from 'snake-case';
 
+const getMessagesRoot = (files) => {
+    // Find any channel.json inside a numbered folder
+    const sample = files.find(f => /\/c?[0-9]{16,32}\/channel\.json$/.test(f.name));
+    if (!sample) throw new Error('Could not find Messages folder structure');
+    // Remove the channel ID and file name to get the root
+    const segments = sample.name.split('/');
+    return segments.slice(0, segments.length - 2).join('/');
+};
+
+const getServersRoot = (files) => {
+    // Find any guild.json inside a numbered folder
+    const sample = files.find(f => /\/[0-9]{16,32}\/guild\.json$/.test(f.name));
+    if (!sample) throw new Error('Could not find Servers folder structure');
+    // Remove the guild ID and file name to get the root
+    const segments = sample.name.split('/');
+    return segments.slice(0, segments.length - 2).join('/');
+};
+
+/*
+ * Gets the root of the user folder.
+ *
+ * Important: we cannot simply use the first user.json file found, because the package can contain multiple files.
+ *
+ *   * Activités/Activities_1/users/user.json
+ *   * Compte/user.json
+ */
+const getUserRoot = (files) => {
+    // Find any user.json file
+    const sample = files.find(f => /^([^\/]+)\/user\.json$/.test(f.name));
+    if (!sample) throw new Error('Could not find User folder structure');
+    // Remove the file name to get the root
+    const segments = sample.name.split('/');
+    return segments.slice(0, segments.length - 1).join('/');
+};
+
 /**
  * Fetch a user on Discord.
  * This is necessary because sometimes we only have the user ID in the files.
@@ -150,6 +185,14 @@ export const extractData = async (files) => {
         }
     };
 
+    const accountFolder = getUserRoot(files);
+    const serversFolder = getServersRoot(files);
+    const messagesRoot = getMessagesRoot(files);
+
+    console.log('[debug] Found account folder:', accountFolder);
+    console.log('[debug] Found servers folder:', serversFolder);
+    console.log('[debug] Found messages root:', messagesRoot);
+
     const getFile = (name) => files.find((file) => file.name === name);
     // Read a file from its name
     const readFile = (name) => {
@@ -173,7 +216,7 @@ export const extractData = async (files) => {
     console.log('[debug] Loading user info...');
     loadTask.set('Loading user information...');
 
-    extractedData.user = JSON.parse(await readFile('Account/user.json'));
+    extractedData.user = JSON.parse(await readFile(`${accountFolder}/user.json`));
     loadTask.set('Fetching user information...');
     const fetchedUser = await fetchUser(extractedData.user.id);
     extractedData.user.username = fetchedUser.username;
@@ -202,17 +245,17 @@ export const extractData = async (files) => {
     console.log('[debug] Loading channels...');
     loadTask.set('Loading user messages...');
 
-    const messagesIndex = JSON.parse(await readFile('Messages/index.json'));
+    const messagesIndex = JSON.parse(await readFile(`${messagesRoot}/index.json`));
 
-    const messagesPathRegex = /Messages\/c?([0-9]{16,32})\/$/;
-    const channelsIDsFile = files.filter((file) => messagesPathRegex.test(file.name));
+    const messagesPathRegex = /c?([0-9]{16,32})\/$/;
+    const channelsIDsFile = files.filter((file) => messagesPathRegex.test(file.name) && file.name.startsWith(messagesRoot));
 
     // Packages before 06-12-2021 does not have the leading "c" before the channel ID
-    const isOldPackage = channelsIDsFile[0].name.match(/Messages\/(c)?([0-9]{16,32})\/$/)[1] === undefined;
+    const isOldPackage = channelsIDsFile[0].name.match(/(c)?([0-9]{16,32})\/$/)[1] === undefined;
     const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[1]);
 
     // Packages before 01-03-2024 does not have json files for messages but csv files
-    const isOldPackagev2 = files.find((file) => /Messages\/c?([0-9]{16,32})\/messages.json/.test(file.name)) === undefined;
+    const isOldPackagev2 = files.find((file) => /c?([0-9]{16,32})\/messages.json/.test(file.name)) === undefined;
 
     console.log(`[debug] Old package (2021): ${isOldPackage}`);
     console.log(`[debug] Old package (2024): ${isOldPackagev2}`);
@@ -223,9 +266,9 @@ export const extractData = async (files) => {
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
-            const channelDataPath = `Messages/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
+            const channelDataPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
             const extension = isOldPackagev2 ? 'csv' : 'json';
-            const channelMessagesPath = `Messages/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
+            const channelMessagesPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
 
             Promise.all([
                 readFile(channelDataPath),
@@ -278,7 +321,7 @@ export const extractData = async (files) => {
     console.log('[debug] Loading guilds...');
     loadTask.set('Loading joined servers...');
 
-    const guildIndex = JSON.parse(await readFile('Servers/index.json'));
+    const guildIndex = JSON.parse(await readFile(`${serversFolder}/index.json`));
     extractedData.guildCount = Object.keys(guildIndex).length;
 
     console.log(`[debug] ${extractedData.guildCount} guilds loaded`);
@@ -324,7 +367,7 @@ export const extractData = async (files) => {
     loadTask.set('Calculating statistics...');
     console.log('[debug] Fetching activity...');
 
-    const statistics = await readAnalyticsFile(files.find((file) => /Activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    const statistics = await readAnalyticsFile(files.find((file) => /analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
     extractedData.openCount = statistics.openCount;
     extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
     extractedData.notificationCount = statistics.notificationCount;
