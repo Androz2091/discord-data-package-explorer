@@ -324,7 +324,7 @@ export const extractData = async (files) => {
     loadTask.set('Calculating statistics...');
     console.log('[debug] Fetching activity...');
 
-    const statistics = await readAnalyticsFile(files.find((file) => /activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    const statistics = await readAnalyticsFile(files.find((file) => /Activity\/analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
     extractedData.openCount = statistics.openCount;
     extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
     extractedData.notificationCount = statistics.notificationCount;
