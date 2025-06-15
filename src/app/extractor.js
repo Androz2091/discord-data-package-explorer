@@ -202,17 +202,17 @@ export const extractData = async (files) => {
     console.log('[debug] Loading channels...');
     loadTask.set('Loading user messages...');
 
-    const messagesIndex = JSON.parse(await readFile('messages/index.json'));
+    const messagesIndex = JSON.parse(await readFile('Messages/index.json'));
 
-    const messagesPathRegex = /messages\/c?([0-9]{16,32})\/$/;
+    const messagesPathRegex = /Messages\/c?([0-9]{16,32})\/$/;
     const channelsIDsFile = files.filter((file) => messagesPathRegex.test(file.name));
 
     // Packages before 06-12-2021 does not have the leading "c" before the channel ID
-    const isOldPackage = channelsIDsFile[0].name.match(/messages\/(c)?([0-9]{16,32})\/$/)[1] === undefined;
+    const isOldPackage = channelsIDsFile[0].name.match(/Messages\/(c)?([0-9]{16,32})\/$/)[1] === undefined;
     const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[1]);
 
     // Packages before 01-03-2024 does not have json files for messages but csv files
-    const isOldPackagev2 = files.find((file) => /messages\/c?([0-9]{16,32})\/messages.json/.test(file.name)) === undefined;
+    const isOldPackagev2 = files.find((file) => /Messages\/c?([0-9]{16,32})\/messages.json/.test(file.name)) === undefined;
 
     console.log(`[debug] Old package (2021): ${isOldPackage}`);
     console.log(`[debug] Old package (2024): ${isOldPackagev2}`);
@@ -223,9 +223,9 @@ export const extractData = async (files) => {
     await Promise.all(channelsIDs.map((channelID) => {
         return new Promise((resolve) => {
 
-            const channelDataPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
+            const channelDataPath = `Messages/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
             const extension = isOldPackagev2 ? 'csv' : 'json';
-            const channelMessagesPath = `messages/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
+            const channelMessagesPath = `Messages/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
 
             Promise.all([
                 readFile(channelDataPath),
@@ -278,7 +278,7 @@ export const extractData = async (files) => {
     console.log('[debug] Loading guilds...');
     loadTask.set('Loading joined servers...');
 
-    const guildIndex = JSON.parse(await readFile('servers/index.json'));
+    const guildIndex = JSON.parse(await readFile('Servers/index.json'));
     extractedData.guildCount = Object.keys(guildIndex).length;
 
     console.log(`[debug] ${extractedData.guildCount} guilds loaded`);

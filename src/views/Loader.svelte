@@ -32,9 +32,9 @@
         let validPackage = true;
         const requiredFiles = [
             'README.txt',
-            'account/user.json',
-            'messages/index.json',
-            'servers/index.json'
+            'Account/user.json',
+            'Messages/index.json',
+            'Servers/index.json'
         ];
         for (const requiredFile of requiredFiles) {
             if (!files.some((file) => file.name === requiredFile)) validPackage = false;
