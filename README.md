@@ -14,6 +14,9 @@ What's **really** in your Discord Data package? And how can this data be useful?
 
 ![Example](./example.png)
 
+> [!IMPORTANT]
+> On June 14th, 2025, Discord updated their package format once again. We've just released an update that should resolve all related issues. If you're still experiencing problems, feel free to open an issue — we'll do our best to fix it promptly.
+
 ## How to Use
 
 * Ask for your data file in Discord (`Settings` > `Privacy & Safety`)
