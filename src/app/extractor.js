@@ -173,7 +173,7 @@ export const extractData = async (files) => {
     console.log('[debug] Loading user info...');
     loadTask.set('Loading user information...');
 
-    extractedData.user = JSON.parse(await readFile('account/user.json'));
+    extractedData.user = JSON.parse(await readFile('Account/user.json'));
     loadTask.set('Fetching user information...');
     const fetchedUser = await fetchUser(extractedData.user.id);
     extractedData.user.username = fetchedUser.username;
