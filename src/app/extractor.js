@@ -305,10 +305,10 @@ export const extractData = async (files) => {
 
     extractedData.channelCount = channels.filter(c => !c.isDM).length;
     extractedData.dmChannelCount = channels.length - extractedData.channelCount;
-    extractedData.topChannels = channels.filter(c => c.data && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10).map((channel) => ({
+    extractedData.topChannels = channels.filter(c => c.data && !c.isDM).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10).map((channel) => ({
         name: channel.name,
         messageCount: channel.messages.length,
-        guildName: channel.data.guild.name
+        guildName: channel.data.guild ? channel.data.guild.name : 'Group DM'
     }));
     extractedData.characterCount = channels.map((channel) => channel.messages).flat().map((message) => message.length).reduce((p, c) => p + c);
 
