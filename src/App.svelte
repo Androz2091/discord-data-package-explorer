@@ -1,7 +1,7 @@
 <script>
+	import decodeJwt from 'jwt-decode';
 	import { onMount } from 'svelte';
 	import { Router, Route } from 'svelte-routing';
-	import decodeJwt from 'jwt-decode';
 
 	import Header from './components/Header.svelte';
 	import Footer from './components/Footer.svelte';
@@ -13,28 +13,35 @@
 
 	import Modal from 'svelte-simple-modal';
 
-	import { SvelteToast } from '@zerodevx/svelte-toast';
+	import { SvelteToast, toast } from '@zerodevx/svelte-toast';
+    import { diswhoCompleted } from './app/store';
 
 	const options = {
 	    duration: 10000
 	};
 
 	onMount(() => {
-	    const
-            paramDiswhoJwt = new URLSearchParams(window.location.search).get('diswhoJwt'),
-            storeDiswhoJwt = localStorage.getItem('diswhoJwt');
+		const paramDiswhoJwt = new URLSearchParams(window.location.search).get('diswhoJwt');
         if(paramDiswhoJwt){
             window.history.replaceState(null, document.title, location.pathname);
             localStorage.setItem('diswhoJwt', paramDiswhoJwt);
+			diswhoCompleted.set(true);
+			toast.push('Thank you for completing the captcha.', {
+				theme: {
+					'--toastBackground': '#18191c',
+					'--toastColor': 'white',
+					'--toastBarBackground': '#3b82f6'
+				}
+			});
         }
-	    else if(
-	        !storeDiswhoJwt
-            ||
-	        storeDiswhoJwt && decodeJwt(storeDiswhoJwt).expirationTimestamp < Date.now()
-        ){
-            window.location.replace(`https://diswho.androz2091.fr?returnUrl=${window.location.href}`);
-        }
-    });
+		const storeDiswhoJwt = localStorage.getItem('diswhoJwt');
+        if (storeDiswhoJwt && decodeJwt(storeDiswhoJwt).expirationTimestamp > Date.now()) {
+            diswhoCompleted.set(true);
+        } else {
+			diswhoCompleted.set(false);
+		}
+	});
+
 </script>
 
 <svelte:head>

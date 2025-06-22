@@ -8,6 +8,7 @@ let dataValue = storedData && JSON.parse(storedData);
 export const loadTask = writable(null);
 export const loadEstimatedTime = writable(null);
 export const data = writable(dataValue);
+export const diswhoCompleted = writable(false);
 
 data.subscribe((value) => {
     if (!value) localStorage.removeItem('data');

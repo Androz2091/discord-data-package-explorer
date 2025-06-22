@@ -1,4 +1,5 @@
 <div class="help">
+    <button class="go-back-button" on:click={() => window.location.href = '/'}>Go back to the home page</button>
     <div>
         <ol>
             <li>Click on "User Settings" in the bottom left corner.</li>
@@ -25,6 +26,13 @@
 </div>
 
 <style>
+    .go-back-button {
+        background-color: #ffffff;
+        color: black;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+    }
     .help {
         margin-right: 0.5rem;
         margin-left: 0.5rem;

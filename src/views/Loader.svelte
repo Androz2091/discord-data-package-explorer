@@ -2,11 +2,12 @@
     import { link } from 'svelte-routing';
 	import { Unzip, AsyncUnzipInflate } from 'fflate';
     import { navigate } from "svelte-routing";
-    import { loadTask, loadEstimatedTime, data } from '../app/store';
+    import { loadTask, loadEstimatedTime, data, diswhoCompleted } from '../app/store';
     import { extractData } from '../app/extractor';
 
     let loading = false;
-    let error = false;
+    let error = "";
+    let informationalMessage = "";
     async function handleFile (file) {
         loading = true;
         const uz = new Unzip();
@@ -80,8 +81,18 @@
             error = 'Error trying to handle the dropped file. Try clicking instead.';
         }
     }
+    
     function filePopup (event) {
         if (event.target.classList.value.includes('help') || loading || error) return;
+
+        if(!$diswhoCompleted){
+            informationalMessage = "Redirecting you to Diswho to complete a captcha...";
+            return setTimeout(() => {
+                informationalMessage = "";
+                window.location.replace(`https://diswho.androz2091.fr?returnUrl=${window.location.href}`);
+            }, 2000);
+        }
+
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('accept', '.zip');
@@ -143,8 +154,12 @@
                             {/if}
                         {:else if error}
                             <p style="color: red;">{@html error}</p>
+                        {:else if informationalMessage}
+                            {informationalMessage}
+                        {:else if $diswhoCompleted}
+                            Click <strong>here</strong> to select your Discord data<br><small class="text-gray">Thank you for completing the captcha!</small>
                         {:else}
-                            Click <strong>here</strong> to select your Discord data
+                            Click <strong>here</strong> to select your Discord data<br><small class="text-gray">You will be redirected to complete a captcha before using DDPE.</small>
                         {/if}
                     </span>
                 </label>
@@ -160,6 +175,9 @@
 </template>
 
 <style lang="scss">
+    .text-gray {
+        color: #9ca3af;
+    }
     .app-loader {
 		padding-top: 3rem;
 		max-width: 768px;
