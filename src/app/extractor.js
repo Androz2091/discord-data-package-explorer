@@ -223,7 +223,13 @@ export const extractData = async (files) => {
     extractedData.user.discriminator = fetchedUser.discriminator;
     extractedData.user.avatar_hash = fetchedUser.avatar;
 
-    const confirmedPayments = extractedData.user.payments !== undefined ? extractedData.user.payments.filter((p) => p.status === 1) : [];
+    // Discord Orbs are a virtual currency awarded via Quests / events — the
+    // user never pays real money for them, and the `amount` is denominated in
+    // orbs (not cents). Including these would tell e.g. a user with €0 of
+    // real spend but 29 720 orbs of cosmetic purchases that they spent
+    // "DISCORD_ORB 297.20", which is meaningless. Drop them alongside the
+    // status filter.
+    const confirmedPayments = extractedData.user.payments !== undefined ? extractedData.user.payments.filter((p) => p.status === 1 && p.currency !== 'discord_orb') : [];
     if (confirmedPayments.length) {
         const currencies = [...new Set(confirmedPayments.map((p) => p.currency))];
         for (let p of confirmedPayments) {
