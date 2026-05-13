@@ -1,7 +1,6 @@
 {
   "name": "discord-data-package-explorer",
   "version": "2.3.4",
-  "packageManager": "yarn@3.6.3",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",

@@ -1,8 +1,7 @@
 FROM node:20.4.0-alpine AS build
 WORKDIR /usr/local/ddpe
-RUN corepack enable
-COPY package.json yarn.lock .yarnrc.yml .
-RUN yarn install --immutable
+COPY package.json yarn.lock .
+RUN yarn install
 COPY . .
 RUN yarn build
 
