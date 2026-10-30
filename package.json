@@ -19,11 +19,11 @@
     "@untemps/svelte-use-tooltip": "^4.0.2",
     "@zerodevx/svelte-toast": "^0.9.6",
     "axios": "^1.21.0",
+    "change-case": "^5.4.4",
     "fflate": "^0.8.3",
     "jwt-decode": "^4.0.0",
     "papaparse": "^5.7.0",
     "sass": "^1.107.0",
-    "snake-case": "^3.0.4",
     "svelte-frappe-charts": "^2.0.0",
     "svelte-routing": "^2.13.0",
     "svelte-simple-modal": "^2.0.0"

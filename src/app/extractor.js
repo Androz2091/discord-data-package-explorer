@@ -5,7 +5,7 @@ import eventsData from './events.json';
 import { loadEstimatedTime, loadTask } from './store';
 import { getCreatedTimestamp, getFavoriteWords } from './helpers';
 import { DecodeUTF8 } from 'fflate';
-import { snakeCase } from 'snake-case';
+import { snakeCase } from 'change-case';
 
 const getMessagesRoot = (files) => {
     // Find any channel.json inside a numbered folder
