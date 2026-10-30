@@ -16,7 +16,7 @@
     "vite": "^8.3.5"
   },
   "dependencies": {
-    "@zerodevx/svelte-toast": "^0.1.4",
+    "@zerodevx/svelte-toast": "^0.9.6",
     "axios": "^0.21.1",
     "fflate": "^0.6.7",
     "jwt-decode": "^3.1.2",

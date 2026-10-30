@@ -394,10 +394,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zerodevx/svelte-toast@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "@zerodevx/svelte-toast@npm:0.1.4"
-  checksum: 10c0/070d17d981a267ff9d71bf7fd4e15b71eeb270a6abf4de288cf449e2d0a18a968b780b8b2db19ab3e9cd004f99959f6cef6ad99ed6407b3cda980c60cca78638
+"@zerodevx/svelte-toast@npm:^0.9.6":
+  version: 0.9.6
+  resolution: "@zerodevx/svelte-toast@npm:0.9.6"
+  peerDependencies:
+    svelte: ^3.57.0 || ^4.0.0 || ^5.0.0
+  checksum: 10c0/4912e7bcaaf8ce8339f60159963b7461045721b945dc8b5fc67b1a7819fda51fc343aad0b1ac69633b332671c184a2da3a88e36931d96e7e1294922922ce44ef
   languageName: node
   linkType: hard
 
@@ -700,7 +702,7 @@ __metadata:
   resolution: "discord-data-package-explorer@workspace:."
   dependencies:
     "@sveltejs/vite-plugin-svelte": "npm:^7.3.1"
-    "@zerodevx/svelte-toast": "npm:^0.1.4"
+    "@zerodevx/svelte-toast": "npm:^0.9.6"
     axios: "npm:^0.21.1"
     eslint: "npm:^7.20.0"
     eslint-plugin-svelte3: "npm:^3.1.1"
