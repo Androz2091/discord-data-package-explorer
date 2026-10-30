@@ -8,4 +8,4 @@ RUN yarn build
 
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /usr/local/ddpe/public /usr/share/nginx/html
+COPY --from=build /usr/local/ddpe/dist /usr/share/nginx/html

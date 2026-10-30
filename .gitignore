@@ -1,4 +1,4 @@
 node_modules
-public/build
+dist
 .yarn/cache
 .yarn/install-state.gz

@@ -1,36 +1,27 @@
 {
   "name": "discord-data-package-explorer",
   "version": "2.3.5",
+  "type": "module",
   "packageManager": "yarn@4.18.1+sha512.b2e1e7524f654f2749d32b4ebcb4622473cb5bcbc485df2007e12a154e50162a4d795526768bc5f5b8f81717bfd79deb2472813d86fb5ae2eb551fa9c872b08f",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "sirv public --single"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "eslint": "^7.20.0",
     "eslint-plugin-svelte3": "^3.1.1",
-    "rollup": "^1.20.0",
-    "rollup-plugin-css-only": "^3.1.0",
-    "rollup-plugin-livereload": "^1.0.0",
-    "rollup-plugin-svelte": "^7.1.0",
-    "rollup-plugin-terser": "^5.1.2",
-    "svelte": "^3.0.0",
-    "svelte-preprocess": "^4.7.3"
+    "svelte": "^5.57.3",
+    "vite": "^8.3.5"
   },
   "dependencies": {
-    "@jridgewell/sourcemap-codec": "^1.4.15",
-    "@rollup/plugin-terser": "^0.4.3",
     "@zerodevx/svelte-toast": "^0.1.4",
     "axios": "^0.21.1",
     "fflate": "^0.6.7",
     "jwt-decode": "^3.1.2",
     "papaparse": "^5.3.0",
-    "sass": "^1.35.1",
-    "sirv-cli": "^0.4.4",
+    "sass": "^1.107.0",
     "snake-case": "^3.0.4",
     "svelte-frappe-charts": "^1.5.0",
     "svelte-routing": "^1.6.0",
