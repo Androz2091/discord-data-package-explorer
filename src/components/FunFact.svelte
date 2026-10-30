@@ -18,6 +18,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap={strokeLinecap} stroke-linejoin={strokeLinejoin} stroke-width={strokeWidth} d="{ svg }"></path></svg>
         </slot>
         <slot name="content">
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -- the app's own sentence around a number -->
             <h3 style="margin-left: 10px;">{ @html htmlContent }</h3>
         </slot>
     </div>

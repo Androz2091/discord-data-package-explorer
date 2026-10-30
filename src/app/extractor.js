@@ -35,7 +35,7 @@ const getServersRoot = (files) => {
  */
 const getUserRoot = (files) => {
     // Find any user.json file
-    const sample = files.find(f => /^([^\/]+)\/user\.json$/.test(f.name));
+    const sample = files.find(f => /^([^/]+)\/user\.json$/.test(f.name));
     if (!sample) throw new Error('Could not find User folder structure');
     // Remove the file name to get the root
     const segments = sample.name.split('/');
@@ -96,16 +96,16 @@ const parseCSV = (input) => {
  */
 const parseJson = (input) => {
     return JSON.parse(input)
-    .filter((m) => m.Contents)
-    .map((m) => ({
-        id: m.ID,
-        timestamp: m.Timestamp,
-        length: m.Contents.length,
-        words: m.Contents.split(' ')
-        // content: m.Contents,
-        // attachments: m.Attachments
-    }));
-}
+        .filter((m) => m.Contents)
+        .map((m) => ({
+            id: m.ID,
+            timestamp: m.Timestamp,
+            length: m.Contents.length,
+            words: m.Contents.split(' ')
+            // content: m.Contents,
+            // attachments: m.Attachments
+        }));
+};
 
 const perDay = (value, userID) => {
     return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
@@ -246,9 +246,9 @@ export const extractData = async (files) => {
         extractedData.payments.total = ((loc) => {
             const totals = [];
             for (let currency of currencies) {
-                totals.push(currency.toLocaleUpperCase() + " " + extractedData.payments.total[currency].toLocaleString(loc));
+                totals.push(currency.toLocaleUpperCase() + ' ' + extractedData.payments.total[currency].toLocaleString(loc));
             }
-            return totals.join(", ");
+            return totals.join(', ');
         })('en-US');
     }
     console.log('[debug] User info loaded.');

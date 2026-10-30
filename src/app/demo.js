@@ -1,7 +1,7 @@
 const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const demoUserObject = {
-    id: 422820341791064085,
+    id: '422820341791064085',
     username: 'Wumpus',
     discriminator: '0000',
     avatar: null

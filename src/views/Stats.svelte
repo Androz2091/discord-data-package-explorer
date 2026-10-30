@@ -195,7 +195,7 @@
                 <Card name="about">
                     <div style="text-align: center;">
                         <h2>About this project</h2>
-                        <p>Discord Data Package Explorer is a free, ad-free and <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank" class="text-discord" style="text-decoration: none;">open source</a> website made with Svelte.
+                        <p>Discord Data Package Explorer is a free, ad-free and <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank" class="text-discord" style="text-decoration: none;">open source</a> website made with Svelte.</p>
                         <p>These are all the developers who contributed to the creation of DDPE!</p>
                     </div>
 
@@ -210,7 +210,7 @@
                                     </a>
                                 </div>
                             {/each}
-                        {:catch users}
+                        {:catch}
                             <div use:useTooltip={tooltip('Androz2091')}>
                                 <a href="https://github.com/Androz2091">
                                     <div class="contributors-item" style="background-image: url('https://avatars.githubusercontent.com/u/42497995?s=460&u=86b6310688c5e05140c6d12902d878cacdcf93db&v=4');"></div>

@@ -1,5 +1,5 @@
 <script>
-    import { getGitHubContributors } from "../app/helpers";
+    import { getGitHubContributors } from '../app/helpers';
 
 
     let contributors = [];

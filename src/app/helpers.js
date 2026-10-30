@@ -98,10 +98,10 @@ export const generateFileStructureDump = (files) => {
  */
 export const generateGitHubIssueURL = (errorMessage, fileStructure) => {
     const repo = 'Androz2091/discord-data-package-explorer';
-    const title = encodeURIComponent(`[Auto-Report] Package Processing Error`);
+    const title = encodeURIComponent('[Auto-Report] Package Processing Error');
     
     const body = encodeURIComponent(
-`**Error Message:**
+        `**Error Message:**
 ${errorMessage}
 
 **File Structure:**

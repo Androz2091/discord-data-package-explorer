@@ -1,6 +1,4 @@
 <script>
-    let defaultAvatar = '/default-avatar.png';
-
     export let name;
     export let discriminator;
     export let avatar;
