@@ -113,7 +113,7 @@ const perDay = (value, userID) => {
 
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
-        if (!file) resolve({});
+        if (!file) return resolve({});
         const eventsOccurrences = {};
         for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
         const decoder = new DecodeUTF8();
@@ -375,7 +375,12 @@ export const extractData = async (files) => {
     loadTask.set('Calculating statistics...');
     console.log('[debug] Fetching activity...');
 
-    const statistics = await readAnalyticsFile(files.find((file) => /analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name)));
+    // Many exports ship without `analytics`. `reporting` carries the same app open, voice and reaction events, `tns` and `modeling` carry fewer of them.
+    const activityFile = files.find((file) => /analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name))
+        || files.find((file) => /reporting\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name));
+    console.log('[debug] Found activity file:', activityFile && activityFile.name);
+
+    const statistics = await readAnalyticsFile(activityFile);
     extractedData.openCount = statistics.openCount;
     extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
     extractedData.notificationCount = statistics.notificationCount;
