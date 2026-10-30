@@ -791,9 +791,9 @@ __metadata:
     axios: "npm:^1.21.0"
     eslint: "npm:^7.20.0"
     eslint-plugin-svelte3: "npm:^3.1.1"
-    fflate: "npm:^0.6.7"
+    fflate: "npm:^0.8.3"
     jwt-decode: "npm:^4.0.0"
-    papaparse: "npm:^5.3.0"
+    papaparse: "npm:^5.7.0"
     sass: "npm:^1.107.0"
     snake-case: "npm:^3.0.4"
     svelte: "npm:^5.57.3"
@@ -1110,10 +1110,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fflate@npm:^0.6.7":
-  version: 0.6.7
-  resolution: "fflate@npm:0.6.7"
-  checksum: 10c0/7b5ad5a203dfcd387a1a86663186567098c06902fde73e8b5cf81f6037f732d142d4541fc94545da70d9de5d231e4de06c323cb88b08ab7da9874e8acccd4f9a
+"fflate@npm:^0.8.3":
+  version: 0.8.3
+  resolution: "fflate@npm:0.8.3"
+  checksum: 10c0/eab181ca37f5348ae76d4b6f840e0026e30220e33153289ac942222d8b9638237d486507dbcc09878d724095bd354993a2ee48bbee99c8f2c6440d4448719aa7
   languageName: node
   linkType: hard
 
@@ -1834,10 +1834,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"papaparse@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "papaparse@npm:5.3.0"
-  checksum: 10c0/ac83e9376c9bd82afa68c8a09e4483c7998676c7a3a973ee49c5ecc05da71f7e113f616dd4a9a1180326ff173b4d3f214489a4edd3c146c9eb43c01c06655c04
+"papaparse@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "papaparse@npm:5.7.0"
+  checksum: 10c0/aeea2122ffa7abf33206ab9465e1adcb678ca0e9b08fbd3cea53bf6dc07d5903e69f387dc4dde2498e2478130ba3db79d1fd3956bf638c00be802f0d275e006d
   languageName: node
   linkType: hard
 
