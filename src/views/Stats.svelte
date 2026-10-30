@@ -6,7 +6,7 @@
     import Chart from 'svelte-frappe-charts';
     import Modal from '../components/Modal.svelte';
     import { getContext, onMount, onDestroy } from 'svelte';
-    import SvelteTooltip from 'svelte-tooltip';
+    import { useTooltip } from '@untemps/svelte-use-tooltip';
     import { toast } from '@zerodevx/svelte-toast';
     import { navigate } from 'svelte-routing';
 
@@ -45,6 +45,9 @@
     const showModal = (message) => {
         open(Modal, { message });
     };
+
+    // Inside the target, as svelte-tooltip's tip was, so it keeps the text's font and color.
+    const tooltip = (content) => ({ content, position: 'bottom', offset: 8, portal: false });
 
     const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
     </script>
@@ -100,8 +103,8 @@
                     />
                     <FunFact svg="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                         <h3 slot="content">Your favorite words are
-                            <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[0].count.toLocaleString('en-US')} times" bottom color="#000000"><span class="text-discord">{$data.favoriteWords[0].word}</SvelteTooltip></span> and
-                            <span class="text-discord"><SvelteTooltip tip="Used {$data.favoriteWords[1].count.toLocaleString('en-US')} times" bottom color="#000000">{$data.favoriteWords[1].word}</SvelteTooltip></span>
+                            <span class="text-discord" use:useTooltip={tooltip(`Used ${$data.favoriteWords[0].count.toLocaleString('en-US')} times`)}>{$data.favoriteWords[0].word}</span> and
+                            <span class="text-discord" use:useTooltip={tooltip(`Used ${$data.favoriteWords[1].count.toLocaleString('en-US')} times`)}>{$data.favoriteWords[1].word}</span>
                         </h3>
                     </FunFact>
                     <FunFact
@@ -201,18 +204,18 @@
                             <p>Loading...</p>
                         {:then users}
                             {#each users as user}
-                                <SvelteTooltip tip="{user.username}" bottom color="#000000">
+                                <div use:useTooltip={tooltip(user.username)}>
                                     <a href="{user.url}" target="_blank">
                                         <div class="contributors-item" style="background-image: url('{user.avatar}');"></div>
                                     </a>
-                                </SvelteTooltip>
+                                </div>
                             {/each}
                         {:catch users}
-                            <SvelteTooltip tip="Androz2091" bottom color="#000000">
+                            <div use:useTooltip={tooltip('Androz2091')}>
                                 <a href="https://github.com/Androz2091">
                                     <div class="contributors-item" style="background-image: url('https://avatars.githubusercontent.com/u/42497995?s=460&u=86b6310688c5e05140c6d12902d878cacdcf93db&v=4');"></div>
                                 </a>
-                            </SvelteTooltip>
+                            </div>
                         {/await}
                     </div>
                 </Card>
