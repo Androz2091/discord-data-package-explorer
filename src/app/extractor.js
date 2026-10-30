@@ -180,7 +180,7 @@ export const extractData = async (files) => {
         hoursValues: [],
         favoriteWords: null,
         payments: {
-            total: { usd: 0 },
+            total: 0,
             list: ''
         }
     };
@@ -236,6 +236,7 @@ export const extractData = async (files) => {
     const confirmedPayments = (payments || []).filter((p) => p.status === 1 && p.currency !== 'discord_orb');
     if (confirmedPayments.length) {
         const currencies = [...new Set(confirmedPayments.map((p) => p.currency))];
+        extractedData.payments.total = {};
         for (let p of confirmedPayments) {
             if (!extractedData.payments.total[p.currency]) extractedData.payments.total[p.currency] = p.amount / 100;
             else extractedData.payments.total[p.currency] += p.amount / 100;
