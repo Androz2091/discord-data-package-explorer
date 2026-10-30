@@ -13,6 +13,7 @@
     .app-header {
         width: 100%;
         position: fixed;
+        top: 0;
         background-color: var(--secondary-background-color);
         z-index: 9;
     }

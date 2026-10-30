@@ -712,7 +712,7 @@ __metadata:
     svelte: "npm:^5.57.3"
     svelte-frappe-charts: "npm:^1.5.0"
     svelte-routing: "npm:^2.13.0"
-    svelte-simple-modal: "npm:^0.8.1"
+    svelte-simple-modal: "npm:^2.0.0"
     svelte-tooltip: "npm:^1.2.0"
     vite: "npm:^8.3.5"
   languageName: unknown
@@ -1984,12 +1984,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-simple-modal@npm:^0.8.1":
-  version: 0.8.1
-  resolution: "svelte-simple-modal@npm:0.8.1"
+"svelte-simple-modal@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "svelte-simple-modal@npm:2.0.0"
   peerDependencies:
-    svelte: ^3.18.2
-  checksum: 10c0/5dd9a626e1935cfa3095a5fd47400a0e3e50fc729f8ef8428775a5760c0903c1d364977abf2295808b4e791c2fd3569881abcba1b348ae73c3402318cd5929ef
+    svelte: ^5.0.0
+  checksum: 10c0/0a8ee4cc268171177deb457571e7e96b48eba1d5b6a764924a408256660bc5e43e88bb43a739df4d5a6e20efc7ff4fe2e6706dd9c7c62f5b87e2180257627f4c
   languageName: node
   linkType: hard
 
