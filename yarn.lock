@@ -667,13 +667,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dedent-js@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "dedent-js@npm:1.0.1"
-  checksum: 10c0/a8cff2e02d5a1ce64615c5c53c9789e7ef1abb9ae7bf2322dc991fcbaf08d901ace1a679c1e021de15a85db7787b8ccfb02011e1f394afef0f698fc857a47009
-  languageName: node
-  linkType: hard
-
 "deep-is@npm:^0.1.3":
   version: 0.1.3
   resolution: "deep-is@npm:0.1.3"
@@ -718,7 +711,7 @@ __metadata:
     snake-case: "npm:^3.0.4"
     svelte: "npm:^5.57.3"
     svelte-frappe-charts: "npm:^1.5.0"
-    svelte-routing: "npm:^1.6.0"
+    svelte-routing: "npm:^2.13.0"
     svelte-simple-modal: "npm:^0.8.1"
     svelte-tooltip: "npm:^1.2.0"
     vite: "npm:^8.3.5"
@@ -1632,16 +1625,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pascal-case@npm:^3.1.1":
-  version: 3.1.2
-  resolution: "pascal-case@npm:3.1.2"
-  dependencies:
-    no-case: "npm:^3.0.4"
-    tslib: "npm:^2.0.3"
-  checksum: 10c0/05ff7c344809fd272fc5030ae0ee3da8e4e63f36d47a1e0a4855ca59736254192c5a27b5822ed4bae96e54048eec5f6907713cfcfff7cdf7a464eaf7490786d8
-  languageName: node
-  linkType: hard
-
 "path-is-absolute@npm:^1.0.0":
   version: 1.0.1
   resolution: "path-is-absolute@npm:1.0.1"
@@ -1994,14 +1977,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-routing@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "svelte-routing@npm:1.6.0"
-  dependencies:
-    svelte2tsx: "npm:^0.1.157"
-  peerDependencies:
-    svelte: ^3.20.x
-  checksum: 10c0/8926e93b99a79e39a86e8ca5f878c3cad19424b576aff716c825f921acfa78d167507f82e16188f54ef1575b795bcd9eea1572986b6dda2d42eef0739fd0bc72
+"svelte-routing@npm:^2.13.0":
+  version: 2.13.0
+  resolution: "svelte-routing@npm:2.13.0"
+  checksum: 10c0/95daddc66d26b65338af55c93a788753624f3f574c470bad939a7bdb9bb5be75f8d2102ef4dbd4748856b45198113d513b9a86624fc2ab8e315054d1e64e2257
   languageName: node
   linkType: hard
 
@@ -2020,19 +1999,6 @@ __metadata:
   dependencies:
     sirv-cli: "npm:^0.4.4"
   checksum: 10c0/5d26e7903a94135c3e660387803633332e191ec5af7d56eb64715af372325031bc6ae7d8d6e4460808ddb8302063610677afce07d386612b84e8ba3afad8e89b
-  languageName: node
-  linkType: hard
-
-"svelte2tsx@npm:^0.1.157":
-  version: 0.1.193
-  resolution: "svelte2tsx@npm:0.1.193"
-  dependencies:
-    dedent-js: "npm:^1.0.1"
-    pascal-case: "npm:^3.1.1"
-  peerDependencies:
-    svelte: ^3.24
-    typescript: ^4.1.2
-  checksum: 10c0/60a2b10edc3d8ff0998db24898d9e2dcc54ac8adbdfd341e2b4f782bb230ed47bfcddcd72222cbbdd1dd8656aad0c0df8c6f7e133e475dfff7816ca03657f5a3
   languageName: node
   linkType: hard
 

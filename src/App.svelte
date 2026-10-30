@@ -58,11 +58,12 @@
 		<Router>
 			<Header />
 			<div>
-				<Route path="/about" component={About} />
-				<Route path="/stats" component={Stats} />
-				<Route path="/stats/demo" component={Stats} />
-				<Route path="/help" component={Help} />
-				<Route path="/*" component={Loader} />
+				<!-- With Svelte 5, svelte-routing calls a `component` prop that isn't a class, so routes render their children. -->
+				<Route path="/about"><About /></Route>
+				<Route path="/stats"><Stats /></Route>
+				<Route path="/stats/demo"><Stats /></Route>
+				<Route path="/help"><Help /></Route>
+				<Route path="/*"><Loader /></Route>
 			</div>
 			<Footer />
 		</Router>
