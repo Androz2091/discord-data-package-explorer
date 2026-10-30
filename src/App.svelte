@@ -1,5 +1,5 @@
 <script>
-	import decodeJwt from 'jwt-decode';
+	import { jwtDecode } from 'jwt-decode';
 	import { onMount } from 'svelte';
 	import { Router, Route } from 'svelte-routing';
 
@@ -35,7 +35,7 @@
 			});
         }
 		const storeDiswhoJwt = localStorage.getItem('diswhoJwt');
-        if (storeDiswhoJwt && decodeJwt(storeDiswhoJwt).expirationTimestamp > Date.now()) {
+        if (storeDiswhoJwt && jwtDecode(storeDiswhoJwt).expirationTimestamp > Date.now()) {
             diswhoCompleted.set(true);
         } else {
 			diswhoCompleted.set(false);
