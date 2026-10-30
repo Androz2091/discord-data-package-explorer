@@ -710,7 +710,7 @@ __metadata:
     sass: "npm:^1.107.0"
     snake-case: "npm:^3.0.4"
     svelte: "npm:^5.57.3"
-    svelte-frappe-charts: "npm:^1.5.0"
+    svelte-frappe-charts: "npm:^2.0.0"
     svelte-routing: "npm:^2.13.0"
     svelte-simple-modal: "npm:^2.0.0"
     svelte-tooltip: "npm:^1.2.0"
@@ -1021,10 +1021,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"frappe-charts@npm:^1.5.6":
-  version: 1.5.6
-  resolution: "frappe-charts@npm:1.5.6"
-  checksum: 10c0/36490b490a99dad642c6019a7951ca84a5a900ad441552c6630478b408488abac179041f8e2bb3fc963b22fe1766a68139021916e1e0f0039961f22285c7d104
+"frappe-charts@npm:^1.6.2":
+  version: 1.6.2
+  resolution: "frappe-charts@npm:1.6.2"
+  checksum: 10c0/9646999fa9e66526ff081e987b162ecfea5e7e924662dff8f86ca3cab5d30c554ccb7f724b1d90db1a549b3a716e6b36d299c296f1513c8fe3a5d98f32bcd286
   languageName: node
   linkType: hard
 
@@ -1965,15 +1965,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-frappe-charts@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "svelte-frappe-charts@npm:1.5.0"
+"svelte-frappe-charts@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "svelte-frappe-charts@npm:2.0.0"
   dependencies:
-    frappe-charts: "npm:^1.5.6"
-    svelte: "npm:^3.32.2"
+    frappe-charts: "npm:^1.6.2"
   peerDependencies:
-    svelte: ^3.0.0
-  checksum: 10c0/e3200a64bede6b5e8e548f3d6abf321cdf98aad0110fc6a693869ca3698a2a580bb5bd440401ea2fff8986f88d83832fa9e067d79c2f6830a8c66cc76cf46eeb
+    svelte: ^4.0.0 || ^5.0.0
+  checksum: 10c0/1139a111f7932134c1b385776cab146ca9b5069961fa5506eb3c2ab7278483a0981901e540c7534e6861e97fa23b67aa128f8b5e38f8e8427daf72ffdd2a7e77
   languageName: node
   linkType: hard
 
@@ -1999,13 +1998,6 @@ __metadata:
   dependencies:
     sirv-cli: "npm:^0.4.4"
   checksum: 10c0/5d26e7903a94135c3e660387803633332e191ec5af7d56eb64715af372325031bc6ae7d8d6e4460808ddb8302063610677afce07d386612b84e8ba3afad8e89b
-  languageName: node
-  linkType: hard
-
-"svelte@npm:^3.32.2":
-  version: 3.32.3
-  resolution: "svelte@npm:3.32.3"
-  checksum: 10c0/484df4e58f88d36652c1f2881a8fc4768af5a736ba6ce8af32cc226df5c2a3ff577bc83b375528b39adba0815ac1221b12156faae42d792fcba708039af02d74
   languageName: node
   linkType: hard
 
