@@ -375,12 +375,17 @@ export const extractData = async (files) => {
     loadTask.set('Calculating statistics...');
     console.log('[debug] Fetching activity...');
 
-    // Many exports ship without `analytics`. `reporting` carries the same app open, voice and reaction events, `tns` and `modeling` carry fewer of them.
-    const activityFile = files.find((file) => /analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name))
-        || files.find((file) => /reporting\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name));
+    // Many exports ship without `analytics`. `reporting` carries the same app open, voice, reaction and message events, `tns` and `modeling` carry fewer of them.
+    const analyticsFile = files.find((file) => /analytics\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name));
+    const reportingFile = files.find((file) => /reporting\/events-[0-9]{4}-[0-9]{5}-of-[0-9]{5}\.json/.test(file.name));
+    const activityFile = analyticsFile || reportingFile;
     console.log('[debug] Found activity file:', activityFile && activityFile.name);
 
     const statistics = await readAnalyticsFile(activityFile);
+    // `reporting` never carries these events, so its 0 would stand for an unknown count.
+    if (activityFile && activityFile === reportingFile) {
+        for (const stat of ['notificationCount', 'joinCallCount', 'messageEditedCount', 'slashCommandUsedCount']) delete statistics[stat];
+    }
     extractedData.openCount = statistics.openCount;
     extractedData.averageOpenCountPerDay = extractedData.openCount && perDay(statistics.openCount, extractedData.user.id);
     extractedData.notificationCount = statistics.notificationCount;
