@@ -1,46 +1,46 @@
 <script>
-	import decodeJwt from 'jwt-decode';
-	import { onMount } from 'svelte';
-	import { Router, Route } from 'svelte-routing';
+    import { jwtDecode } from 'jwt-decode';
+    import { onMount } from 'svelte';
+    import { Router, Route } from 'svelte-routing';
 
-	import Header from './components/Header.svelte';
-	import Footer from './components/Footer.svelte';
+    import Header from './components/Header.svelte';
+    import Footer from './components/Footer.svelte';
 
-	import Stats from './views/Stats.svelte';
-	import Loader from './views/Loader.svelte';
-	import Help from './views/Help.svelte';
-	import About from './views/About.svelte';
+    import Stats from './views/Stats.svelte';
+    import Loader from './views/Loader.svelte';
+    import Help from './views/Help.svelte';
+    import About from './views/About.svelte';
 
-	import Modal from 'svelte-simple-modal';
+    import Modal from 'svelte-simple-modal';
 
-	import { SvelteToast, toast } from '@zerodevx/svelte-toast';
+    import { SvelteToast, toast } from '@zerodevx/svelte-toast';
     import { diswhoCompleted } from './app/store';
 
-	const options = {
-	    duration: 10000
-	};
+    const options = {
+        duration: 10000
+    };
 
-	onMount(() => {
-		const paramDiswhoJwt = new URLSearchParams(window.location.search).get('diswhoJwt');
+    onMount(() => {
+        const paramDiswhoJwt = new URLSearchParams(window.location.search).get('diswhoJwt');
         if(paramDiswhoJwt){
             window.history.replaceState(null, document.title, location.pathname);
             localStorage.setItem('diswhoJwt', paramDiswhoJwt);
-			diswhoCompleted.set(true);
-			toast.push('Thank you for completing the captcha.', {
-				theme: {
-					'--toastBackground': '#18191c',
-					'--toastColor': 'white',
-					'--toastBarBackground': '#3b82f6'
-				}
-			});
+            diswhoCompleted.set(true);
+            toast.push('Thank you for completing the captcha.', {
+                theme: {
+                    '--toastBackground': '#18191c',
+                    '--toastColor': 'white',
+                    '--toastBarBackground': '#3b82f6'
+                }
+            });
         }
-		const storeDiswhoJwt = localStorage.getItem('diswhoJwt');
-        if (storeDiswhoJwt && decodeJwt(storeDiswhoJwt).expirationTimestamp > Date.now()) {
+        const storeDiswhoJwt = localStorage.getItem('diswhoJwt');
+        if (storeDiswhoJwt && jwtDecode(storeDiswhoJwt).expirationTimestamp > Date.now()) {
             diswhoCompleted.set(true);
         } else {
-			diswhoCompleted.set(false);
-		}
-	});
+            diswhoCompleted.set(false);
+        }
+    });
 
 </script>
 
@@ -58,11 +58,12 @@
 		<Router>
 			<Header />
 			<div>
-				<Route path="/about" component={About} />
-				<Route path="/stats" component={Stats} />
-				<Route path="/stats/demo" component={Stats} />
-				<Route path="/help" component={Help} />
-				<Route path="/*" component={Loader} />
+				<!-- With Svelte 5, svelte-routing calls a `component` prop that isn't a class, so routes render their children. -->
+				<Route path="/about"><About /></Route>
+				<Route path="/stats"><Stats /></Route>
+				<Route path="/stats/demo"><Stats /></Route>
+				<Route path="/help"><Help /></Route>
+				<Route path="/*"><Loader /></Route>
 			</div>
 			<Footer />
 		</Router>

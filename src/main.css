@@ -49,8 +49,15 @@ path {
     fill: var(--secondary-color);
 }
 
-.tooltip {
+/* svelte-tooltip's look: below the header, the text's color, more padding, no arrow. */
+.__tooltip {
     z-index: 5;
+    color: inherit;
+    padding: 8px 16px;
+}
+
+.__tooltip::after {
+    display: none;
 }
 
 .text-discord {

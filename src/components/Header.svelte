@@ -2,19 +2,18 @@
     import { link, navigate } from 'svelte-routing';
 </script>
 
-<template>
-    <div class="app-header">
-        <div class="app-header-container">
-            <div class="app-header-icon tag"><a href="/" use:link>#</a></div>
-            <h1 on:click="{() => navigate('/')}">Discord Data Package Explorer</h1>
-        </div>
+<div class="app-header">
+    <div class="app-header-container">
+        <div class="app-header-icon tag"><a href="/" use:link>#</a></div>
+        <h1 on:click="{() => navigate('/')}">Discord Data Package Explorer</h1>
     </div>
-</template>
+</div>
 
 <style lang="scss">
     .app-header {
         width: 100%;
         position: fixed;
+        top: 0;
         background-color: var(--secondary-background-color);
         z-index: 9;
     }

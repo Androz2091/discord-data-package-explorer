@@ -14,7 +14,6 @@
         Here is a short TikTok video ✨ to show you how to request your Discord Data Package! Note that this is also possible on mobile device using the iOS and Android Discord apps!
     </div>
     <div class="tiktok-player">
-        <!-- svelte-ignore a11y-media-has-caption -->
         <video controls width="250">
 
             <source src="https://github.com/Androz2091/discord-data-package-explorer/raw/master/assets/help-tiktok.mp4"
