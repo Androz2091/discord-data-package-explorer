@@ -2,6 +2,7 @@
     import { blur } from 'svelte/transition';
     import { data } from '../app/store';
     import { generateAvatarURL, getGitHubContributors, hasDiscriminator } from '../app/helpers';
+    import { fetchDMUsers } from '../app/extractor';
     import generateDemoData from '../app/demo';
     import Chart from 'svelte-frappe-charts';
     import Modal from '../components/Modal.svelte';
@@ -52,6 +53,18 @@
     // Three names at most, like the avatars: a list is as wide as its longest name, and on a phone that widens
     // the page.
     const groupName = (members) => members.length ? `${members.slice(0, 3).map((member) => member.username).join(', ')}${members.length > 3 ? ` and ${members.length - 3} more` : ''}` : 'Unknown group';
+
+    let shownDMs = 10;
+    let shownChannels = 10;
+    let fetchingDMs = false;
+    const showMoreDMs = async () => {
+        if (fetchingDMs) return;
+        fetchingDMs = true;
+        // Setting the store again would redraw the charts, so the users looked up aren't stored.
+        await fetchDMUsers($data.topDMs.slice(shownDMs, shownDMs + 10).filter((dm) => !(dm.isGroupDM ? dm.members : dm.userData)));
+        shownDMs += 10;
+        fetchingDMs = false;
+    };
 
     const perDay = (value) => `${value >= 10 ? Math.round(value).toLocaleString('en-US') : value.toLocaleString('en-US', { maximumSignificantDigits: 2 })} per day`;
 
@@ -173,8 +186,8 @@
                     />
                 </Card>
                 <Card name="top-users">
-                    <Leaderboard title="Top Users" description="The users you chat the most with!">
-                        {#each $data.topDMs as channel, i}
+                    <Leaderboard title="Top Users" description="The users you chat the most with!" more={$data.topDMs.length > shownDMs ? showMoreDMs : null}>
+                        {#each $data.topDMs.slice(0, shownDMs) as channel, i}
                             {#if channel.isGroupDM}
                                 <LeaderboardItem
                                     position={i}
@@ -197,8 +210,8 @@
                     </Leaderboard>
                 </Card>
                 <Card name="top-channels">
-                    <Leaderboard title="Top Channels" description="The channels you chat the most in!">
-                        {#each $data.topChannels as channel, i}
+                    <Leaderboard title="Top Channels" description="The channels you chat the most in!" more={$data.topChannels.length > shownChannels ? () => shownChannels += 10 : null}>
+                        {#each $data.topChannels.slice(0, shownChannels) as channel, i}
                             <LeaderboardItem
                                 position={i}
                                 name={channel.name}

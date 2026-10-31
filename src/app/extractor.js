@@ -61,7 +61,7 @@ const fetchUser = async (userID) => {
     return res.data;
 };
 
-const fetchDMUsers = (dms) => Promise.all(dms.map(async (dm) => {
+export const fetchDMUsers = (dms) => Promise.all(dms.map(async (dm) => {
     if (dm.isGroupDM) dm.members = await Promise.all(dm.memberIDs.map(fetchUser));
     else dm.userData = await fetchUser(dm.dmUserID);
 }));
@@ -227,6 +227,10 @@ const readAnalyticsFile = (file) => {
 };
 
 const CHANNELS_READ_AT_ONCE = 8;
+
+// The top lists keep more than the 10 they show for "Show more", but not every channel, since the data is
+// stored in `localStorage`.
+const TOP_KEPT = 100;
 
 // Unlike `setTimeout`, a `MessageChannel` message isn't held back 4 ms once nested, or a second in a
 // background tab.
@@ -405,7 +409,7 @@ export const extractData = async (files) => {
 
     extractedData.channelCount = channels.filter(c => !c.isDM).length;
     extractedData.dmChannelCount = channels.length - extractedData.channelCount;
-    extractedData.topChannels = channels.filter(c => c.data && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, 10).map((channel) => ({
+    extractedData.topChannels = channels.filter(c => c.data && c.data.guild).sort((a, b) => b.messages.length - a.messages.length).slice(0, TOP_KEPT).map((channel) => ({
         name: channel.name,
         messageCount: channel.messages.length,
         guildName: channel.data.guild.name
@@ -444,7 +448,7 @@ export const extractData = async (files) => {
     extractedData.topDMs = channels
         .filter((channel) => channel.isDM || channel.isGroupDM)
         .sort((a, b) => b.messages.length - a.messages.length)
-        .slice(0, 10)
+        .slice(0, TOP_KEPT)
         .map((channel) => channel.isGroupDM ? {
             id: channel.data.id,
             isGroupDM: true,
@@ -460,7 +464,8 @@ export const extractData = async (files) => {
             messagesPerDay: messagesPerDay(channel.messages),
             userData: null
         });
-    await fetchDMUsers(extractedData.topDMs);
+    // The others are looked up when "Show more" shows them.
+    await fetchDMUsers(extractedData.topDMs.slice(0, 10));
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
 
