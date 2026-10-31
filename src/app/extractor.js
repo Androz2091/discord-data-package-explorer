@@ -160,6 +160,19 @@ const readAnalyticsFile = (file) => {
     });
 };
 
+const CHANNELS_READ_AT_ONCE = 8;
+
+// Unlike `setTimeout`, a `MessageChannel` message isn't held back 4 ms once nested, or a second in a
+// background tab.
+const yieldToBrowser = () => new Promise((resolve) => {
+    const { port1, port2 } = new MessageChannel();
+    port1.onmessage = () => {
+        port1.close();
+        resolve();
+    };
+    port2.postMessage(null);
+});
+
 /**
  * Extract the data from the package file.
  * @param files The files in the package
@@ -273,46 +286,51 @@ export const extractData = async (files) => {
     console.log(`[debug] Old package (2021): ${isOldPackage}`);
     console.log(`[debug] Old package (2024): ${isOldPackagev2}`);
 
-    const channels = [];
-    let messagesRead = 0;
+    const readChannel = async (channelID) => {
+        const channelDataPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
+        const extension = isOldPackagev2 ? 'csv' : 'json';
+        const channelMessagesPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
 
-    await Promise.all(channelsIDs.map((channelID) => {
-        return new Promise((resolve) => {
+        const [ rawData, rawMessages ] = await Promise.all([
+            readFile(channelDataPath),
+            readFile(channelMessagesPath)
+        ]);
 
-            const channelDataPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
-            const extension = isOldPackagev2 ? 'csv' : 'json';
-            const channelMessagesPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/messages.${extension}`;
+        if (!rawData || !rawMessages) {
+            console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}. (path=${channelDataPath})`);
+            return null;
+        }
 
-            Promise.all([
-                readFile(channelDataPath),
-                readFile(channelMessagesPath)
-            ]).then(([ rawData, rawMessages ]) => {
+        const data = JSON.parse(rawData);
+        const messages = extension === 'csv' ? parseCSV(rawMessages) : parseJson(rawMessages);
+        const name = messagesIndex[data.id];
+        const isDM = data.recipients && data.recipients.length === 2;
+        const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
+        return {
+            data,
+            messages,
+            name,
+            isDM,
+            dmUserID
+        };
+    };
 
-                if (!rawData || !rawMessages) {
-                    console.log(`[debug] Files of channel ${channelID} can't be read. Data is ${!!rawData} and messages are ${!!rawMessages}. (path=${channelDataPath})`);
-                    return resolve();
-                } else messagesRead++;
+    // Each reader takes the next channel as soon as its own is read, so a large messages file, which fflate
+    // inflates in a worker, doesn't hold the others back. The channels keep the order of the package, which
+    // breaks the ties of the top channels, DMs and words.
+    const channelsRead = [];
+    let nextChannel = 0;
+    const reader = async () => {
+        while (nextChannel < channelsIDs.length) {
+            const index = nextChannel++;
+            channelsRead[index] = await readChannel(channelsIDs[index]);
+            await yieldToBrowser();
+        }
+    };
+    await Promise.all(Array.from({ length: CHANNELS_READ_AT_ONCE }, reader));
+    const channels = channelsRead.filter(Boolean);
 
-                const data = JSON.parse(rawData);
-                const messages = extension === 'csv' ? parseCSV(rawMessages) : parseJson(rawMessages);
-                const name = messagesIndex[data.id];
-                const isDM = data.recipients && data.recipients.length === 2;
-                const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
-                channels.push({
-                    data,
-                    messages,
-                    name,
-                    isDM,
-                    dmUserID
-                });
-
-                resolve();
-            });
-
-        });
-    }));
-
-    if (messagesRead === 0) throw new Error('invalid_package_missing_messages');
+    if (channels.length === 0) throw new Error('invalid_package_missing_messages');
 
     loadTask.set('Calculating statistics...');
 
