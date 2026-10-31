@@ -71,6 +71,7 @@ export default () => {
         topGuilds: new Array(10).fill({}).map(() => ({
             name: 'AndrozDev',
             messageCount: randomNumber(400, 1200)
-        })).sort((a, b) => b.messageCount - a.messageCount)
+        })).sort((a, b) => b.messageCount - a.messageCount),
+        messageCountPerYear: Object.fromEntries([2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].map((year) => [year, randomNumber(500, 3000)]))
     };
 };

@@ -263,6 +263,7 @@ export const extractData = async (files) => {
         characterCount: 0,
         totalSpent: 0,
         hoursValues: [],
+        messageCountPerYear: {},
         favoriteWords: null,
         payments: {
             total: 0,
@@ -492,10 +493,13 @@ export const extractData = async (files) => {
 
     const zoneHours = (statistics.zoneNames || []).map(zoneHourReader);
     extractedData.hoursValues = new Array(24).fill(0);
+    const years = extractedData.messageCountPerYear;
     for (const channel of channels) {
         for (const message of channel.messages) {
             const time = parseTimestamp(message.timestamp);
             if (Number.isNaN(time)) continue;
+            const year = new Date(time).getUTCFullYear();
+            years[year] = (years[year] || 0) + 1;
             const second = Math.floor(time / 1000);
             // An event's second can be one off its message's.
             const zone = statistics.sentZones && (statistics.sentZones.get(second) ?? statistics.sentZones.get(second - 1) ?? statistics.sentZones.get(second + 1));
@@ -503,6 +507,9 @@ export const extractData = async (files) => {
             extractedData.hoursValues[readHour ? readHour(time) : new Date(time).getHours()]++;
         }
     }
+    // A year without a message still shows, as a gap in the chart.
+    const yearsWithMessages = Object.keys(years).map(Number);
+    for (let year = Math.min(...yearsWithMessages); year < Math.max(...yearsWithMessages); year++) years[year] = years[year] || 0;
 
     // `reporting` never carries these events, so its 0 would stand for an unknown count.
     if (activityFile && activityFile === reportingFile) {

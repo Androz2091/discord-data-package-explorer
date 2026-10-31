@@ -255,6 +255,25 @@
                     </Card>
                 {/if}
 
+                <!-- No year when the browser can't read any message time. -->
+                {#if $data.messageCountPerYear && Object.keys($data.messageCountPerYear).length}
+                    <Card name="years">
+                        <h1>Your Discord Years</h1>
+                        <p>{ Object.keys($data.messageCountPerYear).reduce((busiest, year) => $data.messageCountPerYear[year] > $data.messageCountPerYear[busiest] ? year : busiest) } is the year you sent the most messages!</p>
+                        <Chart data={{
+                            labels: Object.keys($data.messageCountPerYear),
+                            datasets: [
+                                {
+                                    name: 'Messages',
+                                    values: Object.values($data.messageCountPerYear)
+                                }
+                            ]
+                        }} axisOptions="{{
+                            xAxisMode: 'tick'
+                        }}" type="bar" />
+                    </Card>
+                {/if}
+
                 <Card name="about">
                     <div style="text-align: center;">
                         <h2>About this project</h2>
