@@ -181,7 +181,7 @@ export const extractData = async (files) => {
         hoursValues: [],
         favoriteWords: null,
         payments: {
-            total: { usd: 0 },
+            total: 0,
             list: ''
         }
     };
@@ -224,15 +224,20 @@ export const extractData = async (files) => {
     extractedData.user.discriminator = fetchedUser.discriminator;
     extractedData.user.avatar_hash = fetchedUser.avatar;
 
+    // Recent exports keep payments in the billing export, older ones in `user.json`.
+    const rawBillingPayments = await readFile(`${accountFolder}/user_data_exports/discord_billing/payments.json`);
+    const payments = rawBillingPayments ? JSON.parse(rawBillingPayments).records : extractedData.user.payments;
+
     // Discord Orbs are a virtual currency awarded via Quests / events — the
     // user never pays real money for them, and the `amount` is denominated in
     // orbs (not cents). Including these would tell e.g. a user with €0 of
     // real spend but 29 720 orbs of cosmetic purchases that they spent
     // "DISCORD_ORB 297.20", which is meaningless. Drop them alongside the
     // status filter.
-    const confirmedPayments = extractedData.user.payments !== undefined ? extractedData.user.payments.filter((p) => p.status === 1 && p.currency !== 'discord_orb') : [];
+    const confirmedPayments = (payments || []).filter((p) => p.status === 1 && p.currency !== 'discord_orb');
     if (confirmedPayments.length) {
         const currencies = [...new Set(confirmedPayments.map((p) => p.currency))];
+        extractedData.payments.total = {};
         for (let p of confirmedPayments) {
             if (!extractedData.payments.total[p.currency]) extractedData.payments.total[p.currency] = p.amount / 100;
             else extractedData.payments.total[p.currency] += p.amount / 100;
