@@ -20,12 +20,14 @@
     "vite": "^8.3.5"
   },
   "dependencies": {
+    "@fontsource-variable/rubik": "^5.3.0",
     "@untemps/svelte-use-tooltip": "^4.0.2",
     "@zerodevx/svelte-toast": "^0.9.6",
     "axios": "^1.21.0",
     "change-case": "^5.4.4",
     "fflate": "^0.8.3",
     "jwt-decode": "^4.0.0",
+    "modern-screenshot": "^4.7.0",
     "papaparse": "^5.7.0",
     "sass": "^1.107.0",
     "svelte-frappe-charts": "^2.0.0",

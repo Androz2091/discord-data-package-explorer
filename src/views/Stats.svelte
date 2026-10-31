@@ -70,6 +70,19 @@
     const perDay = (value) => `${value >= 10 ? Math.round(value).toLocaleString('en-US') : value.toLocaleString('en-US', { maximumSignificantDigits: 2 })} per day`;
 
     const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
+
+    // The share sheet, its cards and what draws them load when someone is about to open it.
+    const loadShareSheet = () => import('../components/share/ShareSheet.svelte');
+    const preloadShareSheet = () => loadShareSheet().catch(() => {});
+    let ShareSheet = null;
+    let shareButton;
+    const openShareSheet = () => loadShareSheet().then((module) => {
+        ShareSheet = module.default;
+    }, () => toast.push('The share cards couldn\'t load. Check your connection and try again.'));
+    const closeShareSheet = () => {
+        ShareSheet = null;
+        shareButton.focus();
+    };
     </script>
 
     <div class="statistics" transition:blur>
@@ -81,6 +94,10 @@
                         discriminator="{ hasDiscriminator($data.user.discriminator) ? $data.user.discriminator.toString().padStart(4, '0') : null }"
                         avatar="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }"
                     />
+                    <button class="share" bind:this={shareButton} on:click={openShareSheet} on:pointerenter={preloadShareSheet} on:focus={preloadShareSheet}>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        Share your recap
+                    </button>
                 </Card>
                 <Card name="first">
                     <FunFact
@@ -305,6 +322,9 @@
                     </div>
                 </Card>
             </div>
+            {#if ShareSheet}
+                <svelte:component this={ShareSheet} source={$data} onClose={closeShareSheet} />
+            {/if}
         {/if}
     </div>
 
@@ -321,6 +341,32 @@
 
         .hint {
             color: #f9a825;
+        }
+
+        .share {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--main-color);
+            color: white;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .share svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* `main.css` fills every path. */
+        .share path {
+            fill: none;
         }
 
         .cards {
