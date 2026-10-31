@@ -252,6 +252,7 @@ export const extractData = async (files) => {
 
     const extractedData = {
         user: null,
+        lookupsFailed: false,
 
         topDMs: [],
         topChannels: [],
@@ -305,9 +306,12 @@ export const extractData = async (files) => {
     extractedData.user = JSON.parse(await readFile(`${accountFolder}/user.json`));
     loadTask.set('Fetching user information...');
     const fetchedUser = await fetchUser(extractedData.user.id);
-    extractedData.user.username = fetchedUser.username;
-    extractedData.user.discriminator = fetchedUser.discriminator;
-    extractedData.user.avatar_hash = fetchedUser.avatar;
+    // A failed lookup has no `id`, and the package has the user's own name and avatar to keep then.
+    if (fetchedUser.id) {
+        extractedData.user.username = fetchedUser.username;
+        extractedData.user.discriminator = fetchedUser.discriminator;
+        extractedData.user.avatar_hash = fetchedUser.avatar;
+    }
 
     // Recent exports keep payments in the billing export, older ones in `user.json`.
     const rawBillingPayments = await readFile(`${accountFolder}/user_data_exports/discord_billing/payments.json`);
@@ -477,6 +481,8 @@ export const extractData = async (files) => {
         });
     // The others are looked up when "Show more" shows them.
     await fetchDMUsers(extractedData.topDMs.slice(0, 10));
+    // When every lookup fails, something blocks diswho, an ad blocker for eg., and the page says so.
+    extractedData.lookupsFailed = [fetchedUser, ...extractedData.topDMs.slice(0, 10).flatMap((dm) => (dm.isGroupDM ? dm.members : [dm.userData]))].every((userData) => !userData.id);
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
 
