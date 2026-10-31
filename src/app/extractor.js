@@ -61,6 +61,11 @@ const fetchUser = async (userID) => {
     return res.data;
 };
 
+const fetchDMUsers = (dms) => Promise.all(dms.map(async (dm) => {
+    if (dm.isGroupDM) dm.members = await Promise.all(dm.memberIDs.map(fetchUser));
+    else dm.userData = await fetchUser(dm.dmUserID);
+}));
+
 /**
  * Parse the mention to return a user ID
  */
@@ -355,12 +360,15 @@ export const extractData = async (files) => {
         const name = messagesIndex[data.id];
         const isDM = data.recipients && data.recipients.length === 2;
         const dmUserID = isDM ? data.recipients.find((userID) => userID !== extractedData.user.id) : undefined;
+        // Recent packages name the channel types, older ones number them.
+        const isGroupDM = data.type === 'GROUP_DM' || data.type === 3;
         return {
             data,
             messages,
             name,
             isDM,
-            dmUserID
+            dmUserID,
+            isGroupDM
         };
     };
 
@@ -420,25 +428,25 @@ export const extractData = async (files) => {
     console.log('[debug] Fetching top DMs...');
     loadTask.set('Loading user activity...');
     
+    // A group DM with one other member left has two recipients, like a DM, so its type comes first.
     extractedData.topDMs = channels
-        .filter((channel) => channel.isDM)
+        .filter((channel) => channel.isDM || channel.isGroupDM)
         .sort((a, b) => b.messages.length - a.messages.length)
         .slice(0, 10)
-        .map((channel) => ({
+        .map((channel) => channel.isGroupDM ? {
+            id: channel.data.id,
+            isGroupDM: true,
+            name: channel.data.name || null,
+            memberIDs: (channel.data.recipients || []).filter((userID) => userID !== extractedData.user.id),
+            messageCount: channel.messages.length,
+            members: null
+        } : {
             id: channel.data.id,
             dmUserID: channel.dmUserID,
             messageCount: channel.messages.length,
             userData: null
-        }));
-    await Promise.all(extractedData.topDMs.map((channel) => {
-        return new Promise((resolve) => {
-            fetchUser(channel.dmUserID).then((userData) => {
-                const channelIndex = extractedData.topDMs.findIndex((c) => c.id === channel.id);
-                extractedData.topDMs[channelIndex].userData = userData;
-                resolve();
-            });
         });
-    }));
+    await fetchDMUsers(extractedData.topDMs);
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
 
