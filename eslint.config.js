@@ -5,7 +5,7 @@ import globals from 'globals';
 import svelteConfig from './svelte.config.js';
 
 export default [
-    { ignores: ['dist/'] },
+    { ignores: ['public/'] },
     js.configs.recommended,
     ...svelte.configs.recommended,
     {
