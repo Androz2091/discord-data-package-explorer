@@ -56,6 +56,7 @@
 
     let shownDMs = 10;
     let shownChannels = 10;
+    let shownGuilds = 10;
     let fetchingDMs = false;
     const showMoreDMs = async () => {
         if (fetchingDMs) return;
@@ -222,6 +223,21 @@
                         {/each}
                     </Leaderboard>
                 </Card>
+
+                {#if $data.topGuilds}
+                    <Card name="top-servers">
+                        <Leaderboard title="Top Servers" description="The servers you chat the most in!" more={$data.topGuilds.length > shownGuilds ? () => shownGuilds += 10 : null}>
+                            {#each $data.topGuilds.slice(0, shownGuilds) as guild, i}
+                                <LeaderboardItem
+                                    position={i}
+                                    name={guild.name}
+                                    count={guild.messageCount.toLocaleString('en-US')}
+                                    server
+                                />
+                            {/each}
+                        </Leaderboard>
+                    </Card>
+                {/if}
 
                 <Card name="about">
                     <div style="text-align: center;">

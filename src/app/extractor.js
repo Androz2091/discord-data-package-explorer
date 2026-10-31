@@ -255,6 +255,7 @@ export const extractData = async (files) => {
 
         topDMs: [],
         topChannels: [],
+        topGuilds: [],
         guildCount: 0,
         dmChannelCount: 0,
         channelCount: 0,
@@ -414,6 +415,15 @@ export const extractData = async (files) => {
         messageCount: channel.messages.length,
         guildName: channel.data.guild.name
     }));
+    // A channel Discord no longer describes has no `guild`, so its messages count for no server.
+    const guilds = new Map();
+    for (const channel of channels) {
+        if (!channel.data.guild) continue;
+        const guild = guilds.get(channel.data.guild.id) || { name: channel.data.guild.name, messageCount: 0 };
+        guild.messageCount += channel.messages.length;
+        guilds.set(channel.data.guild.id, guild);
+    }
+    extractedData.topGuilds = [...guilds.values()].sort((a, b) => b.messageCount - a.messageCount).slice(0, TOP_KEPT);
     extractedData.characterCount = channels.map((channel) => channel.messages).flat().map((message) => message.length).reduce((p, c) => p + c);
 
     console.log(`[debug] ${channels.length} channels loaded.`);

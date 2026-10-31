@@ -62,6 +62,11 @@ export default () => {
             sentMessageCount: randomNumber(200, 600),
             averageMessageCountPerDay: randomNumber(20, 30),
             slashCommandUsedCount: randomNumber(10, 20)
-        })
+        }),
+
+        topGuilds: new Array(10).fill({}).map(() => ({
+            name: 'AndrozDev',
+            messageCount: randomNumber(400, 1200)
+        })).sort((a, b) => b.messageCount - a.messageCount)
     };
 };

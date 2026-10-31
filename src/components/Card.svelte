@@ -29,6 +29,9 @@
         .card.top-channels {
             grid-column: 6 / 12;
         }
+        .card.top-servers {
+            grid-column: 1 / 6;
+        }
         .card.hours {
             grid-column: 6 / 12;
             grid-row: 2 / 3;
