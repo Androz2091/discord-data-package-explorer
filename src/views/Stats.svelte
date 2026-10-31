@@ -128,6 +128,7 @@
                     }} axisOptions="{{
                         xAxisMode: 'tick'
                     }}" type="bar" />
+                    <small>Messages count in the time zone they were sent from, or in yours when Discord didn't record it.</small>
                 </Card>
                 <Card name="third">
                     <FunFact
