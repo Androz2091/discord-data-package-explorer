@@ -1,46 +1,78 @@
-<img width="200" height="150" align="left" style="float: left; margin: 0 10px 0 0;" alt="DDPE" src="https://github.com/Androz2091/discord-data-package-explorer/raw/master/static/favicon.png">  
+<p align="center">
+  <img src=".github/readme/hero.webp" alt="Five DDPE share cards for a made-up account: 180,551 messages sent, top DMs, a 7-year recap, top words and a 10 PM peak hour" width="100%">
+</p>
 
-# [Discord Data Package Explorer](https://ddpe.androz2091.fr)
+<h1 align="center">Discord Data Package Explorer</h1>
 
-What's **really** in your Discord Data package? And how can this data be useful? Discord Data Package Explorer does the job for you!
+<p align="center">
+  <b>What's really in your Discord data package?</b> DDPE reads the package Discord gives you, right in your browser, shows who you talk to, where you hang out and when you're online, and turns it into cards to share.
+</p>
 
-## Dumpus
+<p align="center">
+  <a href="https://ddpe.androz2091.fr"><img src=".github/readme/open-ddpe.svg" alt="Open DDPE" height="54"></a>
+</p>
 
-**Discord Data Package Explorer v2** is now available as [Dumpus](https://github.com/dumpus-app/dumpus-app). This repository (v1) will still be maintained 💪
+<p align="center">
+  <a href="https://ddpe.androz2091.fr/stats/demo">Try the demo</a> · <a href="https://androz2091.fr/discord">Our Discord server</a>
+</p>
 
-## Example
+## What you get
 
-### [DEMO](https://ddpe.androz2091.fr/stats/demo)
+<table>
+  <tr>
+    <td align="center" width="50%"><img src=".github/readme/stats.webp" alt="The stats page of a made-up account: people, messages, app opens, favorite words and the hours it chats at"></td>
+    <td align="center" width="50%"><img src=".github/readme/top.webp" alt="The top users and channels of a made-up account, with the messages a day of each"></td>
+  </tr>
+  <tr>
+    <td align="center">Your numbers and your Discord hours</td>
+    <td align="center">Who you talk to, and where</td>
+  </tr>
+  <tr>
+    <td align="center"><img src=".github/readme/words.webp" alt="The top servers and top words of a made-up account"></td>
+    <td align="center"><img src=".github/readme/share.webp" alt="The share sheet open on the cover card of a made-up account"></td>
+  </tr>
+  <tr>
+    <td align="center">Your servers and your words</td>
+    <td align="center">Cards to share</td>
+  </tr>
+</table>
 
-![Example](./example.png)
+- Hours are counted in the time zone each message was sent from.
+- Group DMs rank among your top users, each with its messages a day.
+- Share 8 story cards and a square summary, drawn on your device.
 
-> [!IMPORTANT]
-> On June 14th, 2025, Discord updated their package format once again. We've just released an update that should resolve all related issues. If you're still experiencing problems, feel free to open an issue — we'll do our best to fix it promptly.
+The screenshots and cards show a made-up account.
 
-## How to Use
+## Your data stays in your browser
 
-* Ask for your data file in Discord (`Settings` > `Privacy & Safety`)
-* Open **https://ddpe.androz2091.fr**
-* and import your data file!
+- DDPE opens your package and reads it in your browser: the zip is never uploaded.
+- The stats it finds are saved in your browser's local storage, so the page survives a reload. Loading another package replaces them.
+- To show names and avatars, it sends user IDs, yours and those of the people in your top lists, to [diswho](https://github.com/Androz2091/deno-diswho), which asks Discord's API, and loads the avatars from Discord's CDN. diswho asks you to solve a captcha first.
+- Share cards are drawn on your device, and leave it only when you share or download one.
+- The hosted site counts visits with [Umami](https://umami.is). Every copy loads its font from Google Fonts, and its contributors list and help video from GitHub.
+- When a package can't be read, DDPE offers a prefilled GitHub issue with the error, your browser and the package's folder names. Nothing is sent unless you post it.
 
-### Docker
+## Get your Discord package
 
-This repository provides a Docker image and compose file. Simply run `docker-compose up -d` in the project directory 
-and you can access the app at http://localhost:5000.
+1. In Discord, open **User Settings** > **Privacy & Safety** and click **Request Data**. Select at least **Account info** and **Messages**: **Activity** adds app opens, notifications, reactions and voice.
+2. Discord emails you a download link once your package is ready.
+3. Open [DDPE](https://ddpe.androz2091.fr) and select your `package.zip`, as Discord sent it.
 
-### Manual Installation
+## Run it yourself
 
-Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, and is quite easy to install.
+DDPE is a [Svelte](https://svelte.dev) app.
 
-* Clone the repository.
-* Install the dependencies using `npm install` or `yarn install`.
-* Start the app using `npm run dev` or `yarn dev`!
+- With Docker: `docker compose up -d`, then open http://localhost:5000.
+- With Node.js 22: `corepack enable`, `yarn install`, then `yarn dev`.
 
-The app resolves user names with [diswho](https://github.com/Androz2091/deno-diswho) and counts visits with [Umami](https://umami.is). `.env` points both at the hosted instances: set `VITE_DISWHO_URL`, `VITE_ANALYTICS_URL` and `VITE_ANALYTICS_WEBSITE_ID` in `.env.local` or in the build's environment to use your own, or leave `VITE_ANALYTICS_URL` empty to load no analytics.
+`.env` points at the hosted diswho and Umami. Set `VITE_DISWHO_URL`, `VITE_ANALYTICS_URL` and `VITE_ANALYTICS_WEBSITE_ID` in `.env.local` or in the build's environment to use your own, or leave `VITE_ANALYTICS_URL` empty to load no analytics.
 
-> Note: for testing purposes, you may append use [this link](https://ddpe.androz2091.fr/stats/demo) to use the mocked data.
+## On your phone
 
-### Kaki87
+[Dumpus](https://dumpus.app) is the next version of DDPE, an app for iOS, Android and desktop. It processes your package on its server rather than in your browser.
 
-This project was created after a discussion with [Kaki87](https://kaki87.net), an awesome developer who taught me a lot of things. He had in mind to create this app but didn't have the time for it. I decided to learn Svelte and build it as a side project :)
-This project would never have existed without him! 🙏
+## Credits
+
+DDPE was created after a discussion with [Kaki87](https://kaki87.net), an awesome developer who taught me a lot of things. He had in mind to create this app but didn't have the time for it, so I learned Svelte and built it as a side project. It would never have existed without him! 🙏
+
+DDPE is licensed under [GPL-3.0](LICENSE).
