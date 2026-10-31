@@ -1,7 +1,7 @@
 <script>
     import { blur } from 'svelte/transition';
     import { data } from '../app/store';
-    import { generateAvatarURL, getGitHubContributors } from '../app/helpers';
+    import { generateAvatarURL, getGitHubContributors, hasDiscriminator } from '../app/helpers';
     import generateDemoData from '../app/demo';
     import Chart from 'svelte-frappe-charts';
     import Modal from '../components/Modal.svelte';
@@ -55,7 +55,7 @@
                 <Card name="profile">
                     <ProfileCard
                         name="{ $data.user.username }"
-                        discriminator="{ $data.user.discriminator.toString().padStart(4, '0') }"
+                        discriminator="{ hasDiscriminator($data.user.discriminator) ? $data.user.discriminator.toString().padStart(4, '0') : null }"
                         avatar="{ generateAvatarURL($data.user.avatar_hash, $data.user.id, $data.user.discriminator) }"
                     />
                 </Card>
@@ -169,7 +169,7 @@
                                 position={i}
                                 avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
                                 name={channel.userData.username}
-                                discriminator={channel.userData.discriminator}
+                                discriminator={hasDiscriminator(channel.userData.discriminator) ? channel.userData.discriminator : null}
                                 count={channel.messageCount.toLocaleString('en-US')}
                             />
                         {/each}

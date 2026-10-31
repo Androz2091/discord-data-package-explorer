@@ -1,9 +1,14 @@
 import axios from 'axios';
 
+// Unique usernames have the discriminator "0", or none at all.
+export const hasDiscriminator = (discriminator) => Number(discriminator) > 0;
+
 export const generateAvatarURL = (avatarHash, id, discriminator) => {
     let avatarURL = 'https://cdn.discordapp.com/';
     if (avatarHash) avatarURL += `avatars/${id}/${avatarHash}.${avatarHash.startsWith('a_') ? 'gif' : 'webp'}`;
-    else avatarURL += `embed/avatars/${discriminator % 5}.png`;
+    else if (hasDiscriminator(discriminator)) avatarURL += `embed/avatars/${discriminator % 5}.png`;
+    // Discord picks the default avatar of a unique username from its ID.
+    else avatarURL += `embed/avatars/${id ? (BigInt(id) >> 22n) % 6n : 0}.png`;
     return avatarURL;
 };
 

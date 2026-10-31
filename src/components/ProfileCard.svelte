@@ -11,7 +11,7 @@
         <img src="{ avatar }" alt="Avatar" />
     </div>
     <h1>
-        { name }<small class="text-muted">#{ discriminator }</small>
+        { name }{#if discriminator}<small class="text-muted">#{ discriminator }</small>{/if}
     </h1>
 </div>
 

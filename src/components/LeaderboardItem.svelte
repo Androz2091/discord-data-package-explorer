@@ -16,7 +16,7 @@
         {:else}
             <img class="top-avatar" src="{avatarURL}" alt="Avatar" />
         {/if}
-        <h3 class="top-name">{name} <small class="text-muted channel">{channel ? guild : `#${discriminator}`}</small></h3>
+        <h3 class="top-name">{name} <small class="text-muted channel">{channel ? guild : discriminator ? `#${discriminator}` : ''}</small></h3>
     </div>
     <div class="top-messages">
         <h3>{count} <small>messages</small></h3>
