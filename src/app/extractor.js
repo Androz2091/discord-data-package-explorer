@@ -160,13 +160,10 @@ const readAnalyticsFile = (file) => {
     });
 };
 
-// How many channels are read at the same time. Reading all of them at once kept the files of every channel
-// in memory together, and blocked the page until the last one was parsed, which froze Firefox on big
-// packages (#85).
 const CHANNELS_READ_AT_ONCE = 8;
 
-// Lets the browser repaint and handle input between two channels. Unlike `setTimeout`, a `MessageChannel`
-// message isn't held back 4 ms once nested, or a second in a background tab.
+// Unlike `setTimeout`, a `MessageChannel` message isn't held back 4 ms once nested, or a second in a
+// background tab.
 const yieldToBrowser = () => new Promise((resolve) => {
     const { port1, port2 } = new MessageChannel();
     port1.onmessage = () => {
@@ -289,7 +286,6 @@ export const extractData = async (files) => {
     console.log(`[debug] Old package (2021): ${isOldPackage}`);
     console.log(`[debug] Old package (2024): ${isOldPackagev2}`);
 
-    // Reads the data and messages of a channel, or gives null when one of its files is missing.
     const readChannel = async (channelID) => {
         const channelDataPath = `${messagesRoot}/${isOldPackage ? '' : 'c'}${channelID}/channel.json`;
         const extension = isOldPackagev2 ? 'csv' : 'json';
