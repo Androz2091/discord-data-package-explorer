@@ -111,6 +111,32 @@ const perDay = (value, userID) => {
     return parseInt(value / ((Date.now() - getCreatedTimestamp(userID)) / 24 / 60 / 60 / 1000));
 };
 
+// Recent packages write message times in UTC without an offset, which `Date` would read as local time.
+const parseTimestamp = (timestamp) => Date.parse(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(timestamp) ? `${timestamp.replace(' ', 'T')}Z` : timestamp);
+
+const zoneHourReader = (zone) => {
+    let format;
+    try {
+        format = new Intl.DateTimeFormat('en-US', { timeZone: zone, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    } catch {
+        return null;
+    }
+    // The offset only changes at daylight saving transitions, so it is computed once per zone and hour.
+    const offsets = new Map();
+    return (time) => {
+        const hour = Math.floor(time / 3600000);
+        let offset = offsets.get(hour);
+        if (offset === undefined) {
+            const parts = Object.fromEntries(format.formatToParts(hour * 3600000).map((part) => [part.type, Number(part.value)]));
+            offset = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute) - hour * 3600000;
+            offsets.set(hour, offset);
+        }
+        return new Date(time + offset).getUTCHours();
+    };
+};
+
+const SENT_MESSAGE_EVENT = '"event_type":"send_message"';
+
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
         if (!file) return resolve({});
@@ -133,6 +159,11 @@ const readAnalyticsFile = (file) => {
         const eventNames = Object.keys(eventsOccurrences).map((event) => [event, snakeCase(event)]);
         const carryLength = Math.max(...eventNames.map(([, eventName]) => eventName.length)) - 1;
         let carry = '';
+        // A `send_message` event carries the time zone of the device that sent the message, at the second of
+        // the message in the package. Chunks cut lines anywhere, so a line is read once the next chunk ends it.
+        const sentZones = new Map();
+        const zoneNames = [];
+        let lineCarry = '';
         decoder.ondata = (str, final) => {
             const text = carry + str;
             for (const [event, eventName] of eventNames) {
@@ -143,6 +174,22 @@ const readAnalyticsFile = (file) => {
                 }
             }
             carry = text.slice(-carryLength);
+            const lines = lineCarry + str;
+            const whole = final ? lines.length : lines.lastIndexOf('\n') + 1;
+            let at = lines.indexOf(SENT_MESSAGE_EVENT);
+            while (at !== -1 && at < whole) {
+                const end = lines.indexOf('\n', at);
+                const line = lines.slice(lines.lastIndexOf('\n', at) + 1, end === -1 ? lines.length : end);
+                const zone = line.match(/"time_zone":"([^"]+)"/);
+                const timestamp = line.match(/"timestamp":"\\"([^"\\]+)\\""/);
+                if (zone && timestamp) {
+                    let zoneIndex = zoneNames.indexOf(zone[1]);
+                    if (zoneIndex === -1) zoneIndex = zoneNames.push(zone[1]) - 1;
+                    sentZones.set(Math.floor(Date.parse(timestamp[1]) / 1000), zoneIndex);
+                }
+                at = end === -1 ? -1 : lines.indexOf(SENT_MESSAGE_EVENT, end);
+            }
+            lineCarry = lines.slice(whole);
             if (final) {
                 resolve({
                     openCount: eventsOccurrences.appOpened,
@@ -152,7 +199,9 @@ const readAnalyticsFile = (file) => {
                     addReactionCount: eventsOccurrences.addReaction,
                     messageEditedCount: eventsOccurrences.messageEdited,
                     sendMessageCount: eventsOccurrences.sendMessage,
-                    slashCommandUsedCount: eventsOccurrences.slashCommandUsed
+                    slashCommandUsedCount: eventsOccurrences.slashCommandUsed,
+                    sentZones,
+                    zoneNames
                 });
             }
         };
@@ -343,10 +392,6 @@ export const extractData = async (files) => {
     }));
     extractedData.characterCount = channels.map((channel) => channel.messages).flat().map((message) => message.length).reduce((p, c) => p + c);
 
-    for (let i = 0; i < 24; i++) {
-        extractedData.hoursValues.push(channels.map((c) => c.messages).flat().filter((m) => new Date(m.timestamp).getHours() === i).length);
-    }
-
     console.log(`[debug] ${channels.length} channels loaded.`);
 
     console.log('[debug] Loading guilds...');
@@ -407,6 +452,21 @@ export const extractData = async (files) => {
     console.log('[debug] Found activity file:', activityFile && activityFile.name);
 
     const statistics = await readAnalyticsFile(activityFile);
+
+    const zoneHours = (statistics.zoneNames || []).map(zoneHourReader);
+    extractedData.hoursValues = new Array(24).fill(0);
+    for (const channel of channels) {
+        for (const message of channel.messages) {
+            const time = parseTimestamp(message.timestamp);
+            if (Number.isNaN(time)) continue;
+            const second = Math.floor(time / 1000);
+            // An event's second can be one off its message's.
+            const zone = statistics.sentZones && (statistics.sentZones.get(second) ?? statistics.sentZones.get(second - 1) ?? statistics.sentZones.get(second + 1));
+            const readHour = zone === undefined ? null : zoneHours[zone];
+            extractedData.hoursValues[readHour ? readHour(time) : new Date(time).getHours()]++;
+        }
+    }
+
     // `reporting` never carries these events, so its 0 would stand for an unknown count.
     if (activityFile && activityFile === reportingFile) {
         for (const stat of ['notificationCount', 'joinCallCount', 'messageEditedCount', 'slashCommandUsedCount']) delete statistics[stat];
