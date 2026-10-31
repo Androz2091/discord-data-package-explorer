@@ -188,6 +188,9 @@
                 </Card>
                 <Card name="top-users">
                     <Leaderboard title="Top Users" description="The users you chat the most with!" more={$data.topDMs.length > shownDMs ? showMoreDMs : null}>
+                        {#if $data.lookupsFailed}
+                            <p class="hint">Names and avatars couldn't be loaded. If an ad blocker is on, allow {import.meta.env.VITE_DISWHO_URL.replace(/^https?:\/\//, '')} and load your package again.</p>
+                        {/if}
                         {#each $data.topDMs.slice(0, shownDMs) as channel, i}
                             {#if channel.isGroupDM}
                                 <LeaderboardItem
@@ -314,6 +317,10 @@
 
         h3 {
             margin-left: 10px;
+        }
+
+        .hint {
+            color: #f9a825;
         }
 
         .cards {
