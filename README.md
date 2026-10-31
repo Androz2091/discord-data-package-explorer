@@ -36,6 +36,8 @@ Discord Data Package Explorer is built with **[Svelte](https://svelte.dev)**, an
 * Install the dependencies using `npm install` or `yarn install`.
 * Start the app using `npm run dev` or `yarn dev`!
 
+The app resolves user names with [diswho](https://github.com/Androz2091/deno-diswho) and counts visits with [Umami](https://umami.is). `.env` points both at the hosted instances: set `VITE_DISWHO_URL`, `VITE_ANALYTICS_URL` and `VITE_ANALYTICS_WEBSITE_ID` in `.env.local` or in the build's environment to use your own, or leave `VITE_ANALYTICS_URL` empty to load no analytics.
+
 > Note: for testing purposes, you may append use [this link](https://ddpe.androz2091.fr/stats/demo) to use the mocked data.
 
 ### Kaki87

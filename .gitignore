@@ -2,3 +2,4 @@ node_modules
 /public
 .yarn/cache
 .yarn/install-state.gz
+.env*.local
