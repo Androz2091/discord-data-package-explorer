@@ -53,6 +53,8 @@
     // the page.
     const groupName = (members) => members.length ? `${members.slice(0, 3).map((member) => member.username).join(', ')}${members.length > 3 ? ` and ${members.length - 3} more` : ''}` : 'Unknown group';
 
+    const perDay = (value) => `${value >= 10 ? Math.round(value).toLocaleString('en-US') : value.toLocaleString('en-US', { maximumSignificantDigits: 2 })} per day`;
+
     const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
     </script>
 
@@ -179,6 +181,7 @@
                                     avatarURLs={channel.members.length ? channel.members.map((member) => generateAvatarURL(member.avatar, member.id, member.discriminator)) : [generateAvatarURL()]}
                                     name={channel.name || groupName(channel.members)}
                                     count={channel.messageCount.toLocaleString('en-US')}
+                                    detail={perDay(channel.messagesPerDay)}
                                 />
                             {:else}
                                 <LeaderboardItem
@@ -187,6 +190,7 @@
                                     name={channel.userData.username}
                                     discriminator={hasDiscriminator(channel.userData.discriminator) ? channel.userData.discriminator : null}
                                     count={channel.messageCount.toLocaleString('en-US')}
+                                    detail={channel.messagesPerDay === undefined ? null : perDay(channel.messagesPerDay)}
                                 />
                             {/if}
                         {/each}

@@ -7,6 +7,7 @@
     export let count;
     export let channel = false;
     export let avatarURLs = null;
+    export let detail = null;
 </script>
 
 <div class="top-item">
@@ -27,7 +28,7 @@
         <h3 class="top-name">{name} <small class="text-muted channel">{channel ? guild : avatarURLs ? 'Group DM' : discriminator ? `#${discriminator}` : ''}</small></h3>
     </div>
     <div class="top-messages">
-        <h3>{count} <small>messages</small></h3>
+        <h3>{count} <small>messages</small>{#if detail}<br><small class="text-muted detail">{detail}</small>{/if}</h3>
     </div>
 </div>
 
@@ -84,6 +85,10 @@
     }
     .top-messages {
         flex-shrink: 0;
+        text-align: right;
+    }
+    .detail {
+        font-weight: normal;
     }
     .top-bubble {
         align-items: center;

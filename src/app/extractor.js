@@ -142,6 +142,18 @@ const zoneHourReader = (zone) => {
 
 const SENT_MESSAGE_EVENT = '"event_type":"send_message"';
 
+const messagesPerDay = (messages) => {
+    let first = Infinity;
+    let last = -Infinity;
+    for (const message of messages) {
+        const time = parseTimestamp(message.timestamp);
+        if (time < first) first = time;
+        if (time > last) last = time;
+    }
+    // A day at least, so messages sent within a few hours aren't scaled up to a whole day.
+    return messages.length / Math.max(1, (last - first) / 86400000);
+};
+
 const readAnalyticsFile = (file) => {
     return new Promise((resolve) => {
         if (!file) return resolve({});
@@ -439,11 +451,13 @@ export const extractData = async (files) => {
             name: channel.data.name || null,
             memberIDs: (channel.data.recipients || []).filter((userID) => userID !== extractedData.user.id),
             messageCount: channel.messages.length,
+            messagesPerDay: messagesPerDay(channel.messages),
             members: null
         } : {
             id: channel.data.id,
             dmUserID: channel.dmUserID,
             messageCount: channel.messages.length,
+            messagesPerDay: messagesPerDay(channel.messages),
             userData: null
         });
     await fetchDMUsers(extractedData.topDMs);
