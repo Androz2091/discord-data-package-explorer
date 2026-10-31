@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/readme/hero.webp" alt="Five DDPE share cards for a made-up account: 180,551 messages sent, top DMs, a 7-year recap, top words and a 10 PM peak hour" width="100%">
+  <img src=".github/readme/hero.webp" alt="Five DDPE share cards from Androz2091's own package: 233,467 messages sent, top DMs, an 8-year recap, top words and a 6 PM peak hour" width="100%">
 </p>
 
 <h1 align="center">Discord Data Package Explorer</h1>
@@ -20,16 +20,16 @@
 
 <table>
   <tr>
-    <td align="center" width="50%"><img src=".github/readme/stats.webp" alt="The stats page of a made-up account: people, messages, app opens, favorite words and the hours it chats at"></td>
-    <td align="center" width="50%"><img src=".github/readme/top.webp" alt="The top users and channels of a made-up account, with the messages a day of each"></td>
+    <td align="center" width="50%"><img src=".github/readme/stats.webp" alt="The stats page of Androz2091's package: people, messages, app opens, favorite words and chat hours"></td>
+    <td align="center" width="50%"><img src=".github/readme/top.webp" alt="The top users and channels of Androz2091's package, with the messages a day of each"></td>
   </tr>
   <tr>
     <td align="center">Your numbers and your Discord hours</td>
     <td align="center">Who you talk to, and where</td>
   </tr>
   <tr>
-    <td align="center"><img src=".github/readme/words.webp" alt="The top servers and top words of a made-up account"></td>
-    <td align="center"><img src=".github/readme/share.webp" alt="The share sheet open on the cover card of a made-up account"></td>
+    <td align="center"><img src=".github/readme/words.webp" alt="The top servers and top words of Androz2091's package"></td>
+    <td align="center"><img src=".github/readme/share.webp" alt="The share sheet open on the cover card of Androz2091's package"></td>
   </tr>
   <tr>
     <td align="center">Your servers and your words</td>
@@ -41,7 +41,7 @@
 - Group DMs rank among your top users, each with its messages a day.
 - Share 8 story cards and a square summary, drawn on your device.
 
-The screenshots and cards show a made-up account.
+The screenshots and cards show Androz2091's own Discord package.
 
 ## Your data stays in your browser
 
