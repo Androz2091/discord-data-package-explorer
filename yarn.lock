@@ -103,6 +103,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/rubik@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource-variable/rubik@npm:5.3.0"
+  checksum: 10c0/b9577a08be21c4b256d4681c7b4d048c0d2e78a40e1b3d0e02fad3a8175b54b3a4f1148982153e32683ee6f4afd7be542117e0d1b206e90946f7f0a843d7c49e
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.2":
   version: 0.19.2
   resolution: "@humanfs/core@npm:0.19.2"
@@ -816,6 +823,7 @@ __metadata:
   resolution: "discord-data-package-explorer@workspace:."
   dependencies:
     "@eslint/js": "npm:^10.0.1"
+    "@fontsource-variable/rubik": "npm:^5.3.0"
     "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@sveltejs/vite-plugin-svelte": "npm:^7.3.1"
     "@untemps/svelte-use-tooltip": "npm:^4.0.2"
@@ -827,6 +835,7 @@ __metadata:
     fflate: "npm:^0.8.3"
     globals: "npm:^17.13.0"
     jwt-decode: "npm:^4.0.0"
+    modern-screenshot: "npm:^4.7.0"
     papaparse: "npm:^5.7.0"
     sass: "npm:^1.107.0"
     svelte: "npm:^5.57.3"
@@ -1670,6 +1679,13 @@ __metadata:
   dependencies:
     minipass: "npm:^7.1.2"
   checksum: 10c0/5aad75ab0090b8266069c9aabe582c021ae53eb33c6c691054a13a45db3b4f91a7fb1bd79151e6b4e9e9a86727b522527c0a06ec7d45206b745d54cd3097bcec
+  languageName: node
+  linkType: hard
+
+"modern-screenshot@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "modern-screenshot@npm:4.7.0"
+  checksum: 10c0/9c5fbe4f4c73d3dcf0ba7fb76c1671ad148fdedffc84700e0b8ca1c1640a6ab1930718ae1424b0a6517b98d8f18c898ea0e62ee0ca57a25bfce7b914df721a63
   languageName: node
   linkType: hard
 
