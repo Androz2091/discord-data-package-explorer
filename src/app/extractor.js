@@ -128,20 +128,21 @@ const readAnalyticsFile = (file) => {
             loadEstimatedTime.set(`Estimated time: ${remainingTime+1} second${remainingTime+1 === 1 ? '' : 's'}`);
             decoder.push(data, final);
         };
-        let prevChkEnd = '';
+        // The end of the previous chunk is prepended so an event name split between two chunks is found.
+        // Matches that end inside it were already counted with the previous chunk.
+        const eventNames = Object.keys(eventsOccurrences).map((event) => [event, snakeCase(event)]);
+        const carryLength = Math.max(...eventNames.map(([, eventName]) => eventName.length)) - 1;
+        let carry = '';
         decoder.ondata = (str, final) => {
-            str = prevChkEnd + str;
-            for (let event of Object.keys(eventsOccurrences)) {
-                const eventName = snakeCase(event);
-                // eslint-disable-next-line no-constant-condition
-                while (true) {
-                    const ind = str.indexOf(eventName);
-                    if (ind == -1) break;
-                    str = str.slice(ind + eventName.length);
+            const text = carry + str;
+            for (const [event, eventName] of eventNames) {
+                let ind = text.indexOf(eventName, Math.max(0, carry.length - eventName.length + 1));
+                while (ind !== -1) {
                     eventsOccurrences[event]++;
+                    ind = text.indexOf(eventName, ind + eventName.length);
                 }
-                prevChkEnd = str.slice(-eventName.length);
             }
+            carry = text.slice(-carryLength);
             if (final) {
                 resolve({
                     openCount: eventsOccurrences.appOpened,
