@@ -49,6 +49,10 @@
     // Inside the target, as svelte-tooltip's tip was, so it keeps the text's font and color.
     const tooltip = (content) => ({ content, position: 'bottom', offset: 8, portal: false });
 
+    // Three names at most, like the avatars: a list is as wide as its longest name, and on a phone that widens
+    // the page.
+    const groupName = (members) => members.length ? `${members.slice(0, 3).map((member) => member.username).join(', ')}${members.length > 3 ? ` and ${members.length - 3} more` : ''}` : 'Unknown group';
+
     const hoursLabels = new Array(24).fill(0).map((v, i) => i == 0 ? '12am' : i < 12 ? `${i}am` : i == 12 ? '12pm' : `${i-12}pm`);
     </script>
 
@@ -169,13 +173,22 @@
                 <Card name="top-users">
                     <Leaderboard title="Top Users" description="The users you chat the most with!">
                         {#each $data.topDMs as channel, i}
-                            <LeaderboardItem
-                                position={i}
-                                avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
-                                name={channel.userData.username}
-                                discriminator={hasDiscriminator(channel.userData.discriminator) ? channel.userData.discriminator : null}
-                                count={channel.messageCount.toLocaleString('en-US')}
-                            />
+                            {#if channel.isGroupDM}
+                                <LeaderboardItem
+                                    position={i}
+                                    avatarURLs={channel.members.length ? channel.members.map((member) => generateAvatarURL(member.avatar, member.id, member.discriminator)) : [generateAvatarURL()]}
+                                    name={channel.name || groupName(channel.members)}
+                                    count={channel.messageCount.toLocaleString('en-US')}
+                                />
+                            {:else}
+                                <LeaderboardItem
+                                    position={i}
+                                    avatarURL={generateAvatarURL(channel.userData.avatar, channel.userData.id, channel.userData.discriminator)}
+                                    name={channel.userData.username}
+                                    discriminator={hasDiscriminator(channel.userData.discriminator) ? channel.userData.discriminator : null}
+                                    count={channel.messageCount.toLocaleString('en-US')}
+                                />
+                            {/if}
                         {/each}
                     </Leaderboard>
                 </Card>
