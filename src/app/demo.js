@@ -16,10 +16,14 @@ export default () => {
 
         user: demoUserObject,
 
-        topDMs: new Array(10).fill({}).map(() => ({
-            messageCount: randomNumber(200, 600),
-            userData: demoUserObject
-        })).sort((a, b) => b.messageCount - a.messageCount),
+        topDMs: new Array(10).fill({}).map(() => {
+            const messageCount = randomNumber(200, 600);
+            return {
+                messageCount,
+                messagesPerDay: messageCount / 120,
+                userData: demoUserObject
+            };
+        }).sort((a, b) => b.messageCount - a.messageCount),
         topChannels: new Array(10).fill({}).map(() => ({
             messageCount: randomNumber(200, 600),
             name: 'awesome',
