@@ -48,7 +48,7 @@ const getUserRoot = (files) => {
  * @param userID The ID of the user to fetch
  */
 const fetchUser = async (userID) => {
-    const res = await axios(`https://diswho.androz2091.fr/user/${userID}`, {
+    const res = await axios(`${import.meta.env.VITE_DISWHO_URL}/user/${userID}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('diswhoJwt')}`
         }

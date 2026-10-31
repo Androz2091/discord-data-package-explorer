@@ -104,7 +104,7 @@
             informationalMessage = 'Redirecting you to Diswho to complete a captcha...';
             return setTimeout(() => {
                 informationalMessage = '';
-                window.location.replace(`https://diswho.androz2091.fr?returnUrl=${window.location.href}`);
+                window.location.replace(`${import.meta.env.VITE_DISWHO_URL}?returnUrl=${window.location.href}`);
             }, 2000);
         }
 
