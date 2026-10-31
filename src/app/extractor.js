@@ -253,12 +253,13 @@ export const extractData = async (files) => {
 
     const messagesIndex = JSON.parse(await readFile(`${messagesRoot}/index.json`));
 
-    const messagesPathRegex = /c?([0-9]{16,32})\/$/;
+    // Channels are found from their `channel.json` files, since some zips have no directory entries.
+    const messagesPathRegex = /\/(c)?([0-9]{16,32})\/channel\.json$/;
     const channelsIDsFile = files.filter((file) => messagesPathRegex.test(file.name) && file.name.startsWith(messagesRoot));
 
     // Packages before 06-12-2021 does not have the leading "c" before the channel ID
-    const isOldPackage = channelsIDsFile[0].name.match(/(c)?([0-9]{16,32})\/$/)[1] === undefined;
-    const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[1]);
+    const isOldPackage = channelsIDsFile[0].name.match(messagesPathRegex)[1] === undefined;
+    const channelsIDs = channelsIDsFile.map((file) => file.name.match(messagesPathRegex)[2]);
 
     // Packages before 01-03-2024 does not have json files for messages but csv files
     const isOldPackagev2 = files.find((file) => /c?([0-9]{16,32})\/messages.json/.test(file.name)) === undefined;
