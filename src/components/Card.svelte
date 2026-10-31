@@ -35,6 +35,9 @@
         .card.top-words {
             grid-column: 6 / 12;
         }
+        .card.years {
+            grid-column: 1 / 12;
+        }
         .card.hours {
             grid-column: 6 / 12;
             grid-row: 2 / 3;
