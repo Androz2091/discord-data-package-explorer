@@ -32,6 +32,9 @@
         .card.top-servers {
             grid-column: 1 / 6;
         }
+        .card.top-words {
+            grid-column: 6 / 12;
+        }
         .card.hours {
             grid-column: 6 / 12;
             grid-row: 2 / 3;

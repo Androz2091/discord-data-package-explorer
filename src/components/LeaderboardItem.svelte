@@ -10,6 +10,7 @@
     export let detail = null;
     // Packages rarely carry a server's icon, so a server shows its initials, as Discord does without one.
     export let server = false;
+    export let unit = 'messages';
 </script>
 
 <div class="top-item">
@@ -26,13 +27,13 @@
                     <img class="top-avatar" src="{url}" alt="Avatar" />
                 {/each}
             </div>
-        {:else}
+        {:else if avatarURL}
             <img class="top-avatar" src="{avatarURL}" alt="Avatar" />
         {/if}
         <h3 class="top-name">{name} <small class="text-muted channel">{channel ? guild : avatarURLs ? 'Group DM' : discriminator ? `#${discriminator}` : ''}</small></h3>
     </div>
     <div class="top-messages">
-        <h3>{count} <small>messages</small>{#if detail}<br><small class="text-muted detail">{detail}</small>{/if}</h3>
+        <h3>{count} <small>{unit}</small>{#if detail}<br><small class="text-muted detail">{detail}</small>{/if}</h3>
     </div>
 </div>
 

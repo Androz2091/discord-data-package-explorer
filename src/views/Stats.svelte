@@ -239,6 +239,22 @@
                     </Card>
                 {/if}
 
+                <!-- Data read before the top words had only the two favorite ones. -->
+                {#if $data.favoriteWords.length > 2}
+                    <Card name="top-words">
+                        <Leaderboard title="Top Words" description="The words you use the most!">
+                            {#each $data.favoriteWords as word, i}
+                                <LeaderboardItem
+                                    position={i}
+                                    name={word.word}
+                                    count={word.count.toLocaleString('en-US')}
+                                    unit="times"
+                                />
+                            {/each}
+                        </Leaderboard>
+                    </Card>
+                {/if}
+
                 <Card name="about">
                     <div style="text-align: center;">
                         <h2>About this project</h2>

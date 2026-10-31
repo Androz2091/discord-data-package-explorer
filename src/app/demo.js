@@ -44,7 +44,11 @@ export default () => {
             {
                 word: 'DDPE',
                 count: randomNumber(200, 600)
-            }
+            },
+            ...['Discord', 'Wumpus', 'Svelte', 'Dumpus', 'package', 'explorer', 'statistics', 'awesome'].map((word, i) => ({
+                word,
+                count: 190 - i * 20
+            }))
         ],
         payments: {
             total: 0,
