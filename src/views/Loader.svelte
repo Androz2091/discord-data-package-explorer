@@ -1,10 +1,28 @@
 <script>
     import { link } from 'svelte-routing';
-	import { Unzip, AsyncUnzipInflate } from 'fflate';
+	import { Unzip, AsyncUnzipInflate, UnzipInflate } from 'fflate';
     import { navigate } from 'svelte-routing';
     import { loadTask, loadEstimatedTime, data, diswhoCompleted } from '../app/store';
     import { extractData } from '../app/extractor';
     import { generateFileStructureDump, generateGitHubIssueURL } from '../app/helpers';
+
+    // fflate inflates large files in workers it starts from blob: URLs, and never hears from one whose URL is
+    // refused, by a content security policy or a test's network route for eg., so the package would never
+    // finish loading. A worker of our own tells first whether they start; if not, the page inflates every file.
+    const workersStart = () => new Promise((resolve) => {
+        const url = URL.createObjectURL(new Blob(['postMessage(0)'], { type: 'text/javascript' }));
+        try {
+            const worker = new Worker(url);
+            worker.onmessage = worker.onerror = (event) => {
+                worker.terminate();
+                URL.revokeObjectURL(url);
+                resolve(event.type === 'message');
+            };
+        } catch {
+            URL.revokeObjectURL(url);
+            resolve(false);
+        }
+    });
 
     let loading = false;
     let error = '';
@@ -15,7 +33,6 @@
         error = '';
         errorReportURL = '';
         const uz = new Unzip();
-        uz.register(AsyncUnzipInflate);
         const files = [];
         uz.onfile = (f) => files.push(f);
         if (!file.stream) {
@@ -23,6 +40,7 @@
             error = 'This browser is not supported. Try using Google Chrome instead.';
             return;
         }
+        const inflateInWorkers = workersStart();
         const reader = file.stream().getReader();
         while (true) {
             const { done, value } = await reader.read();
@@ -34,7 +52,9 @@
                 uz.push(value.subarray(i, i + 65536));
             }
         }
-        
+        // fflate picks a file's decoder when the file is read, so it can still be chosen here.
+        uz.register(await inflateInWorkers ? AsyncUnzipInflate : UnzipInflate);
+
         // Helper function to set error with GitHub report link
         const setErrorWithReport = (errorMsg) => {
             error = errorMsg;
