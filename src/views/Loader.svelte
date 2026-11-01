@@ -1,6 +1,6 @@
 <script>
     import { link } from 'svelte-routing';
-	import { Unzip, AsyncUnzipInflate, UnzipInflate } from 'fflate';
+	import { Unzip, AsyncUnzipInflate, Inflate } from 'fflate';
     import { navigate } from 'svelte-routing';
     import { loadTask, loadEstimatedTime, data, diswhoCompleted } from '../app/store';
     import { extractData } from '../app/extractor';
@@ -23,6 +23,19 @@
             resolve(false);
         }
     });
+
+    // fflate's UnzipInflate hands a broken file's error to `ondata`, then still pushes the rest of the file into
+    // the broken stream, which copies all it holds at each push: close to a minute for 256 MB. This one throws
+    // the error out of `start()`, as fflate does for the small files it keeps off workers.
+    class PageInflate {
+        static compression = 8;
+        constructor () {
+            this.inflate = new Inflate((inflated, final) => this.ondata(null, inflated, final));
+        }
+        push (chunk, final) {
+            this.inflate.push(chunk, final);
+        }
+    }
 
     let loading = false;
     let error = '';
@@ -53,7 +66,7 @@
             }
         }
         // fflate picks a file's decoder when the file is read, so it can still be chosen here.
-        uz.register(await inflateInWorkers ? AsyncUnzipInflate : UnzipInflate);
+        uz.register(await inflateInWorkers ? AsyncUnzipInflate : PageInflate);
 
         // Helper function to set error with GitHub report link
         const setErrorWithReport = (errorMsg) => {
