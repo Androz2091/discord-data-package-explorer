@@ -1,6 +1,6 @@
 <script>
     import { link } from 'svelte-routing';
-	import { Unzip, AsyncUnzipInflate, UnzipInflate } from 'fflate';
+	import { Unzip, AsyncUnzipInflate, Inflate } from 'fflate';
     import { navigate } from 'svelte-routing';
     import { loadTask, loadEstimatedTime, data, diswhoCompleted } from '../app/store';
     import { extractData } from '../app/extractor';
@@ -24,6 +24,19 @@
         }
     });
 
+    // fflate's UnzipInflate hands a broken file's error to `ondata`, then still pushes the rest of the file into
+    // the broken stream, which copies all it holds at each push: close to a minute for 256 MB. This one throws
+    // the error out of `start()`, as fflate does for the small files it keeps off workers.
+    class PageInflate {
+        static compression = 8;
+        constructor () {
+            this.inflate = new Inflate((inflated, final) => this.ondata(null, inflated, final));
+        }
+        push (chunk, final) {
+            this.inflate.push(chunk, final);
+        }
+    }
+
     let loading = false;
     let error = '';
     let errorReportURL = '';
@@ -40,20 +53,6 @@
             error = 'This browser is not supported. Try using Google Chrome instead.';
             return;
         }
-        const inflateInWorkers = workersStart();
-        const reader = file.stream().getReader();
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-                uz.push(new Uint8Array(0), true);
-                break;
-            }
-            for (let i = 0; i < value.length; i += 65536) {
-                uz.push(value.subarray(i, i + 65536));
-            }
-        }
-        // fflate picks a file's decoder when the file is read, so it can still be chosen here.
-        uz.register(await inflateInWorkers ? AsyncUnzipInflate : UnzipInflate);
 
         // Helper function to set error with GitHub report link
         const setErrorWithReport = (errorMsg) => {
@@ -61,7 +60,30 @@
             const fileStructure = generateFileStructureDump(files);
             errorReportURL = generateGitHubIssueURL(errorMsg, fileStructure);
         };
-        
+
+        const inflateInWorkers = workersStart();
+        const reader = file.stream().getReader();
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    uz.push(new Uint8Array(0), true);
+                    break;
+                }
+                for (let i = 0; i < value.length; i += 65536) {
+                    uz.push(value.subarray(i, i + 65536));
+                }
+            }
+        } catch (err) {
+            // fflate throws "invalid zip data" when the package ends inside a file, a download cut short for eg.
+            console.error(err);
+            setErrorWithReport('Something went wrong... Click or drop your package file here to retry');
+            loading = false;
+            return;
+        }
+        // fflate picks a file's decoder when the file is read, so it can still be chosen here.
+        uz.register(await inflateInWorkers ? AsyncUnzipInflate : PageInflate);
+
         if (files.some((file) => file.name.startsWith('package/'))) {
             setErrorWithReport('Seems like you unzipped and re-zipped your package file. To fix this issue, instead of right clicking on the package folder and zipping it, you should open the folder, select all files inside it, and zip them directly. Name the resulting file "package.zip" and try again.');
             loading = false;

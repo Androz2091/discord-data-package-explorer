@@ -155,14 +155,15 @@ const messagesPerDay = (messages) => {
 };
 
 const readAnalyticsFile = (file) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         if (!file) return resolve({});
         const eventsOccurrences = {};
         for (let eventName of eventsData.eventsEnabled) eventsOccurrences[eventName] = 0;
         const decoder = new DecodeUTF8();
         let startAt = Date.now();
         let bytesRead = 0;
-        file.ondata = (_err, data, final) => {
+        file.ondata = (err, data, final) => {
+            if (err) return reject(err);
             bytesRead += data.length;
             loadTask.set(`Loading user statistics... ${Math.ceil(bytesRead / file.originalSize * 100)}%`);
             const remainingBytes = file.originalSize-bytesRead;
@@ -283,12 +284,13 @@ export const extractData = async (files) => {
     const getFile = (name) => files.find((file) => file.name === name);
     // Read a file from its name
     const readFile = (name) => {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const file = getFile(name);
             if (!file) return resolve(null);
             const fileContent = [];
             const decoder = new DecodeUTF8();
             file.ondata = (err, data, final) => {
+                if (err) return reject(err);
                 decoder.push(data, final);
             };
             decoder.ondata = (str, final) => {
