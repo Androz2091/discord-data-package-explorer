@@ -16,6 +16,10 @@
   <a href="https://ddpe.androz2091.fr/stats/demo">Try the demo</a> · <a href="https://androz2091.fr/discord">Our Discord server</a>
 </p>
 
+<p align="center">
+  Want more, on your phone too? <a href="https://dumpus.app"><b>Dumpus</b></a> is DDPE's successor. <a href="#ddpe-or-dumpus">How they differ</a>
+</p>
+
 ## What you get
 
 <table>
@@ -43,6 +47,17 @@
 
 The screenshots and cards show Androz2091's own Discord package.
 
+## DDPE or Dumpus?
+
+DDPE is where it started, and it stays free and open source. [Dumpus](https://dumpus.app) is its successor, by the same author, and where new features come out first.
+
+| | DDPE | Dumpus |
+| --- | --- | --- |
+| Where | In your browser | iOS, Android, desktop and the web |
+| Your package | Read on your device, never uploaded | Read on Dumpus's server, from the link in Discord's email |
+| Your stats | Totals, top users, channels, servers and words, your hours, share cards | All of that, plus a page for each DM and group DM, who you call, and the last 4 weeks, 6 months or year |
+| Between visits | Kept in this browser | Kept on your device, with as many packages as you like |
+
 ## Your data stays in your browser
 
 - DDPE opens your package and reads it in your browser: the zip is never uploaded.
@@ -54,7 +69,7 @@ The screenshots and cards show Androz2091's own Discord package.
 
 ## Get your Discord package
 
-1. In Discord, open **User Settings** > **Privacy & Safety** and click **Request Data**. Select at least **Account info** and **Messages**: **Activity** adds app opens, notifications, reactions and voice.
+1. In Discord, open **User Settings** > **Data & Privacy** and click **Request Data**. Tick **Account**, **Your Activity**, **Messages** and **Servers**: DDPE can't read a package without Account, and Your Activity adds app opens, notifications, reactions and voice.
 2. Discord emails you a download link once your package is ready.
 3. Open [DDPE](https://ddpe.androz2091.fr) and select your `package.zip`, as Discord sent it.
 
@@ -66,10 +81,6 @@ DDPE is a [Svelte](https://svelte.dev) app.
 - With Node.js 22: `corepack enable`, `yarn install`, then `yarn dev`.
 
 `.env` points at the hosted diswho and Umami. Set `VITE_DISWHO_URL`, `VITE_ANALYTICS_URL` and `VITE_ANALYTICS_WEBSITE_ID` in `.env.local` or in the build's environment to use your own, or leave `VITE_ANALYTICS_URL` empty to load no analytics.
-
-## On your phone
-
-[Dumpus](https://dumpus.app) is the next version of DDPE, an app for iOS, Android and desktop. It processes your package on its server rather than in your browser.
 
 ## Credits
 

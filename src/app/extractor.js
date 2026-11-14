@@ -45,9 +45,17 @@ const getUserRoot = (files) => {
 /**
  * Fetch a user on Discord.
  * This is necessary because sometimes we only have the user ID in the files.
+ * A deleted account has no ID: Discord writes a "Deleted User", in the package's language, where it goes, so
+ * it's shown as written, without a lookup.
  * @param userID The ID of the user to fetch
  */
 const fetchUser = async (userID) => {
+    if (!/^\d+$/.test(userID)) return {
+        username: userID || 'Unknown',
+        discriminator: '0000',
+        avatar: null,
+        deleted: true
+    };
     const res = await axios(`${import.meta.env.VITE_DISWHO_URL}/user/${userID}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('diswhoJwt')}`
@@ -484,7 +492,7 @@ export const extractData = async (files) => {
     // The others are looked up when "Show more" shows them.
     await fetchDMUsers(extractedData.topDMs.slice(0, 10));
     // When every lookup fails, something blocks diswho, an ad blocker for eg., and the page says so.
-    extractedData.lookupsFailed = [fetchedUser, ...extractedData.topDMs.slice(0, 10).flatMap((dm) => (dm.isGroupDM ? dm.members : [dm.userData]))].every((userData) => !userData.id);
+    extractedData.lookupsFailed = [fetchedUser, ...extractedData.topDMs.slice(0, 10).flatMap((dm) => (dm.isGroupDM ? dm.members : [dm.userData]))].filter((userData) => !userData.deleted).every((userData) => !userData.id);
 
     console.log(`[debug] ${extractedData.topDMs.length} top DMs loaded.`);
 
