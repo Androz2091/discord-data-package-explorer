@@ -1,6 +1,6 @@
 <script>
     import { blur } from 'svelte/transition';
-    import { data } from '../app/store';
+    import { data, openRecap } from '../app/store';
     import { generateAvatarURL, getGitHubContributors, hasDiscriminator } from '../app/helpers';
     import { fetchDMUsers } from '../app/extractor';
     import generateDemoData from '../app/demo';
@@ -17,10 +17,10 @@
     import Leaderboard from '../components/Leaderboard.svelte';
     import LeaderboardItem from '../components/LeaderboardItem.svelte';
 
-    let timeout;
+    const demo = window.location.href.includes('/demo');
 
     onMount(() => {
-        if (window.location.href.includes('/demo')) {
+        if (demo) {
 
             const demoData = generateDemoData();
             data.set(demoData);
@@ -33,18 +33,45 @@
                 }
             });
 
-            timeout = setTimeout(() => {
-                showModal('<div style="text-align: center">Like what you see?<br><a href="https://androz2091.fr/discord" target="_blank">Support us by saying hello and sharing your stats in our Discord server!<a></div>');
-            }, 10000);
+            if ($openRecap) {
+                openRecap.set(false);
+                openShareSheet();
+            } else askForStar(STAR_ASK_AFTER);
         } else navigate('/');
     });
 
-    onDestroy(() => timeout && clearTimeout(timeout));
+    onDestroy(() => clearTimeout(starTimer));
 
     const { open } = getContext('simple-modal');
 
     const showModal = (message) => {
         open(Modal, { message });
+    };
+
+    // Once per browser: a while into the stats, or right after the recap closes on a card shared. Never over
+    // the recap, and never for the demo, whose stats aren't the visitor's.
+    const STAR_ASK_KEY = 'star-asked';
+    const STAR_ASK_AFTER = 30000;
+    let starTimer;
+    const starAsked = () => {
+        try {
+            return localStorage.getItem(STAR_ASK_KEY) !== null;
+        } catch {
+            return true;
+        }
+    };
+    const askForStar = (delay) => {
+        clearTimeout(starTimer);
+        if (demo || starAsked()) return;
+        starTimer = setTimeout(() => {
+            if (ShareSheet || document.visibilityState !== 'visible' || starAsked()) return;
+            try {
+                localStorage.setItem(STAR_ASK_KEY, '1');
+            } catch {
+                // A full storage: the page may ask again on a later visit.
+            }
+            showModal('<div style="text-align: center">Like what you see?<br>⭐ <a href="https://github.com/Androz2091/discord-data-package-explorer" target="_blank" data-umami-event="github-star">Star DDPE on GitHub</a>, it helps others find it.<br>And say hello in <a href="https://androz2091.fr/discord" target="_blank">our Discord server</a>!</div>');
+        }, delay);
     };
 
     // Inside the target, as svelte-tooltip's tip was, so it keeps the text's font and color.
@@ -76,12 +103,16 @@
     const preloadShareSheet = () => loadShareSheet().catch(() => {});
     let ShareSheet = null;
     let shareButton;
+    let shared = false;
     const openShareSheet = () => loadShareSheet().then((module) => {
+        clearTimeout(starTimer);
         ShareSheet = module.default;
     }, () => toast.push('The share cards couldn\'t load. Check your connection and try again.'));
     const closeShareSheet = () => {
         ShareSheet = null;
         shareButton.focus();
+        askForStar(shared ? 1000 : STAR_ASK_AFTER);
+        shared = false;
     };
     </script>
 
@@ -323,7 +354,7 @@
                 </Card>
             </div>
             {#if ShareSheet}
-                <svelte:component this={ShareSheet} source={$data} onClose={closeShareSheet} />
+                <svelte:component this={ShareSheet} source={$data} onClose={closeShareSheet} onShared={() => (shared = true)} />
             {/if}
         {/if}
     </div>

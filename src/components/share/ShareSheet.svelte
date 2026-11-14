@@ -15,6 +15,8 @@
     // The stats page's data, read when the sheet opens.
     export let source;
     export let onClose;
+    /** Called once a card is shared or downloaded. */
+    export let onShared = () => {};
 
     const COMPONENTS = { cover: Cover, messages: Messages, people: People, servers: Servers, peakHour: PeakHour, words: Words, habits: Habits, summary: Summary, summarySquare: Summary };
     const GAP = 12;
@@ -115,13 +117,19 @@
         try {
             if (navigator.canShare({ files: [file] })) {
                 await navigator.share({ title: 'Here is my Discord recap!', text: 'Made on https://ddpe.androz2091.fr, try it yourself!', files: [file] });
+                onShared();
                 return;
             }
-            download(drawing.blob, name);
+            save();
         } catch (error) {
             // Closing the share sheet rejects too.
-            if (error.name !== 'AbortError') download(drawing.blob, name);
+            if (error.name !== 'AbortError') save();
         }
+    };
+
+    const save = () => {
+        download(drawing.blob, name);
+        onShared();
     };
 
     const retry = () => {
@@ -209,7 +217,7 @@
                             {status === 'pending' ? 'Generating...' : 'Share'}
                         </button>
                     {/if}
-                    <button type="button" class:secondary={shareable} disabled={status !== 'ready'} aria-busy={status === 'pending'} on:click={() => download(drawing.blob, name)}>
+                    <button type="button" class:secondary={shareable} disabled={status !== 'ready'} aria-busy={status === 'pending'} on:click={save}>
                         {status === 'pending' && !shareable ? 'Generating...' : 'Download'}
                     </button>
                 {/if}

@@ -2,7 +2,7 @@
     import { link } from 'svelte-routing';
 	import { Unzip, AsyncUnzipInflate, Inflate } from 'fflate';
     import { navigate } from 'svelte-routing';
-    import { loadTask, loadEstimatedTime, data, diswhoCompleted } from '../app/store';
+    import { loadTask, loadEstimatedTime, data, diswhoCompleted, openRecap } from '../app/store';
     import { extractData } from '../app/extractor';
     import { generateFileStructureDump, generateGitHubIssueURL } from '../app/helpers';
 
@@ -115,6 +115,7 @@
             loadTask.set(null);
             loadEstimatedTime.set(null);
             console.log(`[debug] Data extracted in ${(Date.now() - extractStartAt) / 1000} seconds.`);
+            openRecap.set(true);
             navigate('/stats');
         }).catch((err) => {
             console.error(err);
