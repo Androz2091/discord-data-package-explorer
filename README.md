@@ -54,7 +54,7 @@ The screenshots and cards show Androz2091's own Discord package.
 
 ## Get your Discord package
 
-1. In Discord, open **User Settings** > **Privacy & Safety** and click **Request Data**. Select at least **Account info** and **Messages**: **Activity** adds app opens, notifications, reactions and voice.
+1. In Discord, open **User Settings** > **Data & Privacy** and click **Request Data**. Tick **Account**, **Your Activity**, **Messages** and **Servers**: DDPE can't read a package without Account, and Your Activity adds app opens, notifications, reactions and voice.
 2. Discord emails you a download link once your package is ready.
 3. Open [DDPE](https://ddpe.androz2091.fr) and select your `package.zip`, as Discord sent it.
 

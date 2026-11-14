@@ -96,13 +96,15 @@
             loading = false;
             return;
         }
+        // What Discord's form left out, not a bug in DDPE: no report link.
+        const requestAgain = 'Request your data again on Discord with <em>Account</em>, <em>Your Activity</em>, <em>Messages</em> and <em>Servers</em> ticked.';
         if (!hasUserJson) {
-            setErrorWithReport('Your package is missing the <strong>Account info</strong> section. DDPE needs it to identify you. Please re-request your data on Discord with at least <em>Account info</em> and <em>Messages</em> selected.');
+            error = `Your package is missing the <strong>Account</strong> section, which DDPE needs to know who you are. ${requestAgain}`;
             loading = false;
             return;
         }
         if (!hasMessages) {
-            setErrorWithReport('Your package does not contain any <strong>Messages</strong>. Please re-request your data on Discord with the <em>Messages</em> category selected.');
+            error = `Your package has no <strong>Messages</strong>. ${requestAgain}`;
             loading = false;
             return;
         }

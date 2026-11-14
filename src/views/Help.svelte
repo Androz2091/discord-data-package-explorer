@@ -2,16 +2,16 @@
     <button class="go-back-button" on:click={() => window.location.href = '/'}>Go back to the home page</button>
     <div>
         <ol>
-            <li>Click on "User Settings" in the bottom left corner.</li>
-            <li>Click on "Privacy & Safety".</li>
-            <li>Scroll down to the "Request Data" section at the bottom of the page.</li>
-            <li>Click on "Request Data".</li>
-            <li>Wait for the email from Discord with the download link. 🥳</li>
+            <li>Click on "User Settings", the cog in the bottom left corner. On your phone, tap your avatar, then the cog.</li>
+            <li>Click on "Data & Privacy".</li>
+            <li>Under "Request your data", click on "Request Data" ("Request all of my data" on your phone).</li>
+            <li>Tick "Account", "Your Activity", "Messages" and "Servers", then click on "Request My Data". Without "Account", DDPE can't read your package.</li>
+            <li>Wait for the email from Discord with the download link: it can take up to 30 days. 🥳</li>
         </ol>
     </div>
 
     <div>
-        Here is a short TikTok video ✨ to show you how to request your Discord Data Package! Note that this is also possible on mobile device using the iOS and Android Discord apps!
+        Here is a short TikTok video ✨ to show you how to request your Discord Data Package! Discord's screens have changed a little since it was made: the steps above are today's.
     </div>
     <div class="tiktok-player">
         <video controls width="250">
